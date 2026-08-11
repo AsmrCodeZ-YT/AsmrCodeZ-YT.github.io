@@ -1,51 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<!-- skill:chrome -->
-<style>
-/* Credit line — bottom-right */
-.design-ui-credit {
-  position: fixed;
-  bottom: 12px;
-  right: 12px;
-  font: 11px/1 system-ui, sans-serif;
-  color: rgba(128,128,128,0.5);
-  pointer-events: none;
-  z-index: 2147483647;
-  transition: opacity 0.4s ease;
-  user-select: none;
-  letter-spacing: 0.02em;
-}
-
-/* Hide chrome on touch devices */
-@media (hover: none) {
-  .design-ui-credit { display: none; }
-}
-
-/* Print fixes */
-@media print {
-  * {
-    transition: none !important;
-    animation: none !important;
-    box-shadow: none !important;
-  }
-  body {
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-  }
-  .design-ui-credit { display: none !important; }
-}
-
-</style>
-<script>
-(function () {
-    // Design-ui pages are single compositions, so the whole body is editable.
-    function markEditable() {
-        document.body.classList.add('artifact-editable');
+  <!-- skill:chrome -->
+  <style>
+    /* Credit line — bottom-right */
+    .design-ui-credit {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      font: 11px/1 system-ui, sans-serif;
+      color: rgba(128, 128, 128, 0.5);
+      pointer-events: none;
+      z-index: 2147483647;
+      transition: opacity 0.4s ease;
+      user-select: none;
+      letter-spacing: 0.02em;
     }
 
-    // Credit badge with idle-fade. Hover devices only.
-    function initChromeUI() {
+    /* Hide chrome on touch devices */
+    @media (hover: none) {
+      .design-ui-credit {
+        display: none;
+      }
+    }
+
+    /* Print fixes */
+    @media print {
+      * {
+        transition: none !important;
+        animation: none !important;
+        box-shadow: none !important;
+      }
+
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .design-ui-credit {
+        display: none !important;
+      }
+    }
+  </style>
+  <script>
+    (function () {
+      // Design-ui pages are single compositions, so the whole body is editable.
+      function markEditable() {
+        document.body.classList.add('artifact-editable');
+      }
+
+      // Credit badge with idle-fade. Hover devices only.
+      function initChromeUI() {
         if (!matchMedia('(hover: hover)').matches) return;
 
         var credit = document.createElement('div');
@@ -58,36 +64,41 @@
         var fade = function (out) { credit.style.opacity = out ? '0' : ''; };
         fade(true);
         var show = function () {
-            fade(false);
-            clearTimeout(timer);
-            timer = setTimeout(function () { fade(true); }, 3000);
+          fade(false);
+          clearTimeout(timer);
+          timer = setTimeout(function () { fade(true); }, 3000);
         };
         document.addEventListener('mousemove', show);
         show();
-    }
+      }
 
-    function init() {
+      function init() {
         markEditable();
         initChromeUI();
-    }
+      }
 
-    if (document.readyState === 'loading') {
+      if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
-    } else {
+      } else {
         init();
-    }
-})();
+      }
+    })();
 
-</script>
-<!-- /skill:chrome -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Omid Ebrahimi — Data Engineer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </script>
+  <!-- /skill:chrome -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Omid Ebrahimi — Data Engineer</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2e05c'/><text x='50' y='72' font-family='Archivo,Arial' font-weight='900' font-size='62' text-anchor='middle' fill='%23231a12'>OE</text></svg>">
 
-<!--
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!--
   ============================================================
   EDIT ME
   1) PROFILE PHOTO  -> <img id="avatar" src="./src/me.jpg">  (a few lines down in <body>)
@@ -100,537 +111,838 @@
   ============================================================
 -->
 
-<style>
-  :root{
-    --paper:      oklch(95.5% 0.014 92);
-    --paper-2:    oklch(98.5% 0.007 92);
-    --ink:        oklch(19% 0.018 62);
-    --ink-soft:   oklch(45% 0.016 62);
-    --accent:     oklch(60% 0.205 33);
-    --accent-ink: oklch(97% 0.015 60);
-    --signal:     oklch(86% 0.155 96);
+  <style>
+    :root {
+      --paper: oklch(95.5% 0.014 92);
+      --paper-2: oklch(98.5% 0.007 92);
+      --ink: oklch(19% 0.018 62);
+      --ink-soft: oklch(45% 0.016 62);
+      --accent: oklch(60% 0.205 33);
+      --accent-ink: oklch(97% 0.015 60);
+      --signal: oklch(86% 0.155 96);
 
-    --line: 2px solid var(--ink);
-    --drop: 5px 5px 0 var(--ink);
-    --drop-lg: 9px 9px 0 var(--ink);
+      --line: 2px solid var(--ink);
+      --drop: 5px 5px 0 var(--ink);
+      --drop-lg: 9px 9px 0 var(--ink);
 
-    --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+      --s1: 4px;
+      --s2: 8px;
+      --s3: 12px;
+      --s4: 16px;
+      --s5: 24px;
+      --s6: 32px;
 
-    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    --sans: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --sans: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 
-    --out: cubic-bezier(0.16, 1, 0.3, 1);
-    --quart: cubic-bezier(0.25, 1, 0.5, 1);
-  }
+      --out: cubic-bezier(0.16, 1, 0.3, 1);
+      --quart: cubic-bezier(0.25, 1, 0.5, 1);
+    }
 
-  *{ box-sizing:border-box; margin:0; padding:0; }
-  html,body{ height:100%; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  body{
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-optical-sizing: auto;
-    -webkit-font-smoothing: antialiased;
-    overflow: hidden;
-  }
+    html,
+    body {
+      height: 100%;
+    }
 
-  .frame{
-    height: 100dvh;
-    display: grid;
-    grid-template-rows: auto minmax(0,1fr) auto auto;
-    gap: var(--s3);
-    padding: var(--s3) var(--s4) var(--s4);
-  }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-optical-sizing: auto;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
 
-  /* ---------- top bar ---------- */
-  .bar{
-    display:flex; align-items:center; justify-content:space-between;
-    gap: var(--s4);
-    border-bottom: var(--line);
-    padding-bottom: var(--s3);
-  }
-  .wordmark{
-    font-size: clamp(0.95rem, 1.15vw, 1.15rem);
-    font-weight: 900;
-    font-stretch: 112%;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    display:flex; align-items:baseline; gap: 0.35em;
-  }
-  .wordmark sup{ font-size:0.5em; font-weight:600; }
-  .wordmark .dash{
-    font-family: var(--mono);
-    font-size: 0.62em; font-weight:500;
-    letter-spacing: 0.06em;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-  }
-  @media (max-width: 820px){ .wordmark .dash{ display:none; } }
+    .frame {
+      height: 100dvh;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto auto;
+      gap: var(--s3);
+      padding: var(--s3) var(--s4) var(--s4);
+    }
 
-  nav{ display:flex; gap: var(--s2); flex-wrap:wrap; }
-  .btn{
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration:none;
-    color: var(--ink);
-    background: var(--paper-2);
-    border: var(--line);
-    padding: 7px 11px;
-    line-height:1;
-    display:inline-flex; align-items:center; gap:6px;
-    transition: transform .14s var(--quart), background-color .14s var(--quart), box-shadow .14s var(--quart);
-  }
-  .btn:hover{ background: var(--signal); transform: translate(-2px,-2px); box-shadow: 3px 3px 0 var(--ink); }
-  .btn:active{ transform: translate(0,0); box-shadow: none; }
-  .btn:focus-visible{ outline:3px solid var(--accent); outline-offset:2px; }
-  .btn.solid{ background: var(--ink); color: var(--paper-2); }
-  .btn.solid:hover{ background: var(--accent); color: var(--accent-ink); }
+    /* ---------- top bar ---------- */
+    .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s4);
+      border-bottom: var(--line);
+      padding-bottom: var(--s3);
+    }
 
-  /* ---------- main split ---------- */
-  main{
-    display:grid;
-    grid-template-columns: minmax(320px, 0.9fr) 1.5fr;
-    gap: var(--s5);
-    min-height:0;
-  }
+    .wordmark {
+      font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+      font-weight: 900;
+      font-stretch: 112%;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: baseline;
+      gap: 0.35em;
+    }
 
-  /* ---------- left: identity ---------- */
-  .id-col{ display:flex; flex-direction:column; min-height:0; gap: var(--s4); }
+    .wordmark sup {
+      font-size: 0.5em;
+      font-weight: 600;
+    }
 
-  /* --- profile photo block --- */
-  .who-row{
-    display:flex; align-items:stretch; gap: var(--s3);
-  }
-  .portrait{
-    position:relative; flex:none;
-    width: clamp(78px, 8.4vw, 116px);
-    aspect-ratio: 1;
-    border: var(--line);
-    background: var(--ink);
-    box-shadow: var(--drop);
-    overflow:hidden;
-  }
-  .portrait img{
-    width:100%; height:100%; object-fit:cover; display:block;
-    filter: grayscale(1) contrast(1.08);
-    transition: filter .35s var(--out), transform .5s var(--out);
-  }
-  .portrait:hover img{ filter:none; transform: scale(1.04); }
-  /* fallback monogram when no photo file is present */
-  .portrait.pending img{ display:none; }
-  .portrait.pending::after{
-    content:"OE";
-    position:absolute; inset:0;
-    display:grid; place-items:center;
-    background: var(--signal);
-    color: var(--ink);
-    font-weight:900; font-stretch:118%;
-    font-size: clamp(1.6rem, 3.2vw, 2.6rem);
-    letter-spacing:-0.03em;
-  }
-  .portrait.pending::before{
-    content:"ADD PHOTO";
-    position:absolute; left:0; right:0; bottom:0; z-index:1;
-    background: var(--ink); color: var(--paper-2);
-    font-family: var(--mono); font-size:0.5rem; letter-spacing:0.1em;
-    text-align:center; padding:3px 0;
-  }
+    .wordmark .dash {
+      font-family: var(--mono);
+      font-size: 0.62em;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+    }
 
-  .who-meta{
-    display:flex; flex-direction:column; justify-content:center; gap: 7px;
-    min-width:0;
-  }
-  .status{
-    font-family: var(--mono);
-    font-size: 0.66rem; letter-spacing:0.09em; text-transform:uppercase;
-    color: var(--ink-soft);
-    display:flex; align-items:center; gap:8px;
-  }
-  .dot{
-    width:9px; height:9px; background: var(--accent);
-    border-radius:50%; flex:none;
-    box-shadow: 0 0 0 3px oklch(60% 0.205 33 / 0.22);
-  }
-  .who-meta .name{
-    font-size: clamp(1rem, 1.35vw, 1.3rem);
-    font-weight:900; font-stretch:112%; letter-spacing:-0.02em;
-    line-height:1;
-  }
-  .who-meta .role{
-    font-family: var(--mono); font-size:0.66rem;
-    letter-spacing:0.06em; color: var(--ink-soft);
-    line-height:1.4;
-  }
+    @media (max-width: 820px) {
+      .wordmark .dash {
+        display: none;
+      }
+    }
 
-  h1{
-    font-size: clamp(1.9rem, min(3.3vw, 5.9vh), 3.9rem);
-    line-height: 0.88;
-    font-weight: 900;
-    font-stretch: 118%;
-    letter-spacing: -0.035em;
-    text-transform: uppercase;
-    text-wrap: balance;
-  }
-  h1 .mark{
-    background: var(--signal);
-    box-shadow: 0.12em 0 0 var(--signal), -0.06em 0 0 var(--signal);
-  }
-  h1 .out{
-    color: var(--paper);
-    -webkit-text-stroke: 2px var(--ink);
-  }
+    nav {
+      display: flex;
+      gap: var(--s2);
+      flex-wrap: wrap;
+    }
 
-  .lede{
-    font-size: clamp(0.88rem, 1vw, 1rem);
-    line-height: 1.5;
-    max-width: 46ch;
-    color: var(--ink-soft);
-    text-wrap: pretty;
-  }
-  .lede strong{ color: var(--ink); font-weight:600; }
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink);
+      background: var(--paper-2);
+      border: var(--line);
+      padding: 7px 11px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform .14s var(--quart), background-color .14s var(--quart), box-shadow .14s var(--quart);
+    }
 
-  .track{
-    border-top: var(--line);
-    margin-top:auto;
-    padding-top: var(--s3);
-    display:grid; gap: 1px;
-    border-bottom: var(--line);
-  }
-  .track-head{
-    font-family: var(--mono); font-size:0.63rem;
-    letter-spacing:0.12em; text-transform:uppercase; color: var(--ink-soft);
-    padding-bottom: var(--s2);
-  }
-  .row{
-    display:grid;
-    grid-template-columns: 5.2em 1fr;
-    gap: var(--s3);
-    padding: 8px 0;
-    align-items:baseline;
-  }
-  .row time{
-    font-family: var(--mono); font-size:0.65rem; letter-spacing:0.03em;
-    color: var(--ink-soft); font-variant-numeric: tabular-nums;
-  }
-  .row .what{ font-size: 0.85rem; font-weight:600; line-height:1.3; }
-  .row .who{ font-weight:400; color: var(--ink-soft); }
+    .btn:hover {
+      background: var(--signal);
+      transform: translate(-2px, -2px);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
 
-  /* ---------- right: work ---------- */
-  .work{ display:flex; flex-direction:column; min-height:0; gap: var(--s3); }
-  .work-head{
-    display:flex; align-items:baseline; justify-content:space-between; gap: var(--s4);
-    font-family: var(--mono); font-size:0.63rem;
-    letter-spacing:0.12em; text-transform:uppercase; color: var(--ink-soft);
-  }
-  .work-head b{
-    color: var(--ink); font-family: var(--sans); font-weight:900;
-    font-stretch:112%; font-size:0.95rem; letter-spacing:0.02em;
-  }
+    .btn:active {
+      transform: translate(0, 0);
+      box-shadow: none;
+    }
 
-  #grid{
-    flex:1; min-height:0;
-    display:grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: var(--s3);
-  }
+    .btn:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
 
-  .tile{
-    grid-column: span 2;
-    display:flex; flex-direction:column;
-    min-height:0; min-width:0;
-    border: var(--line);
-    background: var(--paper-2);
-    box-shadow: var(--drop);
-    text-decoration:none; color:inherit;
-    overflow:hidden;
-    transition: transform .22s var(--out), box-shadow .22s var(--out);
-  }
-  .tile:hover, .tile:focus-visible{
-    transform: translate(-4px,-4px);
-    box-shadow: var(--drop-lg);
-  }
-  .tile:focus-visible{ outline:3px solid var(--accent); outline-offset:3px; }
-  .tile:active{ transform: translate(0,0); box-shadow: 2px 2px 0 var(--ink); }
+    .btn.solid {
+      background: var(--ink);
+      color: var(--paper-2);
+    }
 
-  .shot{
-    flex:1; min-height:0; position:relative;
-    background: var(--paper);
-    border-bottom: var(--line);
-    overflow:hidden;
-  }
-  .shot img{
-    width:100%; height:100%; object-fit:cover; object-position: top center;
-    display:block;
-    filter: saturate(0.92);
-    transition: transform .5s var(--out);
-  }
-  .tile:hover .shot img{ transform: scale(1.035); }
+    .btn.solid:hover {
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
 
-  .shot.pending{
-    background-image: repeating-linear-gradient(
-      -45deg,
-      var(--paper) 0 9px,
-      oklch(90% 0.02 92) 9px 18px
-    );
-    display:grid; place-items:center;
-  }
-  .shot.pending::after{
-    content: attr(data-note);
-    font-family: var(--mono); font-size:0.58rem; letter-spacing:0.1em;
-    text-transform:uppercase; color: var(--ink-soft);
-    background: var(--paper-2);
-    border: var(--line);
-    padding: 5px 9px;
-  }
-  .shot.pending img{ display:none; }
+    /* ---------- main split ---------- */
+    main {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.9fr) 1.5fr;
+      gap: var(--s5);
+      min-height: 0;
+    }
 
-  .meta{
-    padding: 9px 11px 10px;
-    display:flex; align-items:center; justify-content:space-between; gap: var(--s3);
-    background: var(--paper-2);
-    transition: background-color .18s var(--quart), color .18s var(--quart);
-  }
-  .tile:hover .meta{ background: var(--ink); color: var(--paper-2); }
-  .tile:hover .meta .stack{ color: oklch(78% 0.02 92); }
-  .tile:hover .arrow{ background: var(--accent); color: var(--accent-ink); border-color: var(--paper-2); }
+    /* ---------- left: identity ---------- */
+    .id-col {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      gap: var(--s4);
+    }
 
-  .meta h3{
-    font-size: clamp(0.78rem, 0.92vw, 0.96rem);
-    font-weight:800; font-stretch:108%; letter-spacing:-0.015em;
-    line-height:1.15;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
-  .stack{
-    font-family: var(--mono); font-size:0.58rem; letter-spacing:0.05em;
-    color: var(--ink-soft); margin-top:3px;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
-  .arrow{
-    flex:none;
-    width:24px; height:24px;
-    display:grid; place-items:center;
-    border:1.5px solid var(--ink);
-    font-size: 0.72rem; line-height:1;
-    transition: background-color .18s var(--quart), color .18s var(--quart), border-color .18s var(--quart);
-  }
+    /* --- profile photo block --- */
+    .who-row {
+      display: flex;
+      align-items: stretch;
+      gap: var(--s3);
+    }
 
-  .tile.featured .meta{ padding: 12px 14px 13px; }
-  .tile.featured .meta h3{ font-size: clamp(0.95rem, 1.25vw, 1.25rem); }
+    .portrait {
+      position: relative;
+      flex: none;
+      width: clamp(78px, 8.4vw, 116px);
+      aspect-ratio: 1;
+      border: var(--line);
+      background: var(--ink);
+      box-shadow: var(--drop);
+      overflow: hidden;
+    }
 
-  .empty{
-    grid-column: 1 / -1;
-    border: 2px dashed var(--ink-soft);
-    display:grid; place-items:center; text-align:center;
-    padding: var(--s6);
-    font-family: var(--mono); font-size:0.72rem; letter-spacing:0.06em;
-    color: var(--ink-soft); line-height:1.8;
-  }
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(1) contrast(1.08);
+      transition: filter .35s var(--out), transform .5s var(--out);
+    }
 
-  /* ---------- ticker ---------- */
-  .ticker{
-    border-block: var(--line);
-    background: var(--ink);
-    color: var(--paper-2);
-    overflow:hidden;
-    display:flex;
-  }
-  .ticker div{
-    display:flex; flex:none; gap: 2.4rem;
-    padding: 7px 1.2rem 7px 0;
-    font-family: var(--mono); font-size:0.67rem;
-    letter-spacing:0.14em; text-transform:uppercase;
-    white-space:nowrap;
-    animation: slide 34s linear infinite;
-  }
-  .ticker span:nth-child(3n){ color: var(--signal); }
-  @keyframes slide{ to{ transform: translateX(-100%); } }
-  @media (prefers-reduced-motion: reduce){ .ticker div{ animation:none; } }
+    .portrait:hover img {
+      filter: none;
+      transform: scale(1.04);
+    }
 
-  /* ---------- footer ---------- */
-  footer{
-    display:flex; align-items:center; justify-content:space-between;
-    gap: var(--s4); flex-wrap:wrap;
-    font-family: var(--mono); font-size:0.64rem;
-    letter-spacing:0.07em; text-transform:uppercase; color: var(--ink-soft);
-  }
-  footer b{ color: var(--ink); font-weight:600; }
-  footer .avail{
-    color: var(--ink);
-    border: var(--line);
-    background: var(--signal);
-    padding: 5px 10px;
-  }
+    /* fallback monogram when no photo file is present */
+    .portrait.pending img {
+      display: none;
+    }
 
-  /* ---------- responsive ---------- */
-  @media (max-width: 1023px){
-    body{ overflow:auto; }
-    .frame{ height:auto; min-height:100dvh; gap: var(--s5); }
-    main{ grid-template-columns: 1fr; gap: var(--s6); }
-    h1{ font-size: clamp(2.4rem, 11vw, 4rem); }
-    .portrait{ width: 96px; }
-    .track{ margin-top:0; }
-    #grid{ grid-template-columns: repeat(2, 1fr); grid-template-rows:none !important; }
-    .tile{ grid-column: span 1 !important; }
-    .tile .shot{ aspect-ratio: 16/10; flex:none; }
-    .tile.featured{ grid-column: 1 / -1 !important; }
-  }
-  @media (max-width: 560px){
-    .frame{ padding: var(--s3) var(--s3) var(--s5); }
-    #grid{ grid-template-columns: 1fr; }
-    nav{ gap: 6px; }
-    .btn{ padding: 6px 9px; font-size: 0.62rem; }
-    footer{ flex-direction:column; align-items:flex-start; gap: var(--s3); }
-  }
-</style>
+    .portrait.pending::after {
+      content: "OE";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: var(--signal);
+      color: var(--ink);
+      font-weight: 900;
+      font-stretch: 118%;
+      font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+      letter-spacing: -0.03em;
+    }
+
+    .portrait.pending::before {
+      content: "ADD PHOTO";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      background: var(--ink);
+      color: var(--paper-2);
+      font-family: var(--mono);
+      font-size: 0.5rem;
+      letter-spacing: 0.1em;
+      text-align: center;
+      padding: 3px 0;
+    }
+
+    .who-meta {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .status {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex: none;
+      box-shadow: 0 0 0 3px oklch(60% 0.205 33 / 0.22);
+    }
+
+    .who-meta .name {
+      font-size: clamp(1rem, 1.35vw, 1.3rem);
+      font-weight: 900;
+      font-stretch: 112%;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .who-meta .role {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.06em;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, min(3.3vw, 5.9vh), 3.9rem);
+      line-height: 0.88;
+      font-weight: 900;
+      font-stretch: 118%;
+      letter-spacing: -0.035em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+
+    h1 .mark {
+      background: var(--signal);
+      box-shadow: 0.12em 0 0 var(--signal), -0.06em 0 0 var(--signal);
+    }
+
+    h1 .out {
+      color: var(--paper);
+      -webkit-text-stroke: 2px var(--ink);
+    }
+
+    .lede {
+      font-size: clamp(0.88rem, 1vw, 1rem);
+      line-height: 1.5;
+      max-width: 46ch;
+      color: var(--ink-soft);
+      text-wrap: pretty;
+    }
+
+    .lede strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .track {
+      border-top: var(--line);
+      margin-top: auto;
+      padding-top: var(--s3);
+      display: grid;
+      gap: 1px;
+      border-bottom: var(--line);
+    }
+
+    .track-head {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      padding-bottom: var(--s2);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 5.2em 1fr;
+      gap: var(--s3);
+      padding: 8px 0;
+      align-items: baseline;
+    }
+
+    .row time {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.03em;
+      color: var(--ink-soft);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .row .what {
+      font-size: 0.85rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .row .who {
+      font-weight: 400;
+      color: var(--ink-soft);
+    }
+
+    /* ---------- right: work ---------- */
+    .work {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      gap: var(--s3);
+    }
+
+    .work-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--s4);
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .work-head b {
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 900;
+      font-stretch: 112%;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+
+    #grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: var(--s3);
+    }
+
+    .tile {
+      grid-column: span 2;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      min-width: 0;
+      border: var(--line);
+      background: var(--paper-2);
+      box-shadow: var(--drop);
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+      transition: transform .22s var(--out), box-shadow .22s var(--out);
+    }
+
+    .tile:hover,
+    .tile:focus-visible {
+      transform: translate(-4px, -4px);
+      box-shadow: var(--drop-lg);
+    }
+
+    .tile:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .tile:active {
+      transform: translate(0, 0);
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .shot {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      background: var(--paper);
+      border-bottom: var(--line);
+      overflow: hidden;
+    }
+
+    .shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      filter: saturate(0.92);
+      transition: transform .5s var(--out);
+    }
+
+    .tile:hover .shot img {
+      transform: scale(1.035);
+    }
+
+    .shot.pending {
+      background-image: repeating-linear-gradient(-45deg,
+          var(--paper) 0 9px,
+          oklch(90% 0.02 92) 9px 18px);
+      display: grid;
+      place-items: center;
+    }
+
+    .shot.pending::after {
+      content: attr(data-note);
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      background: var(--paper-2);
+      border: var(--line);
+      padding: 5px 9px;
+    }
+
+    .shot.pending img {
+      display: none;
+    }
+
+    .meta {
+      padding: 9px 11px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s3);
+      background: var(--paper-2);
+      transition: background-color .18s var(--quart), color .18s var(--quart);
+    }
+
+    .tile:hover .meta {
+      background: var(--ink);
+      color: var(--paper-2);
+    }
+
+    .tile:hover .meta .stack {
+      color: oklch(78% 0.02 92);
+    }
+
+    .tile:hover .arrow {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--paper-2);
+    }
+
+    .meta h3 {
+      font-size: clamp(0.78rem, 0.92vw, 0.96rem);
+      font-weight: 800;
+      font-stretch: 108%;
+      letter-spacing: -0.015em;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stack {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.05em;
+      color: var(--ink-soft);
+      margin-top: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .arrow {
+      flex: none;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid var(--ink);
+      font-size: 0.72rem;
+      line-height: 1;
+      transition: background-color .18s var(--quart), color .18s var(--quart), border-color .18s var(--quart);
+    }
+
+    .tile.featured .meta {
+      padding: 12px 14px 13px;
+    }
+
+    .tile.featured .meta h3 {
+      font-size: clamp(0.95rem, 1.25vw, 1.25rem);
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      border: 2px dashed var(--ink-soft);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: var(--s6);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+
+    /* ---------- ticker ---------- */
+    .ticker {
+      border-block: var(--line);
+      background: var(--ink);
+      color: var(--paper-2);
+      overflow: hidden;
+      display: flex;
+    }
+
+    .ticker div {
+      display: flex;
+      flex: none;
+      gap: 2.4rem;
+      padding: 7px 1.2rem 7px 0;
+      font-family: var(--mono);
+      font-size: 0.67rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      animation: slide 34s linear infinite;
+    }
+
+    .ticker span:nth-child(3n) {
+      color: var(--signal);
+    }
+
+    @keyframes slide {
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ticker div {
+        animation: none;
+      }
+    }
+
+    /* ---------- footer ---------- */
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s4);
+      flex-wrap: wrap;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    footer b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    footer .avail {
+      color: var(--ink);
+      border: var(--line);
+      background: var(--signal);
+      padding: 5px 10px;
+    }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 1023px) {
+      body {
+        overflow: auto;
+      }
+
+      .frame {
+        height: auto;
+        min-height: 100dvh;
+        gap: var(--s5);
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        gap: var(--s6);
+      }
+
+      h1 {
+        font-size: clamp(2.4rem, 11vw, 4rem);
+      }
+
+      .portrait {
+        width: 96px;
+      }
+
+      .track {
+        margin-top: 0;
+      }
+
+      #grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: none !important;
+      }
+
+      .tile {
+        grid-column: span 1 !important;
+      }
+
+      .tile .shot {
+        aspect-ratio: 16/10;
+        flex: none;
+      }
+
+      .tile.featured {
+        grid-column: 1 / -1 !important;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .frame {
+        padding: var(--s3) var(--s3) var(--s5);
+      }
+
+      #grid {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        gap: 6px;
+      }
+
+      .btn {
+        padding: 6px 9px;
+        font-size: 0.62rem;
+      }
+
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--s3);
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div class="frame">
+  <div class="frame">
 
-  <header class="bar">
-    <div class="wordmark">
-      Omid Ebrahimi<sup>®</sup>
-      <span class="dash">Data Engineer / Fintech &amp; On-Chain</span>
+    <header class="bar">
+      <div class="wordmark">
+        Omid Ebrahimi<sup>®</sup>
+        <span class="dash">Data Engineer / Fintech &amp; On-Chain</span>
+      </div>
+      <nav>
+        <!-- EDIT: your links -->
+        <a class="btn" href="mailto:omidh225@gmail.com">Email</a>
+        <a class="btn" href="https://www.linkedin.com/in/omidebrahimi1" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://www.youtube.com/@thecodez1" target="_blank" rel="noopener">YouTube</a>
+        <a class="btn solid" href="https://github.com/AsmrCodeZ-YT" target="_blank" rel="noopener">GitHub ↗</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="id-col">
+
+        <!-- ===== PROFILE PHOTO: change src below ===== -->
+        <div class="who-row">
+          <figure class="portrait" id="portrait">
+            <img id="avatar" src="./src/me.jpg" alt="Portrait of Omid Ebrahimi">
+          </figure>
+          <div class="who-meta">
+            <p class="status"><span class="dot"></span> Available · Remote</p>
+            <p class="name">Omid Ebrahimi</p>
+            <p class="role">Data Engineer · Ahwaz, Iran<br>Streaming / Reconciliation / Risk</p>
+          </div>
+        </div>
+
+        <h1>Pipelines<br>that <span class="mark">don't</span><br><span class="out">lie.</span></h1>
+
+        <p class="lede">
+          I build ingestion, reconciliation and analytics systems for <strong>fintech and crypto</strong> teams.
+          Fast is easy. I care about data that is complete, traceable and replayable: idempotent processing,
+          backfills, late events, and settlement that actually balances.
+        </p>
+
+        <div class="track">
+          <p class="track-head">Track</p>
+          <div class="row">
+            <time>2024 — now</time>
+            <p class="what">Independent Data Engineer <span class="who">· TheCodeZ</span></p>
+          </div>
+          <div class="row">
+            <time>2024</time>
+            <p class="what">Computer Vision Engineer <span class="who">· Freelance | Remote </span></p>
+          </div>
+          <div class="row">
+            <time>2024</time>
+            <p class="what">AI/ML Engineer, TTS <span class="who">· FaraJahan - Freelance | Remote  </span></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="work">
+        <div class="work-head">
+          <b>Selected Work</b>
+          <span id="count">Live pages · click to open</span>
+        </div>
+        <div id="grid"></div>
+      </section>
+    </main>
+
+    <div class="ticker" aria-hidden="true">
+      <div id="tick"></div>
     </div>
-    <nav>
-      <!-- EDIT: your links -->
-      <a class="btn" href="mailto:omidh225@gmail.com">Email</a>
-      <a class="btn" href="https://www.linkedin.com/in/omidebrahimi1" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="btn" href="https://www.youtube.com/@thecodez1" target="_blank" rel="noopener">YouTube</a>
-      <a class="btn solid" href="https://github.com/AsmrCodeZ-YT" target="_blank" rel="noopener">GitHub ↗</a>
-    </nav>
-  </header>
 
-  <main>
-    <section class="id-col">
+    <footer>
+      <p>BSc Computer Engineering <b>· Islamic Azad University, Science &amp; Research</b> · 2022–2026</p>
+      <p>Python · SQL · Kafka · Spark · ClickHouse · Airflow · Docker</p>
+      <p class="avail">Open to remote roles &amp; freelance</p>
+    </footer>
 
-      <!-- ===== PROFILE PHOTO: change src below ===== -->
-      <div class="who-row">
-        <figure class="portrait" id="portrait">
-          <img id="avatar" src="./src/me.jpg" alt="Portrait of Omid Ebrahimi">
-        </figure>
-        <div class="who-meta">
-          <p class="status"><span class="dot"></span> Available · Remote</p>
-          <p class="name">Omid Ebrahimi</p>
-          <p class="role">Data Engineer · Ahwaz, Iran<br>Streaming / Reconciliation / Risk</p>
-        </div>
-      </div>
+  </div>
 
-      <h1>Pipelines<br>that <span class="mark">don't</span><br><span class="out">lie.</span></h1>
+  <script>
+    /* profile photo fallback: shows the OE monogram if the file isn't there yet */
+    (function () {
+      const img = document.getElementById('avatar');
+      const box = document.getElementById('portrait');
+      img.addEventListener('error', () => box.classList.add('pending'));
+      if (img.complete && img.naturalWidth === 0) box.classList.add('pending');
+    })();
 
-      <p class="lede">
-        I build ingestion, reconciliation and analytics systems for <strong>fintech and crypto</strong> teams.
-        Fast is easy. I care about data that is complete, traceable and replayable: idempotent processing,
-        backfills, late events, and settlement that actually balances.
-      </p>
+    /* ============================================================
+       EDIT ME — one entry per folder in your GitHub repo.
+       href = the html page inside that folder
+       shot = the screenshot inside that folder's /src
+       ============================================================ */
+    const PROJECTS = [
+      {
+        name: "On-Chain Indexer & Reconciliation",
+        stack: "Python · Kafka · ClickHouse · RPC",
+        href: "./onchain-indexer/index.html",
+        shot: "./onchain-indexer/src/preview.png"
+      },
+      {
+        name: "Payment Reconciliation Engine",
+        stack: "Python · PostgreSQL · Airflow",
+        href: "./payment-reconciliation/index.html",
+        shot: "./payment-reconciliation/src/preview.png"
+      },
+      {
+        name: "Crypto Risk Analytics",
+        stack: "Spark · ClickHouse · Graph",
+        href: "./crypto-risk-analytics/index.html",
+        shot: "./crypto-risk-analytics/src/preview.png"
+      },
+      {
+        name: "Streaming Ingestion Pipeline",
+        stack: "Kafka · PySpark · Docker",
+        href: "./streaming-pipeline/index.html",
+        shot: "./streaming-pipeline/src/preview.png"
+      },
+      {
+        name: "Search & Scraping Platform",
+        stack: "Elasticsearch · Python",
+        href: "./z-seek/index.html",
+        shot: "./src/p5.png"
+      }
+    ];
 
-      <div class="track">
-        <p class="track-head">Track</p>
-        <div class="row">
-          <time>2024 — now</time>
-          <p class="what">Independent Data Engineer <span class="who">· TheCodeZ</span></p>
-        </div>
-        <div class="row">
-          <time>2024</time>
-          <p class="what">Computer Vision Engineer <span class="who">· Freelance | Remote </span></p>
-        </div>
-        <div class="row">
-          <time>2024</time>
-          <p class="what">AI/ML Engineer, TTS <span class="who">· FaraJahan  Freelance | Remote </span></p>
-        </div>
-      </div>
-    </section>
+    const SPANS = [4, 2, 2, 2, 2];
+    const grid = document.getElementById('grid');
 
-    <section class="work">
-      <div class="work-head">
-        <b>Selected Work</b>
-        <span id="count">Live pages · click to open</span>
-      </div>
-      <div id="grid"></div>
-    </section>
-  </main>
+    function render(list) {
+      grid.innerHTML = '';
+      if (!list.length) {
+        grid.innerHTML = '<p class="empty">No projects wired up yet.<br>Add folders to the PROJECTS array at the bottom of this file.</p>';
+        return;
+      }
+      let used = 0;
+      list.forEach((p, i) => {
+        const span = SPANS[i % SPANS.length];
+        used += span;
 
-  <div class="ticker" aria-hidden="true"><div id="tick"></div></div>
+        const a = document.createElement('a');
+        a.className = 'tile' + (span >= 4 ? ' featured' : '');
+        a.href = p.href;
+        a.style.gridColumn = 'span ' + span;
+        a.setAttribute('aria-label', 'Open project: ' + p.name);
 
-  <footer>
-    <p>BSc Computer Engineering <b>· Islamic Azad University, Science &amp; Research</b> · 2022–2026</p>
-    <p>Python · SQL · Kafka · Spark · ClickHouse · Airflow · Docker</p>
-    <p class="avail">Open to remote roles &amp; freelance</p>
-  </footer>
-
-</div>
-
-<script>
-/* profile photo fallback: shows the OE monogram if the file isn't there yet */
-(function(){
-  const img = document.getElementById('avatar');
-  const box = document.getElementById('portrait');
-  img.addEventListener('error', () => box.classList.add('pending'));
-  if (img.complete && img.naturalWidth === 0) box.classList.add('pending');
-})();
-
-/* ============================================================
-   EDIT ME — one entry per folder in your GitHub repo.
-   href = the html page inside that folder
-   shot = the screenshot inside that folder's /src
-   ============================================================ */
-const PROJECTS = [
-  {
-    name: "On-Chain Indexer & Reconciliation",
-    stack: "Python · Kafka · ClickHouse · RPC",
-    href: "./onchain-indexer/index.html",
-    shot: "./onchain-indexer/src/preview.png"
-  },
-  {
-    name: "Payment Reconciliation Engine",
-    stack: "Python · PostgreSQL · Airflow",
-    href: "./payment-reconciliation/index.html",
-    shot: "./payment-reconciliation/src/preview.png"
-  },
-  {
-    name: "Crypto Risk Analytics",
-    stack: "Spark · ClickHouse · Graph",
-    href: "./crypto-risk-analytics/index.html",
-    shot: "./crypto-risk-analytics/src/preview.png"
-  },
-  {
-    name: "Streaming Ingestion Pipeline",
-    stack: "Kafka · PySpark · Docker",
-    href: "./streaming-pipeline/index.html",
-    shot: "./streaming-pipeline/src/preview.png"
-  },
-  {
-    name: "Search & Scraping Platform",
-    stack: "Elasticsearch · Python",
-    href: "./z-seek/index.html",
-    shot: "./src/p5.png"
-  }
-];
-
-const SPANS = [4, 2, 2, 2, 2];
-const grid = document.getElementById('grid');
-
-function render(list){
-  grid.innerHTML = '';
-  if (!list.length){
-    grid.innerHTML = '<p class="empty">No projects wired up yet.<br>Add folders to the PROJECTS array at the bottom of this file.</p>';
-    return;
-  }
-  let used = 0;
-  list.forEach((p, i) => {
-    const span = SPANS[i % SPANS.length];
-    used += span;
-
-    const a = document.createElement('a');
-    a.className = 'tile' + (span >= 4 ? ' featured' : '');
-    a.href = p.href;
-    a.style.gridColumn = 'span ' + span;
-    a.setAttribute('aria-label', 'Open project: ' + p.name);
-
-    a.innerHTML = `
+        a.innerHTML = `
       <div class="shot" data-note="Screenshot pending">
         <img alt="Screenshot of ${p.name}" loading="lazy">
       </div>
@@ -642,25 +954,26 @@ function render(list){
         <span class="arrow" aria-hidden="true">↗</span>
       </div>`;
 
-    const box = a.querySelector('.shot');
-    const img = a.querySelector('img');
-    img.onerror = () => box.classList.add('pending');
-    img.src = p.shot;
+        const box = a.querySelector('.shot');
+        const img = a.querySelector('img');
+        img.onerror = () => box.classList.add('pending');
+        img.src = p.shot;
 
-    grid.appendChild(a);
-  });
-  grid.style.gridTemplateRows = `repeat(${Math.max(1, Math.ceil(used / 6))}, minmax(0,1fr))`;
-  document.getElementById('count').textContent = list.length + ' projects · click to open';
-}
-render(PROJECTS);
+        grid.appendChild(a);
+      });
+      grid.style.gridTemplateRows = `repeat(${Math.max(1, Math.ceil(used / 6))}, minmax(0,1fr))`;
+      document.getElementById('count').textContent = list.length + ' projects · click to open';
+    }
+    render(PROJECTS);
 
-/* stack ticker */
-const WORDS = ["Python","SQL","Kafka","Spark","PySpark","PostgreSQL","ClickHouse","dbt","Airflow","Docker","Elasticsearch","Linux","Git","Idempotency","Backfills","Reconciliation","Data Quality"];
-const tick = document.getElementById('tick');
-tick.innerHTML = WORDS.map(w => `<span>${w}</span>`).join('<span>/</span>') + '<span>/</span>';
-const clone = tick.cloneNode(true);
-clone.id = '';
-tick.parentElement.appendChild(clone);
-</script>
+    /* stack ticker */
+    const WORDS = ["Python", "SQL", "Kafka", "Spark", "PySpark", "PostgreSQL", "ClickHouse", "dbt", "Airflow", "Docker", "Elasticsearch", "Linux", "Git", "Idempotency", "Backfills", "Reconciliation", "Data Quality"];
+    const tick = document.getElementById('tick');
+    tick.innerHTML = WORDS.map(w => `<span>${w}</span>`).join('<span>/</span>') + '<span>/</span>';
+    const clone = tick.cloneNode(true);
+    clone.id = '';
+    tick.parentElement.appendChild(clone);
+  </script>
 </body>
+
 </html>
