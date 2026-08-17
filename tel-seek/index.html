@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<!-- skill:chrome -->
+<style>
+/* Credit line — bottom-right */
+.design-ui-credit {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font: 11px/1 system-ui, sans-serif;
+  color: rgba(128,128,128,0.5);
+  pointer-events: none;
+  z-index: 2147483647;
+  transition: opacity 0.4s ease;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+/* Hide chrome on touch devices */
+@media (hover: none) {
+  .design-ui-credit { display: none; }
+}
+
+/* Print fixes */
+@media print {
+  * {
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .design-ui-credit { display: none !important; }
+}
+
+</style>
+<script>
+(function () {
+    // Design-ui pages are single compositions, so the whole body is editable.
+    function markEditable() {
+        document.body.classList.add('artifact-editable');
+    }
+
+    // Credit badge with idle-fade. Hover devices only.
+    function initChromeUI() {
+        if (!matchMedia('(hover: hover)').matches) return;
+
+        var credit = document.createElement('div');
+        credit.className = 'design-ui-credit';
+        credit.setAttribute('aria-hidden', 'true');
+        credit.innerHTML = '\u{1F49C} by ClickUp Brain';
+        document.body.appendChild(credit);
+
+        var timer = null;
+        var fade = function (out) { credit.style.opacity = out ? '0' : ''; };
+        fade(true);
+        var show = function () {
+            fade(false);
+            clearTimeout(timer);
+            timer = setTimeout(function () { fade(true); }, 3000);
+        };
+        document.addEventListener('mousemove', show);
+        show();
+    }
+
+    function init() {
+        markEditable();
+        initChromeUI();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+
+</script>
+<!-- /skill:chrome -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تل‌سیک | Tel-Seek</title>
+<meta name="description" content="Tel-Seek: خروجی خام JSON کانال تلگرام را به یک موتور جستجوی سریع، غلط‌یاب و دوزبانه تبدیل می‌کند.">
+<link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2e05c'/><text x='50' y='72' font-family='Archivo,Arial' font-weight='900' font-size='62' text-anchor='middle' fill='%23231a12'>TS</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: oklch(97.6% 0.014 96);
+    --paper-2: oklch(93.8% 0.022 96);
+    --ink: oklch(17% 0.012 96);
+    --ink-2: oklch(27% 0.012 96);
+    --ink-soft: oklch(46% 0.012 96);
+    --yellow: oklch(88% 0.175 95);
+    --yellow-deep: oklch(80% 0.17 89);
+    --white: oklch(99.2% 0.004 96);
+
+    --sx: 7px;              /* shadow x, flips in RTL */
+    --bw: 3px;
+
+    --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
+    --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 72px; --s-9: 112px;
+
+    --expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --quart: cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  [dir="rtl"]{ --sx: -7px; }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Vazirmatn", system-ui, sans-serif;
+    font-size:1.0625rem;
+    line-height:1.65;
+    font-optical-sizing:auto;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{ margin:0; line-height:1.08; text-wrap:balance; font-weight:900; letter-spacing:-0.01em; }
+  p{ margin:0; text-wrap:pretty; }
+  a{ color:inherit; }
+  ul{ margin:0; padding:0; list-style:none; }
+  mono, .mono, code, pre, .num{
+    font-family:"JetBrains Mono", ui-monospace, monospace;
+    font-variant-ligatures:none;
+    font-variant-numeric:tabular-nums;
+  }
+  .wrap{ width:min(1180px, 100% - 2*var(--s-5)); margin-inline:auto; }
+  .eyebrow{
+    font-family:"JetBrains Mono", monospace;
+    font-size:0.75rem; font-weight:700;
+    letter-spacing:0.14em; text-transform:uppercase;
+  }
+  .box{
+    background:var(--white);
+    border:var(--bw) solid var(--ink);
+    box-shadow:var(--sx) 7px 0 var(--ink);
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:60;
+    background:var(--ink); color:var(--paper);
+    border-bottom:var(--bw) solid var(--ink);
+  }
+  .bar{ display:flex; align-items:center; gap:var(--s-5); padding:var(--s-3) 0; }
+  .brand{ display:flex; flex-direction:column; gap:2px; margin-inline-end:auto; }
+  .brand b{ font-size:1.35rem; font-weight:900; letter-spacing:-0.02em; line-height:1; }
+  .brand span{ font-size:0.72rem; color:var(--yellow); letter-spacing:0.02em; }
+  .navlinks{ display:flex; gap:var(--s-5); font-size:0.9rem; font-weight:500; }
+  .navlinks a{ text-decoration:none; padding-bottom:2px; border-bottom:2px solid transparent; transition:border-color .15s var(--quart), color .15s var(--quart); }
+  .navlinks a:hover{ border-color:var(--yellow); color:var(--yellow); }
+  .switch{ display:flex; border:2px solid var(--paper); }
+  .switch button{
+    font:inherit; font-size:0.8rem; font-weight:700;
+    padding:5px 13px; min-height:34px; cursor:pointer;
+    background:transparent; color:var(--paper); border:0;
+    transition:background .12s linear, color .12s linear;
+  }
+  .switch button[aria-pressed="true"]{ background:var(--paper); color:var(--ink); }
+  .switch button:not([aria-pressed="true"]):hover{ background:oklch(30% 0.012 96); }
+  .ghost{
+    display:inline-flex; align-items:center; min-height:36px;
+    padding:5px 14px; text-decoration:none;
+    font-size:0.82rem; font-weight:700;
+    border:2px solid var(--paper);
+    transition:transform .15s var(--quart), background .15s linear, color .15s linear;
+  }
+  .ghost:hover{ background:var(--yellow); color:var(--ink); border-color:var(--yellow); transform:translateY(-2px); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:var(--yellow);
+    border-bottom:var(--bw) solid var(--ink);
+    padding:var(--s-8) 0 var(--s-9);
+    position:relative; overflow:hidden;
+  }
+  .hero::after{
+    content:""; position:absolute; inset:auto 0 -60px 0; height:120px;
+    background:repeating-linear-gradient(90deg, var(--ink) 0 3px, transparent 3px 22px);
+    opacity:.18;
+  }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:var(--s-8); align-items:start; position:relative; z-index:1; }
+  h1{ font-size:clamp(2.4rem, 5.4vw, 4.1rem); }
+  .lead{ font-size:clamp(1.05rem, 1.5vw, 1.3rem); max-width:46ch; margin-top:var(--s-5); font-weight:500; }
+  .hero .eyebrow{ display:inline-block; background:var(--ink); color:var(--yellow); padding:6px 12px; margin-bottom:var(--s-5); }
+  .cta-row{ display:flex; flex-wrap:wrap; gap:var(--s-3); margin-top:var(--s-6); }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    min-height:52px; padding:12px 26px;
+    font:inherit; font-weight:700; font-size:1rem;
+    text-decoration:none; cursor:pointer;
+    background:var(--ink); color:var(--paper);
+    border:var(--bw) solid var(--ink);
+    box-shadow:var(--sx) 7px 0 oklch(17% 0.012 96 / 0.35);
+    transition:transform .16s var(--expo), box-shadow .16s var(--expo);
+  }
+  .btn:hover{ transform:translate(calc(var(--sx) * .5), 4px); box-shadow:0 0 0 var(--ink); }
+  .btn:active{ transform:translate(calc(var(--sx) * .7), 6px); }
+  .btn.alt{ background:var(--white); color:var(--ink); }
+  .btn:focus-visible, .switch button:focus-visible, .ghost:focus-visible, .chip:focus-visible, .copy:focus-visible, input:focus-visible{
+    outline:3px solid var(--ink); outline-offset:3px;
+  }
+  .hero-note{ margin-top:var(--s-5); font-size:0.85rem; font-weight:500; color:var(--ink-2); }
+
+  /* mock app panel */
+  .mock{ background:var(--white); border:var(--bw) solid var(--ink); box-shadow:var(--sx) 9px 0 var(--ink); }
+  .mock-top{ background:var(--ink); color:var(--paper); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .mock-top .mono{ font-size:0.7rem; letter-spacing:0.1em; }
+  .mock-body{ padding:var(--s-4); display:grid; gap:var(--s-3); }
+  .field-label{ font-size:0.72rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); }
+  .fake-input{ border:2px solid var(--ink); padding:9px 12px; font-size:0.9rem; display:flex; justify-content:space-between; align-items:center; }
+  .fake-input.dim{ color:var(--ink-soft); }
+  .pills{ display:flex; flex-wrap:wrap; gap:6px; }
+  .pill{ border:2px solid var(--ink); padding:4px 10px; font-size:0.76rem; font-weight:700; }
+  .pill.on{ background:var(--ink); color:var(--yellow); }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .three .fake-input{ min-height:64px; align-items:flex-start; font-size:0.78rem; }
+  .mock-cta{ background:var(--yellow); border:2px solid var(--ink); text-align:center; padding:10px; font-weight:900; }
+
+  /* ---------- ticker ---------- */
+  .ticker{ background:var(--ink); color:var(--yellow); border-bottom:var(--bw) solid var(--ink); overflow:hidden; padding:11px 0; }
+  .ticker-track{ display:flex; width:max-content; animation:slide 34s linear infinite; }
+  .ticker-track span{ font-family:"JetBrains Mono",monospace; font-size:0.8rem; letter-spacing:0.08em; padding-inline-end:34px; white-space:nowrap; }
+  @keyframes slide{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+
+  /* ---------- generic section ---------- */
+  section{ padding:var(--s-9) 0; border-bottom:var(--bw) solid var(--ink); }
+  .sec-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:var(--s-5); flex-wrap:wrap; margin-bottom:var(--s-7); }
+  h2{ font-size:clamp(1.8rem, 3.4vw, 2.9rem); }
+  .sec-head p{ max-width:52ch; color:var(--ink-2); }
+
+  /* ---------- before / after ---------- */
+  .compare{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:var(--s-5); align-items:stretch; }
+  .panel{ border:var(--bw) solid var(--ink); padding:var(--s-6); }
+  .panel h3{ font-size:1.4rem; margin-bottom:var(--s-4); }
+  .panel.bad{ background:var(--paper-2); }
+  .panel.good{ background:var(--yellow); box-shadow:var(--sx) 7px 0 var(--ink); }
+  .panel li{ display:flex; gap:10px; padding:9px 0; border-bottom:1px solid oklch(17% 0.012 96 / .18); font-size:0.98rem; }
+  .panel li:last-child{ border-bottom:0; }
+  .panel li b{ font-family:"JetBrains Mono",monospace; font-weight:700; }
+
+  /* ---------- bento ---------- */
+  .bento{ display:grid; grid-template-columns:repeat(6,1fr); gap:var(--s-4); }
+  .cell{ border:var(--bw) solid var(--ink); background:var(--white); padding:var(--s-5); display:flex; flex-direction:column; gap:10px; transition:transform .2s var(--expo), box-shadow .2s var(--expo); }
+  .cell:hover{ transform:translate(calc(var(--sx) * -0.35), -4px); box-shadow:var(--sx) 7px 0 var(--ink); }
+  .cell .num{ font-size:0.72rem; font-weight:700; color:var(--ink-soft); letter-spacing:0.1em; }
+  .cell h3{ font-size:1.22rem; }
+  .cell p{ font-size:0.94rem; color:var(--ink-2); }
+  .cell.hl{ background:var(--yellow); }
+  .cell.hl p{ color:var(--ink); }
+  .c3{ grid-column:span 3; } .c2{ grid-column:span 2; } .c4{ grid-column:span 4; } .c6{ grid-column:span 6; }
+  .cell code{ background:var(--ink); color:var(--yellow); padding:2px 7px; font-size:0.82rem; }
+  .fonts-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; }
+  .fonts-row span{ border:2px solid var(--ink); padding:3px 10px; font-size:0.85rem; font-weight:700; background:var(--white); }
+
+  /* ---------- fuzzy demo ---------- */
+  .demo{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:var(--s-6); align-items:start; }
+  .demo-controls{ display:grid; gap:var(--s-4); }
+  .inp{ display:flex; border:var(--bw) solid var(--ink); background:var(--white); box-shadow:var(--sx) 7px 0 var(--ink); }
+  .inp input{ flex:1; border:0; padding:14px 16px; font:inherit; font-size:1.1rem; font-weight:700; background:transparent; min-width:0; }
+  .inp input::placeholder{ color:var(--ink-soft); font-weight:400; }
+  .chips{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{
+    font:inherit; font-family:"JetBrains Mono",monospace; font-size:0.82rem; font-weight:700;
+    min-height:44px; padding:8px 16px; cursor:pointer;
+    background:var(--white); color:var(--ink); border:var(--bw) solid var(--ink);
+    transition:background .12s linear, color .12s linear, transform .16s var(--quart);
+  }
+  .chip:hover{ transform:translateY(-2px); }
+  .chip[aria-pressed="true"]{ background:var(--ink); color:var(--yellow); }
+  .hint{ font-size:0.86rem; color:var(--ink-soft); }
+  .pool{ border:var(--bw) solid var(--ink); background:var(--white); }
+  .pool-head{ background:var(--ink); color:var(--paper); padding:10px 14px; font-family:"JetBrains Mono",monospace; font-size:0.76rem; letter-spacing:0.08em; display:flex; justify-content:space-between; }
+  .pool-body{ padding:var(--s-4); display:flex; flex-wrap:wrap; gap:8px; min-height:132px; align-content:flex-start; }
+  .word{ border:2px solid var(--ink); padding:6px 12px; font-size:0.95rem; font-weight:700; transition:background .14s linear, color .14s linear, opacity .14s linear; }
+  .word.hit{ background:var(--yellow); }
+  .word.miss{ opacity:.34; font-weight:400; border-style:dashed; }
+  .word small{ font-family:"JetBrains Mono",monospace; font-size:0.68rem; font-weight:400; opacity:.7; margin-inline-start:6px; }
+  .empty{ width:100%; text-align:center; padding:var(--s-5) 0; color:var(--ink-soft); font-size:0.92rem; }
+
+  /* ---------- results mock ---------- */
+  .results-head{ background:var(--ink); color:var(--paper); border:var(--bw) solid var(--ink); box-shadow:var(--sx) 7px 0 var(--ink); padding:14px 18px; font-family:"JetBrains Mono",monospace; font-size:0.86rem; letter-spacing:0.08em; margin-bottom:var(--s-5); }
+  .cards{ display:grid; grid-template-columns:repeat(auto-fit, minmax(275px,1fr)); gap:var(--s-4); }
+  .rcard{ position:relative; border:var(--bw) solid var(--ink); background:var(--white); display:flex; flex-direction:column; }
+  .score{ position:absolute; top:-3px; inset-inline-start:-3px; background:var(--ink); color:var(--paper); font-family:"JetBrains Mono",monospace; font-size:0.8rem; font-weight:700; padding:4px 9px; }
+  .rcard-top{ display:flex; align-items:center; gap:8px; justify-content:flex-end; padding:12px 14px 0; }
+  .tag{ border:2px solid var(--ink); font-family:"JetBrains Mono",monospace; font-size:0.68rem; font-weight:700; padding:2px 7px; }
+  .date{ font-family:"JetBrains Mono",monospace; font-size:0.72rem; color:var(--ink-soft); }
+  .rcard-name{ padding:2px 14px; font-weight:900; font-size:1.05rem; text-align:start; }
+  .rcard-text{ padding:6px 14px 14px; font-size:0.94rem; line-height:1.75; }
+  .rcard-text mark{ background:var(--yellow); color:var(--ink); font-weight:700; padding:0 3px; }
+  .react{ margin:0 14px 14px; border:2px solid var(--ink); display:inline-flex; gap:8px; padding:3px 9px; font-size:0.78rem; align-self:flex-start; }
+  .rcard-foot{ margin-top:auto; background:var(--ink); color:var(--paper); text-align:center; font-family:"JetBrains Mono",monospace; font-size:0.74rem; letter-spacing:0.08em; padding:9px; }
+
+  /* ---------- steps + code ---------- */
+  .steps{ display:grid; gap:var(--s-5); }
+  .step{ display:grid; grid-template-columns:auto 1fr; gap:var(--s-5); align-items:start; }
+  .step-n{ font-family:"JetBrains Mono",monospace; font-weight:700; font-size:1.5rem; background:var(--yellow); border:var(--bw) solid var(--ink); width:58px; height:58px; display:grid; place-items:center; }
+  .step h3{ font-size:1.3rem; margin-bottom:6px; }
+  .step p{ color:var(--ink-2); font-size:0.97rem; max-width:70ch; }
+  pre{ margin:var(--s-3) 0 0; background:var(--ink); color:var(--paper); border:var(--bw) solid var(--ink); padding:14px 16px; overflow-x:auto; direction:ltr; text-align:left; font-size:0.9rem; position:relative; }
+  pre .k{ color:var(--yellow); }
+  .codewrap{ position:relative; }
+  .copy{
+    position:absolute; top:10px; inset-inline-end:10px;
+    font-family:"JetBrains Mono",monospace; font-size:0.7rem; font-weight:700; letter-spacing:0.06em;
+    background:var(--paper); color:var(--ink); border:2px solid var(--paper);
+    padding:4px 9px; cursor:pointer; min-height:30px;
+    transition:background .12s linear, color .12s linear;
+  }
+  .copy:hover{ background:var(--yellow); border-color:var(--yellow); }
+  .copy.done{ background:var(--yellow); border-color:var(--yellow); }
+
+  /* ---------- tables ---------- */
+  .tables{ display:grid; grid-template-columns:1fr 1fr; gap:var(--s-6); }
+  table{ width:100%; border-collapse:collapse; border:var(--bw) solid var(--ink); background:var(--white); }
+  caption{ text-align:start; font-weight:900; font-size:1.15rem; padding-bottom:var(--s-3); }
+  th,td{ border:2px solid var(--ink); padding:10px 12px; text-align:start; font-size:0.9rem; }
+  thead th{ background:var(--ink); color:var(--paper); font-family:"JetBrains Mono",monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; }
+  td.mono{ font-variant-numeric:tabular-nums; }
+  tbody tr:hover{ background:var(--yellow); }
+
+  .tree{ background:var(--ink); color:var(--paper); border:var(--bw) solid var(--ink); box-shadow:var(--sx) 7px 0 var(--ink); padding:var(--s-5); direction:ltr; text-align:left; overflow-x:auto; font-size:0.85rem; line-height:1.85; }
+  .tree b{ color:var(--yellow); font-weight:700; }
+  .tree i{ color:oklch(70% 0.01 96); font-style:normal; }
+
+  /* ---------- footer ---------- */
+  footer{ background:var(--ink); color:var(--paper); padding:var(--s-8) 0 var(--s-6); }
+  .foot-grid{ display:grid; grid-template-columns:1.2fr 1fr; gap:var(--s-7); align-items:start; }
+  footer h2{ font-size:clamp(1.6rem,3vw,2.4rem); }
+  footer .lead{ color:oklch(84% 0.01 96); font-size:1rem; max-width:44ch; }
+  .links{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .links a{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    border:2px solid var(--paper); padding:11px 14px; text-decoration:none;
+    font-weight:700; font-size:0.92rem; min-height:46px;
+    transition:background .14s linear, color .14s linear, transform .18s var(--quart);
+  }
+  .links a span{ font-family:"JetBrains Mono",monospace; font-size:0.7rem; opacity:.7; }
+  .links a:hover{ background:var(--yellow); color:var(--ink); border-color:var(--yellow); transform:translateY(-3px); }
+  .links a:hover span{ opacity:.9; }
+  .signature{ margin-top:var(--s-7); border-top:2px solid oklch(40% 0.012 96); padding-top:var(--s-4); display:flex; flex-wrap:wrap; gap:var(--s-4); justify-content:space-between; font-size:0.8rem; color:oklch(76% 0.01 96); }
+  .signature b{ color:var(--yellow); }
+
+  /* ---------- reveal ---------- */
+  .rev{ opacity:0; transform:translateY(22px); transition:opacity .7s var(--expo), transform .7s var(--expo); transition-delay:calc(var(--i,0) * 60ms); }
+  .rev.in{ opacity:1; transform:none; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1000px){
+    .hero-grid, .compare, .demo, .tables, .foot-grid{ grid-template-columns:1fr; }
+    .hero{ padding:var(--s-7) 0 var(--s-8); }
+    .c3,.c2,.c4{ grid-column:span 3; }
+    .navlinks{ display:none; }
+  }
+  @media (max-width:640px){
+    :root{ --s-9:64px; --s-8:48px; --bw:3px; }
+    .bento{ grid-template-columns:1fr; }
+    .c3,.c2,.c4,.c6{ grid-column:span 1; }
+    .three{ grid-template-columns:1fr; }
+    .bar{ flex-wrap:wrap; gap:var(--s-3); }
+    .brand{ margin-inline-end:0; width:100%; }
+    .links{ grid-template-columns:1fr; }
+    .step{ grid-template-columns:1fr; gap:var(--s-3); }
+    .ghost.hide-sm{ display:none; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition-duration:.01ms !important; }
+    .rev{ opacity:1; transform:none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="brand">
+      <b data-fa="تل‌سیک" data-en="TEL-SEEK">تل‌سیک</b>
+      <span data-fa="جستجو در کانال تلگرام، با الاستیک‌سرچ" data-en="Telegram channel search, powered by Elasticsearch">جستجو در کانال تلگرام، با الاستیک‌سرچ</span>
+    </div>
+    <nav class="navlinks">
+      <a href="#features" data-fa="ویژگی‌ها" data-en="Features">ویژگی‌ها</a>
+      <a href="#fuzzy" data-fa="غلط‌یابی" data-en="Typos">غلط‌یابی</a>
+      <a href="#start" data-fa="شروع سریع" data-en="Quickstart">شروع سریع</a>
+      <a href="#api" data-fa="API" data-en="API">API</a>
+    </nav>
+    <div class="switch" role="group" aria-label="زبان / Language">
+      <button id="fa" aria-pressed="true">فا</button>
+      <button id="en" aria-pressed="false">EN</button>
+    </div>
+    <a class="ghost hide-sm" href="https://github.com/AsmrCodeZ-YT/MKB/tree/products/tel-seek" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow" data-fa="الاستیک‌سرچ ۹ · فست‌ای‌پی‌آی · ری‌اکت ۱۸" data-en="ELASTICSEARCH 9 · FASTAPI · REACT 18">الاستیک‌سرچ ۹ · فست‌ای‌پی‌آی · ری‌اکت ۱۸</p>
+        <h1 data-fa="خروجی خام تلگرام،<br>یک موتور جستجوی واقعی" data-en="A raw Telegram export,<br>turned into real search">خروجی خام تلگرام،<br>یک موتور جستجوی واقعی</h1>
+        <p class="lead" data-fa="فایل JSON کانالت را می‌دهی، تل‌سیک آن را تمیز و ایندکس می‌کند. بعد هر پیامی را در چند صد میلی‌ثانیه پیدا می‌کنی: متن آزاد، کوئری ساختاریافته، بازه‌ی زمانی. فارسی و انگلیسی، هر دو." data-en="Hand it your channel's JSON. Tel-Seek cleans and indexes it, then finds any message in milliseconds: free text, structured queries, time ranges. Persian and English, both first-class.">فایل JSON کانالت را می‌دهی، تل‌سیک آن را تمیز و ایندکس می‌کند. بعد هر پیامی را در چند صد میلی‌ثانیه پیدا می‌کنی: متن آزاد، کوئری ساختاریافته، بازه‌ی زمانی. فارسی و انگلیسی، هر دو.</p>
+        <div class="cta-row">
+          <a class="btn" href="https://github.com/AsmrCodeZ-YT/MKB/tree/products/tel-seek" target="_blank" rel="noopener" data-fa="کد پروژه در گیت‌هاب ↗" data-en="Get the code ↗">کد پروژه در گیت‌هاب ↗</a>
+          <a class="btn alt" href="#start" data-fa="راه‌اندازی با یک دستور" data-en="Run it in one command">راه‌اندازی با یک دستور</a>
+        </div>
+        <p class="hero-note" data-fa="سه سرویس، یک docker compose، بدون تنظیمات اضافه. داده‌ها در ولوم esdata می‌مانند." data-en="Three services, one docker compose, no extra config. Data persists in the esdata volume.">سه سرویس، یک docker compose، بدون تنظیمات اضافه. داده‌ها در ولوم esdata می‌مانند.</p>
+      </div>
+
+      <div class="mock" aria-hidden="true">
+        <div class="mock-top">
+          <span class="mono">localhost:5173</span>
+          <span class="pills"><span class="pill on" style="border-color:var(--paper)">RTL</span><span class="pill" style="border-color:var(--paper)">LTR</span></span>
+        </div>
+        <div class="mock-body">
+          <div>
+            <p class="field-label" data-fa="انتخاب ایندکس" data-en="Index">انتخاب ایندکس</p>
+            <div class="fake-input"><b>tech2</b><span class="mono" style="font-size:.75rem">↻</span></div>
+          </div>
+          <div>
+            <p class="field-label" data-fa="فیلتر زمان" data-en="Time filter">فیلتر زمان</p>
+            <div class="pills">
+              <span class="pill" data-fa="۲۴ ساعت" data-en="24h">۲۴ ساعت</span>
+              <span class="pill" data-fa="۷ روز" data-en="7d">۷ روز</span>
+              <span class="pill on" data-fa="۳۰ روز" data-en="30d">۳۰ روز</span>
+              <span class="pill" data-fa="همه" data-en="All time">همه</span>
+            </div>
+          </div>
+          <div>
+            <p class="field-label" data-fa="جستجوی پیشرفته" data-en="Advanced builder">جستجوی پیشرفته</p>
+            <div class="three">
+              <div class="fake-input"><span>لینکدین</span></div>
+              <div class="fake-input"><span>پروژه:2</span></div>
+              <div class="fake-input dim" data-fa="قدیمی" data-en="old">قدیمی</div>
+            </div>
+          </div>
+          <div class="mock-cta" data-fa="جستجو" data-en="Search">جستجو</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKER -->
+  <div class="ticker" dir="ltr" aria-hidden="true">
+    <div class="ticker-track">
+      <span>FREE-TEXT SEARCH ✳ word:1 = ONE TYPO ✳ word:2 = TWO TYPOS ✳ MUST / SHOULD / MUST-NOT ✳ HIGHLIGHTED SNIPPETS ✳ RTL &amp; LTR ✳ 4 PERSIAN FONTS ✳ DOCKER COMPOSE UP ✳ 20 RESULTS PER PAGE ✳&nbsp;</span>
+      <span>FREE-TEXT SEARCH ✳ word:1 = ONE TYPO ✳ word:2 = TWO TYPOS ✳ MUST / SHOULD / MUST-NOT ✳ HIGHLIGHTED SNIPPETS ✳ RTL &amp; LTR ✳ 4 PERSIAN FONTS ✳ DOCKER COMPOSE UP ✳ 20 RESULTS PER PAGE ✳&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head rev">
+        <h2 data-fa="اسکرول کردن، جستجو نیست" data-en="Scrolling is not searching">اسکرول کردن، جستجو نیست</h2>
+        <p data-fa="یک کانال تلگرام بعد از چند سال، صدها هزار پیام دارد. جستجوی خود تلگرام برای پیدا کردن «آن یک پیام» ساخته نشده." data-en="A few years of a Telegram channel means hundreds of thousands of messages. Telegram's own search was never built to find that one message.">یک کانال تلگرام بعد از چند سال، صدها هزار پیام دارد. جستجوی خود تلگرام برای پیدا کردن «آن یک پیام» ساخته نشده.</p>
+      </div>
+      <div class="compare">
+        <div class="panel bad rev" style="--i:1">
+          <h3 data-fa="بدون تل‌سیک" data-en="Without Tel-Seek">بدون تل‌سیک</h3>
+          <ul>
+            <li><b>✕</b><span data-fa="اسکرول دستی در هزاران پیام" data-en="Hand-scrolling thousands of messages">اسکرول دستی در هزاران پیام</span></li>
+            <li><b>✕</b><span data-fa="یک حرف غلط تایپی، هیچ نتیجه‌ای" data-en="One typo, zero results">یک حرف غلط تایپی، هیچ نتیجه‌ای</span></li>
+            <li><b>✕</b><span data-fa="ترکیب شرط‌ها ممکن نیست" data-en="No way to combine conditions">ترکیب شرط‌ها ممکن نیست</span></li>
+            <li><b>✕</b><span data-fa="واکنش‌ها، فرستنده، فایل: قابل جستجو نیستند" data-en="Reactions, actors, files: not searchable">واکنش‌ها، فرستنده، فایل: قابل جستجو نیستند</span></li>
+            <li><b>✕</b><span data-fa="فارسی؟ خوش‌شانس باشی" data-en="Persian? Good luck">فارسی؟ خوش‌شانس باشی</span></li>
+          </ul>
+        </div>
+        <div class="panel good rev" style="--i:2">
+          <h3 data-fa="با تل‌سیک" data-en="With Tel-Seek">با تل‌سیک</h3>
+          <ul>
+            <li><b>✓</b><span data-fa="کوئری روی همه‌ی فیلدهای متنی، با هایلایت نتیجه" data-en="Query every text field, with highlighted hits">کوئری روی همه‌ی فیلدهای متنی، با هایلایت نتیجه</span></li>
+            <li><b>✓</b><span data-fa="تحمل غلط تایپی به اندازه‌ای که خودت تعیین می‌کنی" data-en="Typo tolerance you dial in yourself">تحمل غلط تایپی به اندازه‌ای که خودت تعیین می‌کنی</span></li>
+            <li><b>✓</b><span data-fa="باید باشد / بهتر است باشد / نباید باشد" data-en="Must / should / must-not, per line">باید باشد / بهتر است باشد / نباید باشد</span></li>
+            <li><b>✓</b><span data-fa="امتیاز، تاریخ، رسانه، فرستنده، واکنش‌ها روی هر کارت" data-en="Score, date, media, actor, reactions on every card">امتیاز، تاریخ، رسانه، فرستنده، واکنش‌ها روی هر کارت</span></li>
+            <li><b>✓</b><span data-fa="رابط کامل فارسی، چیدمان راست‌به‌چپ، انتخاب فونت" data-en="Full Farsi UI, RTL layout, font picker">رابط کامل فارسی، چیدمان راست‌به‌چپ، انتخاب فونت</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-head rev">
+        <h2 data-fa="آن‌چه داخلش هست" data-en="What's inside">آن‌چه داخلش هست</h2>
+        <p class="eyebrow" data-fa="۰۸ قابلیت" data-en="08 CAPABILITIES">۰۸ قابلیت</p>
+      </div>
+      <div class="bento">
+        <div class="cell c3 rev" style="--i:0">
+          <p class="num">01</p>
+          <h3 data-fa="جستجوی متن آزاد" data-en="Free-text search">جستجوی متن آزاد</h3>
+          <p data-fa="یک multi_match روی فیلدهای متنی که خودت تیک می‌زنی. نتایج با <mark style='background:var(--yellow)'>هایلایت</mark> برمی‌گردند، پس دلیل هر مچ معلوم است." data-en="A multi_match over the text fields you tick. Results come back <mark style='background:var(--yellow)'>highlighted</mark>, so every match explains itself.">یک multi_match روی فیلدهای متنی که خودت تیک می‌زنی. نتایج با <mark style="background:var(--yellow)">هایلایت</mark> برمی‌گردند، پس دلیل هر مچ معلوم است.</p>
+        </div>
+        <div class="cell c3 hl rev" style="--i:1">
+          <p class="num">02</p>
+          <h3 data-fa="سینتکس فازی‌نس" data-en="Fuzziness syntax">سینتکس فازی‌نس</h3>
+          <p data-fa="<code>word</code> دقیق، <code>word:1</code> یک حرف اختلاف، <code>word:2</code> دو حرف. در متن آزاد و در هر سه جعبه‌ی پیشرفته کار می‌کند." data-en="<code>word</code> is exact, <code>word:1</code> allows one character change, <code>word:2</code> allows two. Works in free text and all three advanced boxes."><code>word</code> دقیق، <code>word:1</code> یک حرف اختلاف، <code>word:2</code> دو حرف. در متن آزاد و در هر سه جعبه‌ی پیشرفته کار می‌کند.</p>
+        </div>
+        <div class="cell c2 rev" style="--i:2">
+          <p class="num">03</p>
+          <h3 data-fa="سازنده‌ی کوئری" data-en="Advanced builder">سازنده‌ی کوئری</h3>
+          <p data-fa="هر خط یک شرط: باید، ترجیحاً (با بوست)، و نباید." data-en="One term per line: must, should (boosted), must-not.">هر خط یک شرط: باید، ترجیحاً (با بوست)، و نباید.</p>
+        </div>
+        <div class="cell c2 rev" style="--i:3">
+          <p class="num">04</p>
+          <h3 data-fa="فیلتر زمان" data-en="Time filter">فیلتر زمان</h3>
+          <p data-fa="بازه روی فیلد date، با پریست‌های ۲۴ ساعت، ۷ روز، ۳۰ روز و همه‌ی زمان‌ها." data-en="Range on the date field, with 24h / 7d / 30d / all-time presets.">بازه روی فیلد date، با پریست‌های ۲۴ ساعت، ۷ روز، ۳۰ روز و همه‌ی زمان‌ها.</p>
+        </div>
+        <div class="cell c2 rev" style="--i:4">
+          <p class="num">05</p>
+          <h3 data-fa="صفحه‌بندی امن" data-en="Safe pagination">صفحه‌بندی امن</h3>
+          <p data-fa="۲۰ نتیجه در هر صفحه و دکمه‌ی «بیشتر»؛ روی ایندکس‌های بزرگ هم مرورگر را زمین نمی‌زند." data-en="20 per page plus a load-more button; it won't melt the browser on huge indexes.">۲۰ نتیجه در هر صفحه و دکمه‌ی «بیشتر»؛ روی ایندکس‌های بزرگ هم مرورگر را زمین نمی‌زند.</p>
+        </div>
+        <div class="cell c4 rev" style="--i:5">
+          <p class="num">06</p>
+          <h3 data-fa="کارت نتیجه و جزئیات کامل" data-en="Result cards, full detail">کارت نتیجه و جزئیات کامل</h3>
+          <p data-fa="امتیاز، شناسه‌ی پیام، تاریخ، نوع رسانه، فرستنده، متن هایلایت‌شده، واکنش‌ها، فوروارد و فایل. روی متن کلیک کن تا کل سند و همه‌ی فیلدهایش باز شود." data-en="Score, message id, date, media type, actor, highlighted text, reactions, forwarded-from, file. Click the text to open the full document and every field in it.">امتیاز، شناسه‌ی پیام، تاریخ، نوع رسانه، فرستنده، متن هایلایت‌شده، واکنش‌ها، فوروارد و فایل. روی متن کلیک کن تا کل سند و همه‌ی فیلدهایش باز شود.</p>
+        </div>
+        <div class="cell c2 rev" style="--i:6">
+          <p class="num">07</p>
+          <h3 data-fa="راست‌به‌چپ یا چپ‌به‌راست" data-en="RTL or LTR">راست‌به‌چپ یا چپ‌به‌راست</h3>
+          <p data-fa="جهت متن را با یک کلیک عوض کن. همان دکمه‌ای که بالای همین صفحه هست." data-en="Flip text direction in one click. Same switch you see at the top of this page.">جهت متن را با یک کلیک عوض کن. همان دکمه‌ای که بالای همین صفحه هست.</p>
+        </div>
+        <div class="cell c4 hl rev" style="--i:7">
+          <p class="num">08</p>
+          <h3 data-fa="فارسی، درست و حسابی" data-en="Persian, done properly">فارسی، درست و حسابی</h3>
+          <p data-fa="رابط کامل فارسی، چیدمان RTL و انتخاب‌گر فونت با چهار فونت آزاد:" data-en="Full Farsi UI, RTL layout, and a font picker with four free Persian faces:">رابط کامل فارسی، چیدمان RTL و انتخاب‌گر فونت با چهار فونت آزاد:</p>
+          <div class="fonts-row"><span>وزیرمتن</span><span>استعداد</span><span>ساحل</span><span>شبنم</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUZZY DEMO -->
+  <section id="fuzzy">
+    <div class="wrap">
+      <div class="sec-head rev">
+        <h2 data-fa="یک حرف غلط، نتیجه را از دست نده" data-en="One typo shouldn't cost you the result">یک حرف غلط، نتیجه را از دست نده</h2>
+        <p data-fa="عدد بعد از دونقطه می‌گوید چند حرف اختلاف مجاز است. امتحان کن:" data-en="The number after the colon is how many character changes are allowed. Try it:">عدد بعد از دونقطه می‌گوید چند حرف اختلاف مجاز است. امتحان کن:</p>
+      </div>
+      <div class="demo">
+        <div class="demo-controls rev">
+          <div class="inp">
+            <input id="q" type="text" value="لینکدین" autocomplete="off" spellcheck="false" aria-label="عبارت جستجو">
+          </div>
+          <div class="chips" role="group" aria-label="fuzziness">
+            <button class="chip" data-f="0" aria-pressed="false">word</button>
+            <button class="chip" data-f="1" aria-pressed="true">word:1</button>
+            <button class="chip" data-f="2" aria-pressed="false">word:2</button>
+          </div>
+          <p class="hint" data-fa="نمونه‌ها: لینکدین · پروژه · commit · git" data-en="Try: لینکدین · پروژه · commit · git">نمونه‌ها: لینکدین · پروژه · commit · git</p>
+          <div class="chips">
+            <button class="chip" data-q="لینکدین">لینکدین</button>
+            <button class="chip" data-q="پروژه">پروژه</button>
+            <button class="chip" data-q="commit">commit</button>
+            <button class="chip" data-q="git">git</button>
+          </div>
+        </div>
+        <div class="pool rev" style="--i:1">
+          <div class="pool-head">
+            <span data-fa="واژه‌های ایندکس" data-en="INDEXED TERMS">واژه‌های ایندکس</span>
+            <span id="count" class="mono">0 / 0</span>
+          </div>
+          <div class="pool-body" id="pool" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS MOCK -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head rev">
+        <h2 data-fa="نتیجه‌ها این‌طور می‌آیند" data-en="This is what results look like">نتیجه‌ها این‌طور می‌آیند</h2>
+        <p data-fa="کارت‌های واقعی از یک کانال ۱۶۰ هزار پیامی، مرتب‌شده بر اساس امتیاز الاستیک‌سرچ." data-en="Real cards from a 160k-message channel, ranked by Elasticsearch score.">کارت‌های واقعی از یک کانال ۱۶۰ هزار پیامی، مرتب‌شده بر اساس امتیاز الاستیک‌سرچ.</p>
+      </div>
+      <div class="results-head rev" data-fa="نتایج (۲۰ از ۹۷) · ایندکس tech2 · باید شامل: لینکدین، پروژه" data-en="RESULTS (20 OF 97) · INDEX tech2 · MUST: لینکدین, پروژه">نتایج (۲۰ از ۹۷) · ایندکس tech2 · باید شامل: لینکدین، پروژه</div>
+      <div class="cards">
+        <article class="rcard rev" style="--i:0">
+          <span class="score">26.16</span>
+          <div class="rcard-top"><span class="date">2023-03-14 11:50</span><span class="tag">MESSAGE</span><span class="tag">#103547</span></div>
+          <p class="rcard-name">Arsalan</p>
+          <p class="rcard-text">توی <mark>لینکدین</mark> جایی هست که آگهی برای نیرو یا <mark>پروژه</mark> <mark>فریلنسری</mark> بزنم؟</p>
+          <div class="rcard-foot" data-fa="◤ جزئیات" data-en="◤ DETAILS">◤ جزئیات</div>
+        </article>
+        <article class="rcard rev" style="--i:1">
+          <span class="score">26.16</span>
+          <div class="rcard-top"><span class="date">2023-11-28 12:36</span><span class="tag">MESSAGE</span><span class="tag">#136564</span></div>
+          <p class="rcard-name">TheCodeZ</p>
+          <p class="rcard-text">سلام دوستان، یک سوال داشتم: چطور می‌شود در <mark>لینکدین</mark> <mark>پروژه</mark> <mark>فریلنسری</mark> گرفت؟</p>
+          <div class="react">👍 <b>12</b> · ❤️ <b>4</b></div>
+          <div class="rcard-foot" data-fa="◤ جزئیات" data-en="◤ DETAILS">◤ جزئیات</div>
+        </article>
+        <article class="rcard rev" style="--i:2">
+          <span class="score">15.04</span>
+          <div class="rcard-top"><span class="date">2021-01-16 23:04</span><span class="tag">MESSAGE</span><span class="tag">#2287</span></div>
+          <p class="rcard-name">Mehrdad ch</p>
+          <p class="rcard-text">۱. جاب آفر از کجا پیدا کردید؟ ۲. نمونه‌کار مهم‌تر است یا <mark>پروژه</mark>ی واقعی در <mark>لینکدین</mark>…</p>
+          <div class="rcard-foot" data-fa="◤ جزئیات" data-en="◤ DETAILS">◤ جزئیات</div>
+        </article>
+        <article class="rcard rev" style="--i:3">
+          <span class="score">10.55</span>
+          <div class="rcard-top"><span class="date">2024-07-23 23:09</span><span class="tag">MESSAGE</span><span class="tag">#155381</span></div>
+          <p class="rcard-name">Mohammad</p>
+          <p class="rcard-text">بازار کار <mark>ML Engineer</mark> در اروپا چطور است؟ امکان <mark>پروژه</mark>ی دورکاری هست…</p>
+          <div class="rcard-foot" data-fa="◤ جزئیات" data-en="◤ DETAILS">◤ جزئیات</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICKSTART -->
+  <section id="start">
+    <div class="wrap">
+      <div class="sec-head rev">
+        <h2 data-fa="سه قدم تا اولین جستجو" data-en="Three steps to your first search">سه قدم تا اولین جستجو</h2>
+        <p data-fa="پیش‌نیاز: داکر و داکر کامپوز، به‌علاوه یک خروجی JSON از کانال تلگرام (⋮ ← Export chat history ← JSON)." data-en="Prerequisites: Docker and Docker Compose, plus a Telegram channel export (⋮ → Export chat history → JSON).">پیش‌نیاز: داکر و داکر کامپوز، به‌علاوه یک خروجی JSON از کانال تلگرام (⋮ ← Export chat history ← JSON).</p>
+      </div>
+      <div class="steps">
+        <div class="step rev">
+          <div class="step-n">01</div>
+          <div>
+            <h3 data-fa="استک را بالا بیاور" data-en="Bring the stack up">استک را بالا بیاور</h3>
+            <p data-fa="سرویس‌ها به ترتیب بالا می‌آیند: الاستیک‌سرچ (تا healthy شدن صبر می‌کند)، بعد بک‌اند، بعد فرانت‌اند." data-en="Services come up in order: Elasticsearch (waits for healthy), then backend, then frontend.">سرویس‌ها به ترتیب بالا می‌آیند: الاستیک‌سرچ (تا healthy شدن صبر می‌کند)، بعد بک‌اند، بعد فرانت‌اند.</p>
+            <div class="codewrap"><pre><code><span class="k">docker compose</span> up -d --build</code></pre><button class="copy" data-copy="docker compose up -d --build" data-fa="کپی" data-en="COPY">کپی</button></div>
+          </div>
+        </div>
+        <div class="step rev" style="--i:1">
+          <div class="step-n">02</div>
+          <div>
+            <h3 data-fa="داده را ایندکس کن" data-en="Index your data">داده را ایندکس کن</h3>
+            <p data-fa="اسکریپت، فایل result.json را می‌خواند، فیلد text را از قطعه‌های rich-text به رشته‌ی ساده تبدیل می‌کند، result_clean.json را می‌نویسد و همه‌ی پیام‌ها را با bulk داخل ایندکس tech2 می‌ریزد." data-en="The script reads result.json, flattens the rich-text segments of the text field into plain strings, writes result_clean.json, then bulk-indexes every message into the tech2 index.">اسکریپت، فایل result.json را می‌خواند، فیلد text را از قطعه‌های rich-text به رشته‌ی ساده تبدیل می‌کند، result_clean.json را می‌نویسد و همه‌ی پیام‌ها را با bulk داخل ایندکس tech2 می‌ریزد.</p>
+            <div class="codewrap"><pre><code><span class="k">python</span> src/insert_data_to_elk.py</code></pre><button class="copy" data-copy="python src/insert_data_to_elk.py" data-fa="کپی" data-en="COPY">کپی</button></div>
+          </div>
+        </div>
+        <div class="step rev" style="--i:2">
+          <div class="step-n">03</div>
+          <div>
+            <h3 data-fa="ایندکس را چک کن و برو سراغ جستجو" data-en="Verify, then search">ایندکس را چک کن و برو سراغ جستجو</h3>
+            <p data-fa="یا فقط دکمه‌ی ↻ کنار انتخاب ایندکس در رابط را بزن. بعد ایندکس را انتخاب کن؛ فیلدهای متنی خودکار لود و تیک می‌خورند." data-en="Or just hit the ↻ button next to the index dropdown. Pick your index; the text fields load and get checked automatically.">یا فقط دکمه‌ی ↻ کنار انتخاب ایندکس در رابط را بزن. بعد ایندکس را انتخاب کن؛ فیلدهای متنی خودکار لود و تیک می‌خورند.</p>
+            <div class="codewrap"><pre><code><span class="k">curl</span> http://localhost:9200/_cat/indices?v</code></pre><button class="copy" data-copy="curl http://localhost:9200/_cat/indices?v" data-fa="کپی" data-en="COPY">کپی</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK + API -->
+  <section id="api">
+    <div class="wrap">
+      <div class="sec-head rev">
+        <h2 data-fa="استک و ای‌پی‌آی" data-en="Stack and API">استک و ای‌پی‌آی</h2>
+        <p data-fa="سه سرویس، یک شبکه، یک ولوم. بک‌اند فقط چهار اندپوینت دارد و همین کافی است." data-en="Three services, one network, one volume. The backend has four endpoints, and that's enough.">سه سرویس، یک شبکه، یک ولوم. بک‌اند فقط چهار اندپوینت دارد و همین کافی است.</p>
+      </div>
+      <div class="tables">
+        <div class="rev">
+          <table>
+            <caption data-fa="سرویس‌ها" data-en="Services">سرویس‌ها</caption>
+            <thead><tr><th data-fa="سرویس" data-en="Service">سرویس</th><th data-fa="تکنولوژی" data-en="Tech">تکنولوژی</th><th data-fa="پورت" data-en="Port">پورت</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">elasticsearch</td><td>Elasticsearch 9.4.3<br><small data-fa="تک‌نود" data-en="single-node">تک‌نود</small></td><td class="mono">9200</td></tr>
+              <tr><td class="mono">backend</td><td>Python 3.12 + FastAPI</td><td class="mono">8000</td></tr>
+              <tr><td class="mono">frontend</td><td>React 18 + Vite + Tailwind<br><small>nginx</small></td><td class="mono">5173</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="rev" style="--i:1">
+          <table>
+            <caption data-fa="اندپوینت‌ها" data-en="Endpoints">اندپوینت‌ها</caption>
+            <thead><tr><th data-fa="مسیر" data-en="Path">مسیر</th><th data-fa="متد" data-en="Method">متد</th><th data-fa="کار" data-en="Purpose">کار</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">/api/indices</td><td class="mono">GET</td><td data-fa="ایندکس‌های غیرسیستمی" data-en="Non-system indices">ایندکس‌های غیرسیستمی</td></tr>
+              <tr><td class="mono">/api/fields/{index}</td><td class="mono">GET</td><td data-fa="فیلدهای نوع text از مپینگ" data-en="text-type fields from the mapping">فیلدهای نوع text از مپینگ</td></tr>
+              <tr><td class="mono">/api/search</td><td class="mono">POST</td><td data-fa="متن آزاد + فازی‌نس + زمان + صفحه‌بندی" data-en="Free text + fuzziness + time + paging">متن آزاد + فازی‌نس + زمان + صفحه‌بندی</td></tr>
+              <tr><td class="mono">/api/search/advanced</td><td class="mono">POST</td><td data-fa="کوئری bool با must / should / must_not" data-en="bool query with must / should / must_not">کوئری bool با must / should / must_not</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="hint rev" style="margin-top:var(--s-5)" data-fa="پی‌لود جستجو: index، []fields، عبارت‌ها، offset، size، date_from، date_to. پاسخ: _score، کل _source و اسنیپت‌های هایلایت‌شده با mark." data-en="Search payload: index, fields[], query terms, offset, size, date_from, date_to. Response: _score, the full _source, and mark-highlighted snippets.">پی‌لود جستجو: index، []fields، عبارت‌ها، offset، size، date_from، date_to. پاسخ: _score، کل _source و اسنیپت‌های هایلایت‌شده با mark.</p>
+    </div>
+  </section>
+
+  <!-- LAYOUT -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head rev">
+        <h2 data-fa="ساختار پروژه" data-en="Project layout">ساختار پروژه</h2>
+        <p data-fa="بدون لایه‌ی اضافه. هر پوشه یک کار می‌کند." data-en="No extra layers. Each folder does one job.">بدون لایه‌ی اضافه. هر پوشه یک کار می‌کند.</p>
+      </div>
+      <pre class="tree rev"><code>MKB/
+├── <b>docker-compose.yml</b>   <i># 3 services + skillnet network + esdata volume</i>
+├── <b>.env</b>                 <i># STACK_VERSION, CLUSTER_NAME, LICENSE, ES_PORT, MEM_LIMIT</i>
+├── <b>src/</b>                 <i># ETL &amp; analysis</i>
+│   ├── insert_data_to_elk.py   <i># Telegram JSON → clean → bulk-index into tech2</i>
+│   └── analyst-telegram-msg.ipynb <i># schema / field exploration notebook</i>
+├── <b>backend/</b>             <i># FastAPI search API (Python 3.12)</i>
+│   ├── main.py                 <i># 4 endpoints</i>
+│   ├── requirements.txt
+│   └── Dockerfile
+└── <b>frontend/</b>            <i># React 18 + Vite + Tailwind (nginx)</i>
+    ├── Dockerfile              <i># multi-stage build → nginx:alpine</i>
+    ├── nginx.conf              <i># SPA fallback</i>
+    ├── tailwind.config.js      <i># custom shadow-brutal utilities</i>
+    └── src/                    <i># App, components, i18n, fonts</i></code></pre>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p class="eyebrow" style="color:var(--yellow)">TheCodeZ</p>
+        <h2 data-fa="ساخته‌شده توسط امید ابراهیمی" data-en="Built by Omid Ebrahimi">ساخته‌شده توسط امید ابراهیمی</h2>
+        <p class="lead" style="margin-top:var(--s-4)" data-fa="اگر تل‌سیک به کارت آمد، ریپو را استار کن و بگو روی چه داده‌ای اجرا کردی." data-en="If Tel-Seek helps, star the repo and tell me what data you ran it on.">اگر تل‌سیک به کارت آمد، ریپو را استار کن و بگو روی چه داده‌ای اجرا کردی.</p>
+        <p style="margin-top:var(--s-5)">
+          <a class="btn" style="background:var(--yellow); color:var(--ink); border-color:var(--yellow); box-shadow:none" href="https://github.com/AsmrCodeZ-YT/MKB/tree/products/tel-seek" target="_blank" rel="noopener" data-fa="ریپوی تل‌سیک ↗" data-en="Tel-Seek repo ↗">ریپوی تل‌سیک ↗</a>
+        </p>
+      </div>
+      <div class="links">
+        <a href="https://github.com/AsmrCodeZ-YT/MKB/tree/products/tel-seek" target="_blank" rel="noopener"><b data-fa="پروژه در گیت‌هاب" data-en="Project repo">پروژه در گیت‌هاب</b><span>MKB / tel-seek</span></a>
+        <a href="https://github.com/AsmrCodeZ-YT" target="_blank" rel="noopener"><b>GitHub</b><span>AsmrCodeZ-YT</span></a>
+        <a href="https://www.linkedin.com/in/omidebrahimi1/" target="_blank" rel="noopener"><b>LinkedIn</b><span>omidebrahimi1</span></a>
+        <a href="https://www.youtube.com/@thecodez1" target="_blank" rel="noopener"><b>YouTube</b><span>@thecodez1</span></a>
+        <a href="https://t.me/TheCodeZ0" target="_blank" rel="noopener"><b>Telegram</b><span>t.me/TheCodeZ0</span></a>
+        <a href="https://www.instagram.com/thecodez0/" target="_blank" rel="noopener"><b>Instagram</b><span>@thecodez0</span></a>
+      </div>
+    </div>
+    <div class="signature">
+      <span>TheCodeZ | Omid Ebrahimi</span>
+      <span class="mono">TEL-SEEK · ELASTICSEARCH 9.4.3 · FASTAPI · REACT 18</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- language ---------- */
+const faBtn = document.getElementById('fa');
+const enBtn = document.getElementById('en');
+const nodes = document.querySelectorAll('[data-fa][data-en]');
+
+function setLang(lang){
+  const rtl = lang === 'fa';
+  document.documentElement.lang = rtl ? 'fa' : 'en';
+  document.documentElement.dir  = rtl ? 'rtl' : 'ltr';
+  nodes.forEach(n => { n.innerHTML = rtl ? n.dataset.fa : n.dataset.en; });
+  faBtn.setAttribute('aria-pressed', String(rtl));
+  enBtn.setAttribute('aria-pressed', String(!rtl));
+}
+faBtn.addEventListener('click', () => setLang('fa'));
+enBtn.addEventListener('click', () => setLang('en'));
+
+/* ---------- fuzziness demo ---------- */
+const POOL = [
+  'لینکدین','لینکدبن','لینکداین','لینکدینی','لینک',
+  'پروژه','پروزه','پرژه','پروژه‌ها','برنامه',
+  'commit','comit','commmit','commits','commitment',
+  'git','gti','gut','github','digit'
+];
+const pool  = document.getElementById('pool');
+const count = document.getElementById('count');
+const q     = document.getElementById('q');
+let fuzz = 1;
+
+function dist(a, b){
+  const m = a.length, n = b.length;
+  let prev = Array.from({length:n+1}, (_,j) => j);
+  for(let i=1; i<=m; i++){
+    const cur = [i];
+    for(let j=1; j<=n; j++){
+      cur[j] = Math.min(prev[j]+1, cur[j-1]+1, prev[j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+    }
+    prev = cur;
+  }
+  return prev[n];
+}
+
+function render(){
+  const term = q.value.trim().toLowerCase();
+  pool.innerHTML = '';
+  if(!term){
+    pool.innerHTML = '<p class="empty">' + (document.documentElement.lang === 'fa'
+      ? 'یک واژه بنویس تا ببینی چه چیزهایی مچ می‌شوند.'
+      : 'Type a term to see what matches.') + '</p>';
+    count.textContent = '0 / ' + POOL.length;
+    return;
+  }
+  let hits = 0;
+  const frag = document.createDocumentFragment();
+  POOL.forEach(w => {
+    const d = dist(term, w.toLowerCase());
+    const hit = d <= fuzz;
+    if(hit) hits++;
+    const el = document.createElement('span');
+    el.className = 'word ' + (hit ? 'hit' : 'miss');
+    el.innerHTML = w + '<small>Δ' + d + '</small>';
+    frag.appendChild(el);
+  });
+  if(hits === 0){
+    const p = document.createElement('p');
+    p.className = 'empty';
+    p.textContent = document.documentElement.lang === 'fa'
+      ? 'با این میزان فازی‌نس هیچ چیزی مچ نشد. word:2 را امتحان کن.'
+      : 'Nothing matched at this fuzziness. Try word:2.';
+    pool.appendChild(p);
+  }
+  pool.appendChild(frag);
+  count.textContent = hits + ' / ' + POOL.length;
+}
+
+document.querySelectorAll('.chip[data-f]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    fuzz = Number(btn.dataset.f);
+    document.querySelectorAll('.chip[data-f]').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    render();
+  });
+});
+document.querySelectorAll('.chip[data-q]').forEach(btn => {
+  btn.addEventListener('click', () => { q.value = btn.dataset.q; render(); });
+});
+q.addEventListener('input', render);
+render();
+
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.copy').forEach(btn => {
+  const revert = () => { btn.classList.remove('done'); btn.innerHTML = document.documentElement.lang === 'fa' ? btn.dataset.fa : btn.dataset.en; };
+  btn.addEventListener('click', async () => {
+    try{ await navigator.clipboard.writeText(btn.dataset.copy); }catch(e){}
+    btn.classList.add('done');
+    btn.textContent = document.documentElement.lang === 'fa' ? 'کپی شد ✓' : 'COPIED ✓';
+    setTimeout(revert, 1500);
+  });
+});
+
+/* ---------- reveal ---------- */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+document.querySelectorAll('.rev').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
