@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<!-- skill:chrome -->
+<style>
+/* Credit line — bottom-right */
+.design-ui-credit {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font: 11px/1 system-ui, sans-serif;
+  color: rgba(128,128,128,0.5);
+  pointer-events: none;
+  z-index: 2147483647;
+  transition: opacity 0.4s ease;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+/* Hide chrome on touch devices */
+@media (hover: none) {
+  .design-ui-credit { display: none; }
+}
+
+/* Print fixes */
+@media print {
+  * {
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .design-ui-credit { display: none !important; }
+}
+
+</style>
+<script>
+(function () {
+    // Design-ui pages are single compositions, so the whole body is editable.
+    function markEditable() {
+        document.body.classList.add('artifact-editable');
+    }
+
+    // Credit badge with idle-fade. Hover devices only.
+    function initChromeUI() {
+        if (!matchMedia('(hover: hover)').matches) return;
+
+        var credit = document.createElement('div');
+        credit.className = 'design-ui-credit';
+        credit.setAttribute('aria-hidden', 'true');
+        credit.innerHTML = '\u{1F49C} by ClickUp Brain';
+        document.body.appendChild(credit);
+
+        var timer = null;
+        var fade = function (out) { credit.style.opacity = out ? '0' : ''; };
+        fade(true);
+        var show = function () {
+            fade(false);
+            clearTimeout(timer);
+            timer = setTimeout(function () { fade(true); }, 3000);
+        };
+        document.addEventListener('mousemove', show);
+        show();
+    }
+
+    function init() {
+        markEditable();
+        initChromeUI();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+
+</script>
+<!-- /skill:chrome -->
+<!-- skill:libraries -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<!-- /skill:libraries -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>شبکه کلمات — نما و سرچ عمیق درختی</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:   oklch(94.6% 0.010 92);
+  --surface: oklch(97.6% 0.007 92);
+  --sunk:    oklch(90.8% 0.012 92);
+  --ink:     oklch(26% 0.014 82);
+  --ink-2:   oklch(46% 0.014 82);
+  --ink-3:   oklch(61% 0.012 88);
+  --edge:    oklch(31% 0.018 82);
+  --acc:     oklch(84% 0.150 92);
+  --acc-deep:oklch(62% 0.130 66);
+  --lo:#cfcabe; --mid:#e0ac2f; --hi:#493a22;
+
+  --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-6:24px;--s-8:32px;--s-12:48px;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,monospace;
+  --eo:cubic-bezier(.25,1,.5,1); --eox:cubic-bezier(.16,1,.3,1);
+  --hard:-4px 4px 0 var(--edge); --hard-sm:-2px 2px 0 var(--edge);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Vazirmatn,system-ui,sans-serif;
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;font-optical-sizing:auto}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--acc-deep);outline-offset:2px}
+
+.app{display:grid;grid-template-columns:340px minmax(0,1fr);height:100dvh;transition:grid-template-columns .34s var(--eox)}
+body.rail-off .app{grid-template-columns:0 minmax(0,1fr)}
+body.rail-off .rail{border-inline-end-width:0}
+
+/* ---------------- rail ---------------- */
+.rail{background:var(--surface);border-inline-end:2px solid var(--edge);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.rail__head{padding:var(--s-4) var(--s-6);border-block-end:2px solid var(--edge);background:var(--acc)}
+h1{font-size:1.375rem;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.stamp{display:inline-block;font-family:var(--mono);font-size:.625rem;letter-spacing:.14em;text-transform:uppercase;
+  border:2px solid var(--edge);background:var(--surface);padding:1px 7px;margin-block-end:var(--s-2)}
+
+/* tabs inside the rail */
+.nav{display:grid;grid-template-columns:1fr 1fr;border-block-end:2px solid var(--edge);flex:none}
+.nav button{border:0;border-inline-start:2px solid var(--edge);background:var(--sunk);padding:11px 8px 10px;cursor:pointer;
+  text-align:center;font-weight:800;font-size:.8125rem;color:var(--ink-2);transition:background .16s var(--eo),color .16s var(--eo)}
+.nav button:first-child{border-inline-start:0}
+.nav button small{display:block;font-family:var(--mono);font-size:.5625rem;letter-spacing:.1em;font-weight:700;
+  text-transform:uppercase;color:var(--ink-3);margin-block-start:2px}
+.nav button:hover{background:oklch(88% 0.02 92)}
+.nav button[aria-selected=true]{background:var(--edge);color:var(--surface)}
+.nav button[aria-selected=true] small{color:var(--acc)}
+
+.rail__body{overflow-y:auto;padding:var(--s-4) var(--s-6) var(--s-12);flex:1;min-height:0;scrollbar-width:thin}
+.sec{border-block-start:2px solid var(--edge);padding-block-start:var(--s-4);margin-block-start:var(--s-4)}
+.sec:first-of-type{border:0;margin:0;padding-block-start:0}
+.sec__t{font-size:.6875rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);
+  margin-block-end:var(--s-3);display:flex;justify-content:space-between;align-items:center;gap:var(--s-2)}
+.note{font-size:.75rem;color:var(--ink-2);margin:var(--s-3) 0 0;text-wrap:pretty}
+.note b{background:var(--acc);padding:0 3px}
+
+.drop{border:2px dashed var(--edge);background:var(--paper);padding:var(--s-3);text-align:center;transition:background .18s var(--eo)}
+.drop.is-over{background:var(--acc)}
+.drop p{margin:0 0 var(--s-2);font-size:.8125rem;color:var(--ink-2)}
+.drop code{font-family:var(--mono);font-size:.75rem;background:var(--sunk);border:1px solid var(--edge);padding:0 4px}
+
+.btn{border:2px solid var(--edge);background:var(--surface);padding:6px 13px;font-size:.8125rem;font-weight:700;cursor:pointer;
+  box-shadow:var(--hard-sm);transition:transform .1s var(--eo),box-shadow .1s var(--eo),background .16s var(--eo)}
+.btn:hover{background:var(--acc)}
+.btn:active{transform:translate(2px,-2px);box-shadow:none}
+.btn--go{background:var(--edge);color:var(--surface)}
+.btn--go:hover{background:oklch(39% 0.03 82)}
+.btn--bare{border-color:transparent;box-shadow:none;background:transparent;color:var(--ink-2);padding:3px 6px;font-weight:600}
+.btn--bare:hover{background:var(--sunk);color:var(--ink)}
+.row{display:flex;gap:var(--s-2);flex-wrap:wrap}
+
+label.fld{display:block;margin-block-start:var(--s-4)}
+.fld__l{display:flex;justify-content:space-between;align-items:baseline;font-size:.8125rem;color:var(--ink-2);margin-block-end:5px}
+.fld__v{font-family:var(--mono);font-size:.75rem;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+select,textarea,input[type=text],input[type=search]{width:100%;background:var(--paper);border:2px solid var(--edge);padding:6px 9px;font-size:.875rem}
+textarea{min-height:94px;resize:vertical;font-size:.8125rem;line-height:1.7}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:20px;background:transparent;margin:0;cursor:ew-resize}
+input[type=range]::-webkit-slider-runnable-track{height:6px;background:var(--sunk);border:2px solid var(--edge)}
+input[type=range]::-moz-range-track{height:6px;background:var(--sunk);border:2px solid var(--edge)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-7px;background:var(--acc);border:2px solid var(--edge)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:0;background:var(--acc);border:2px solid var(--edge)}
+
+.segs{display:flex;border:2px solid var(--edge);background:var(--paper)}
+.segs button{flex:1;border:0;border-inline-start:2px solid var(--edge);background:transparent;padding:7px 4px;font-size:.75rem;font-weight:700;color:var(--ink-2);cursor:pointer}
+.segs button:first-child{border-inline-start:0}
+.segs button[aria-pressed=true]{background:var(--edge);color:var(--surface)}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);padding:5px 0;font-size:.8125rem;cursor:pointer}
+.switch input{appearance:none;margin:0;flex:none;width:20px;height:20px;border:2px solid var(--edge);background:var(--paper);cursor:pointer;position:relative}
+.switch input:checked{background:var(--acc)}
+.switch input:checked::after{content:"";position:absolute;inset-block-start:1px;inset-inline-start:5px;width:6px;height:11px;
+  border:2px solid var(--edge);border-top:0;border-inline-end:0;transform:rotate(-45deg)}
+
+.figs{display:flex;gap:var(--s-2)}
+.fig{flex:1;border:2px solid var(--edge);background:var(--paper);padding:var(--s-2)}
+.fig b{display:block;font-family:var(--mono);font-size:1.0625rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.fig span{font-size:.5625rem;letter-spacing:.09em;color:var(--ink-3);text-transform:uppercase}
+.ranks{list-style:none;margin:0;padding:0}
+.ranks li{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s-2);align-items:center;padding:5px 0;
+  border-block-end:1px solid var(--sunk);cursor:pointer;font-size:.875rem}
+.ranks li:last-child{border:0}
+.ranks li:hover{color:var(--acc-deep)}
+.ranks i{width:12px;height:12px;border:2px solid var(--edge);display:block}
+.ranks em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ranks b{font-family:var(--mono);font-size:.75rem;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+details.py{margin-block-start:var(--s-3)}
+details.py summary{font-size:.8125rem;font-weight:700;color:var(--ink-2);cursor:pointer}
+details.py summary:hover{color:var(--ink)}
+pre{margin:var(--s-3) 0 0;background:var(--edge);color:oklch(93% 0.02 92);border:2px solid var(--edge);box-shadow:var(--hard-sm);
+  padding:var(--s-3);overflow-x:auto;direction:ltr;text-align:left;font-family:var(--mono);font-size:.6875rem;line-height:1.7;font-variant-ligatures:none}
+pre .c{color:oklch(70% 0.03 92)}pre .s{color:oklch(84% 0.12 128)}
+
+/* ---------------- stage ---------------- */
+.stage{position:relative;min-width:0;min-height:0}
+.pane{position:absolute;inset:0;display:none;
+  background:linear-gradient(var(--sunk) 1px,transparent 1px) 0 0/100% 26px,
+             linear-gradient(90deg,var(--sunk) 1px,transparent 1px) 0 0/26px 100%,var(--paper)}
+.pane.is-on{display:block}
+svg.canvas{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
+svg.canvas.is-panning{cursor:grabbing}
+
+.hud{position:absolute;inset-block-start:var(--s-3);inset-inline:var(--s-3);display:flex;justify-content:space-between;
+  align-items:flex-start;gap:var(--s-2);pointer-events:none;z-index:4;flex-wrap:wrap}
+.hud > *{pointer-events:auto}
+.finder{display:flex;align-items:center;gap:7px;background:var(--surface);border:2px solid var(--edge);box-shadow:var(--hard-sm);padding:4px 11px;width:238px}
+.finder input{border:0;background:transparent;padding:0;font-size:.8125rem}
+.finder input:focus{outline:0}
+.tools{display:flex;background:var(--surface);border:2px solid var(--edge);box-shadow:var(--hard-sm)}
+.tools button{border:0;border-inline-start:2px solid var(--edge);background:transparent;min-width:34px;height:32px;cursor:pointer;
+  font-size:.9375rem;color:var(--ink);display:grid;place-items:center;padding:0 4px}
+.tools button:first-child{border-inline-start:0}
+.tools button:hover{background:var(--acc)}
+.tools button b{font-size:.6875rem;font-family:var(--mono);font-weight:700;padding-inline:4px}
+
+.legend{position:absolute;inset-block-end:var(--s-3);inset-inline-start:var(--s-3);background:var(--surface);
+  border:2px solid var(--edge);box-shadow:var(--hard-sm);padding:8px 10px;z-index:3}
+.legend h4{font-size:.625rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-block-end:5px}
+.ramp{height:10px;width:164px;border:2px solid var(--edge);background:linear-gradient(-90deg,var(--lo),var(--mid),var(--hi))}
+.ramp-l{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.6875rem;color:var(--ink-2);margin-block-start:3px;font-variant-numeric:tabular-nums}
+
+.peek{position:absolute;inset-block-start:var(--s-12);inset-inline-end:var(--s-3);width:250px;background:var(--surface);
+  border:2px solid var(--edge);box-shadow:var(--hard);padding:var(--s-4);opacity:0;transform:translate(6px,-8px);
+  pointer-events:none;transition:opacity .18s var(--eo),transform .26s var(--eox);z-index:5}
+.peek.is-on{opacity:1;transform:none;pointer-events:auto}
+.peek__w{font-size:1.3125rem;font-weight:900;letter-spacing:-.02em;line-height:1.2;padding-inline-end:var(--s-6)}
+.peek__m{font-family:var(--mono);font-size:.75rem;color:var(--ink-2);margin-block-start:2px;font-variant-numeric:tabular-nums}
+.peek h4{font-size:.625rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin:var(--s-4) 0 7px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{border:2px solid var(--edge);background:var(--paper);padding:2px 8px;font-size:.75rem;font-weight:600;cursor:pointer}
+.chip:hover{background:var(--acc)}
+.chip b{font-family:var(--mono);font-weight:700;font-size:.6875rem;color:var(--ink-2);margin-inline-start:5px}
+.peek__x{position:absolute;inset-block-start:5px;inset-inline-start:5px}
+
+/* deep chrome */
+.trail{position:absolute;inset-block-start:var(--s-12);inset-inline-start:var(--s-3);inset-inline-end:var(--s-3);z-index:4;
+  display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.crumb{display:flex;align-items:center;gap:6px;border:2px solid var(--edge);background:var(--surface);box-shadow:var(--hard-sm);
+  padding:3px 9px;font-size:.8125rem;font-weight:700;cursor:pointer}
+.crumb:hover{background:var(--acc)}
+.crumb b{font-family:var(--mono);font-size:.6875rem;font-weight:700;color:var(--ink-2)}
+.crumb--now{background:var(--acc);cursor:default}
+.arrow{font-family:var(--mono);color:var(--ink-3);font-size:.6875rem}
+.pills{position:absolute;inset-block-end:var(--s-3);inset-inline-end:var(--s-3);z-index:4;display:flex;gap:var(--s-2);flex-wrap:wrap}
+.pill{border:2px solid var(--edge);background:var(--surface);box-shadow:var(--hard-sm);padding:5px 10px;font-size:.75rem;
+  font-family:var(--mono);font-variant-numeric:tabular-nums}
+.pill b{font-weight:700;color:var(--acc-deep)}
+
+/* svg paint: network */
+.link{stroke:oklch(67% 0.014 88);fill:none}
+.node circle{stroke:var(--edge);stroke-width:2;cursor:pointer}
+.node text{font-family:Vazirmatn,sans-serif;font-weight:700;fill:var(--ink);text-anchor:middle;paint-order:stroke;
+  stroke:var(--paper);stroke-width:4px;stroke-linejoin:round;pointer-events:none;user-select:none}
+.viz.is-focus .node,.viz.is-focus .link{opacity:.13}
+.viz.is-focus .node.hi,.viz.is-focus .link.hi{opacity:1}
+.viz.is-focus .node.pick circle{stroke-width:4}
+.link.hi{stroke:var(--acc-deep);stroke-opacity:.9}
+.node,.link{transition:opacity .2s var(--eo)}
+.node.hit circle{stroke-width:4;stroke:var(--acc-deep)}
+
+/* svg paint: tree */
+.guide line{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 6;opacity:.5}
+.guide text{font-family:var(--mono);font-size:10px;fill:var(--ink-3);text-anchor:middle;letter-spacing:.08em}
+.tlink{fill:none;stroke:var(--edge);stroke-width:2;stroke-opacity:.45;stroke-linecap:round}
+.tlink.on{stroke:var(--acc-deep);stroke-opacity:1;stroke-width:3}
+.tnode rect.sh{fill:var(--edge)}
+.tnode rect.card{stroke:var(--edge);stroke-width:2;cursor:pointer}
+.tnode text{pointer-events:none;user-select:none}
+.tnode text.w{font-family:Vazirmatn,sans-serif;font-weight:800;fill:var(--ink);text-anchor:middle}
+.tnode text.n{font-family:var(--mono);font-size:10px;fill:var(--ink-2);text-anchor:middle}
+.tnode .badge rect{fill:var(--surface);stroke:var(--edge);stroke-width:2;cursor:pointer}
+.tnode .badge text{font-family:var(--mono);font-size:10px;font-weight:700;fill:var(--ink);text-anchor:middle}
+.tnode.open > rect.card{stroke-width:3}
+.tnode.leaf rect.card{stroke-dasharray:5 4}
+.tnode.leaf rect.card{cursor:default}
+.tnode.root rect.card{stroke-width:4}
+.tnode.on rect.card{stroke:var(--acc-deep);stroke-width:4}
+.tnode:hover rect.card{stroke:var(--acc-deep)}
+
+/* states */
+.overlay{position:absolute;inset:0;z-index:6;display:grid;place-content:center;justify-items:center;text-align:center;
+  gap:var(--s-3);padding:var(--s-8);background:oklch(94.6% 0.010 92 / .93)}
+.overlay[hidden]{display:none}
+.overlay h2{font-size:1.5rem;font-weight:900;letter-spacing:-.02em}
+.overlay p{margin:0;color:var(--ink-2);max-width:46ch;font-size:.9375rem;text-wrap:pretty}
+.spark{width:42px;height:42px;border:4px solid var(--edge);border-block-start-color:var(--acc);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.warn{position:absolute;inset-block-end:var(--s-12);inset-inline-end:var(--s-3);max-width:284px;z-index:5;border:2px solid var(--edge);
+  background:var(--acc);box-shadow:var(--hard-sm);padding:8px 11px;font-size:.8125rem;color:oklch(31% 0.05 78)}
+.warn[hidden]{display:none}
+
+.railbtn{position:absolute;inset-block-start:var(--s-3);inset-inline-start:var(--s-3);z-index:7;border:2px solid var(--edge);
+  background:var(--acc);box-shadow:var(--hard-sm);width:32px;height:32px;cursor:pointer;font-size:.875rem;display:none;place-items:center}
+body.rail-off .railbtn{display:grid}
+
+@media (max-width:980px){
+  .app{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+  body.rail-off .app{grid-template-rows:1fr 0}
+  .stage{order:-1}
+  .rail{border-inline-end:0;border-block-start:2px solid var(--edge);max-height:46dvh}
+  .legend{display:none}
+  .finder{width:100%}
+  .peek{inset-inline:var(--s-3);inset-block:auto var(--s-12);width:auto}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="rail__head">
+      <span class="stamp">co-occurrence engine</span>
+      <h1>شبکه کلمات</h1>
+    </div>
+
+    <div class="nav" role="tablist">
+      <button id="tabNet" role="tab" aria-selected="true" aria-controls="paneNet">شبکه<small>graph · 1</small></button>
+      <button id="tabDeep" role="tab" aria-selected="false" aria-controls="paneDeep">سرچ عمیق<small>tree · 2</small></button>
+    </div>
+
+    <div class="rail__body">
+      <section class="sec">
+        <div class="sec__t"><span>منبع داده</span><button class="btn btn--bare" id="btnSample">داده نمونه</button></div>
+        <div class="drop" id="drop">
+          <p>فایل <code>CSV</code> / <code>JSON</code> / <code>TXT</code> را رها کنید</p>
+          <button class="btn" id="btnPick">انتخاب فایل</button>
+          <input type="file" id="file" accept=".csv,.tsv,.json,.txt" hidden>
+        </div>
+        <label class="fld" id="colWrap" hidden>
+          <span class="fld__l">ستون متن<span class="fld__v" id="colHint"></span></span>
+          <select id="col"></select>
+        </label>
+        <details class="py"><summary>جای‌گذاری دستی متن</summary>
+          <textarea id="paste" placeholder="هر خط یک جمله..." spellcheck="false"></textarea>
+          <div class="row" style="margin-block-start:var(--s-2)"><button class="btn btn--go" id="btnPaste">ساخت گراف</button></div>
+        </details>
+        <details class="py"><summary>خروجی گرفتن از پانداس</summary>
+<pre><span class="c"># ستون جملات را بریز روی دیسک، بعد فایل را رها کن</span>
+df[<span class="s">"name "</span>].dropna().to_csv(
+    <span class="s">"words.csv"</span>, index=False, encoding=<span class="s">"utf-8"</span>)</pre>
+        </details>
+      </section>
+
+      <section class="sec">
+        <div class="sec__t"><span>ساخت یال‌ها</span></div>
+        <div class="segs" role="group" aria-label="حالت اتصال">
+          <button id="mSent" aria-pressed="true">کل جمله</button>
+          <button id="mWin" aria-pressed="false">پنجره مجاورت</button>
+        </div>
+        <label class="fld" id="winWrap" hidden>
+          <span class="fld__l">اندازه پنجره<span class="fld__v" id="winV">۲</span></span>
+          <input type="range" id="win" min="1" max="6" step="1" value="2">
+        </label>
+        <label class="fld">
+          <span class="fld__l">حداقل تکرار کلمه<span class="fld__v" id="minFV">۱</span></span>
+          <input type="range" id="minF" min="1" max="20" step="1" value="1">
+        </label>
+        <label class="fld">
+          <span class="fld__l">حداقل وزن یال<span class="fld__v" id="minWV">۱</span></span>
+          <input type="range" id="minW" min="1" max="12" step="1" value="1">
+        </label>
+        <label class="switch"><span>حذف کلمات ایست</span><input type="checkbox" id="optStop" checked></label>
+        <label class="switch"><span>حذف اعداد</span><input type="checkbox" id="optNum" checked></label>
+        <label class="switch"><span>پنهان کردن نودهای تنها</span><input type="checkbox" id="optIso" checked></label>
+      </section>
+
+      <section class="sec" id="secNet">
+        <div class="sec__t"><span>نمایش شبکه</span></div>
+        <label class="fld">
+          <span class="fld__l">فاصله نودها<span class="fld__v" id="spV">۱٫۰×</span></span>
+          <input type="range" id="spread" min="40" max="220" step="5" value="100">
+        </label>
+        <label class="switch"><span>برچسب همه کلمات</span><input type="checkbox" id="optLbl" checked></label>
+      </section>
+
+      <section class="sec" id="secDeep" hidden>
+        <div class="sec__t"><span>سرچ عمیق</span><button class="btn btn--bare" id="btnReset">ریست</button></div>
+        <label class="fld">
+          <span class="fld__l">کلمه ریشه<span class="fld__v" id="rootHint">—</span></span>
+          <select id="rootSel"></select>
+        </label>
+        <label class="fld">
+          <span class="fld__l">شاخه در هر نود<span class="fld__v" id="fanV">۵</span></span>
+          <input type="range" id="fan" min="2" max="12" step="1" value="5">
+        </label>
+        <label class="fld">
+          <span class="fld__l">باز کردن خودکار تا عمق<span class="fld__v" id="autoV">۲</span></span>
+          <input type="range" id="auto" min="1" max="5" step="1" value="2">
+        </label>
+        <label class="switch"><span>ترتیب شاخه‌ها بر اساس وزن یال</span><input type="checkbox" id="optByW" checked></label>
+        <label class="switch"><span>خط‌کش لایه‌ها</span><input type="checkbox" id="optGuide" checked></label>
+        <p class="note">هر لایه فقط کلماتی را می‌گیرد که تکرارشان <b>کمتر از والد</b> است و در مسیر بالادست نیامده‌اند، پس مسیر همیشه نزولی است و لوپ نمی‌خورد.</p>
+      </section>
+
+      <section class="sec">
+        <div class="sec__t"><span>خلاصه</span></div>
+        <div class="figs">
+          <div class="fig"><b id="kSent">۰</b><span>جمله</span></div>
+          <div class="fig"><b id="kNode">۰</b><span>نود</span></div>
+          <div class="fig"><b id="kEdge">۰</b><span>یال</span></div>
+        </div>
+        <div class="sec__t" style="margin-block:var(--s-4) var(--s-2)"><span>داغ‌ترین کلمات</span></div>
+        <ol class="ranks" id="ranks"></ol>
+        <div class="row" style="margin-block-start:var(--s-4)">
+          <button class="btn" id="btnJson">JSON</button>
+          <button class="btn" id="btnSvg">SVG نمای فعال</button>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <button class="railbtn" id="railOpen" title="نمایش نوار کنار">☰</button>
+
+    <!-- network -->
+    <section class="pane is-on" id="paneNet" role="tabpanel">
+      <svg class="canvas" id="graph" aria-label="گراف شبکه کلمات"></svg>
+      <div class="hud">
+        <div class="finder">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="color:var(--ink-2);flex:none"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="find" placeholder="جست‌وجوی کلمه…" autocomplete="off">
+        </div>
+        <div class="tools">
+          <button id="railHide1" title="پنهان کردن نوار کنار">⟩</button>
+          <button id="zIn" title="بزرگ‌نمایی">+</button>
+          <button id="zOut" title="کوچک‌نمایی">−</button>
+          <button id="zFit" title="جا دادن">⤢</button>
+        </div>
+      </div>
+      <div class="legend">
+        <h4>تکرار کلمه</h4><div class="ramp"></div>
+        <div class="ramp-l"><span>۱</span><span id="rampMax">—</span></div>
+      </div>
+      <div class="peek" id="peek">
+        <button class="btn btn--bare peek__x" id="peekX">✕</button>
+        <div class="peek__w" id="peekW"></div>
+        <div class="peek__m" id="peekM"></div>
+        <h4>هم‌نشین‌ها</h4>
+        <div class="chips" id="peekN"></div>
+        <div class="row" style="margin-block-start:var(--s-4)"><button class="btn btn--go" id="peekDive">کاوش درختی از این کلمه ↳</button></div>
+      </div>
+      <div class="warn" id="warn" hidden></div>
+      <div class="overlay" id="empty">
+        <svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="var(--edge)" stroke-width="2">
+          <circle cx="24" cy="13" r="6" fill="var(--acc)"/><circle cx="11" cy="34" r="4.5"/><circle cx="37" cy="32" r="5" fill="var(--acc)"/><circle cx="25" cy="43" r="3"/>
+          <path d="M24 19 13.5 30M24 19l10 9M14 37.5l8 4.5M33.5 36l-6 5"/></svg>
+        <h2>هنوز گرافی ساخته نشده</h2>
+        <p>ستون جملات را از دیتافریم بیرون بده و فایلش را رها کن، یا با داده نمونه شروع کن.</p>
+        <button class="btn btn--go" id="btnSample2">ساخت با داده نمونه</button>
+      </div>
+      <div class="overlay" id="busy" hidden><div class="spark"></div><p>توکن‌سازی و شمارش هم‌آیی…</p></div>
+      <div class="overlay" id="err" hidden><h2 id="errT"></h2><p id="errB"></p><button class="btn" id="errBack">برگشت</button></div>
+    </section>
+
+    <!-- deep search -->
+    <section class="pane" id="paneDeep" role="tabpanel">
+      <svg class="canvas" id="tree" aria-label="درخت سرچ عمیق"></svg>
+      <div class="hud">
+        <div class="pill" id="dRule">آستانه تکرار <b>—</b></div>
+        <div class="tools">
+          <button id="railHide2" title="پنهان کردن نوار کنار">⟩</button>
+          <button id="dExpand" title="باز کردن خودکار"><b>باز</b></button>
+          <button id="dCollapse" title="جمع کردن همه"><b>جمع</b></button>
+          <button id="dFit" title="جا دادن">⤢</button>
+        </div>
+      </div>
+      <div class="trail" id="trail"></div>
+      <div class="pills">
+        <span class="pill">عمق <b id="dDepth">۰</b></span>
+        <span class="pill">جعبه <b id="dNodes">۰</b></span>
+      </div>
+      <div class="overlay" id="dEmpty">
+        <svg width="62" height="46" viewBox="0 0 62 46" fill="none" stroke="var(--edge)" stroke-width="2">
+          <rect x="40" y="17" width="20" height="12" fill="var(--acc)"/><rect x="16" y="3" width="18" height="11"/><rect x="16" y="17" width="18" height="11"/><rect x="16" y="31" width="18" height="11"/>
+          <path d="M40 23h-4M36 8.5h-2v14M36 36.5h-2v-14"/></svg>
+        <h2>ریشه را انتخاب کن</h2>
+        <p>یک کلمه بردار، بعد با هر کلیک یک لایه پایین‌تر برو. هر لایه فقط کلمات کم‌تکرارتر از والد را باز می‌کند.</p>
+        <button class="btn btn--go" id="dStart">شروع از داغ‌ترین کلمه</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+/* ================= data ================= */
+const SAMPLE=["گوشی موبایل سامسونگ گلکسی اس ۲۳ اولترا","گوشی موبایل شیائومی ردمی نوت ۱۳ پرو","گوشی موبایل اپل آیفون ۱۵ پرو مکس","لپ تاپ ایسوس ویووبوک پرو ۱۵ اینچ","لپ تاپ لنوو آیدیاپد گیمینگ","لپ تاپ اپل مک بوک ایر","هدفون بی سیم سونی","هدفون بلوتوثی شیائومی ردمی بادز","ساعت هوشمند سامسونگ گلکسی واچ ۶","ساعت هوشمند شیائومی می بند ۸","تلویزیون هوشمند ال جی ۵۵ اینچ","تلویزیون هوشمند سامسونگ کریستال ۵۰ اینچ","کیبورد مکانیکی گیمینگ ریزر","ماوس گیمینگ بی سیم لاجیتک","مانیتور گیمینگ ایسوس ۲۷ اینچ","شارژر سریع دیواری سامسونگ","پاوربانک شیائومی ۲۰۰۰۰ میلی آمپر","کیس کامپیوتر گیمینگ گرین","کارت گرافیک ایسوس آر تی ایکس","حافظه اس اس دی سامسونگ ۱ ترابایت","رم کامپیوتر کورسیر ۱۶ گیگابایت","دوربین عکاسی کانن","جاروبرقی رباتیک شیائومی","اسپیکر بلوتوثی جی بی ال","پرینتر لیزری اچ پی","مودم روتر بی سیم تی پی لینک","کولر گازی اسپلیت ال جی","یخچال فریزر سامسونگ ساید بای ساید","ماشین لباسشویی ال جی ۹ کیلو","مایکروویو سامسونگ ۲۳ لیتر","هدفون گیمینگ ریزر با میکروفون","کیبورد بی سیم لاجیتک","گوشی موبایل نوکیا ساده","تبلت سامسونگ گلکسی تب","تبلت اپل آیپد ایر","مانیتور ال جی ۲۴ اینچ اداری"];
+const STOP=new Set(("و در به از که این را با است برای آن یک خود تا بر هم می بود شد ها های کرد شده اما یا اگر هر دو نیز بی دیگر وی او ما شما آنها ای کند باشد دارد داشت بین روی پس چه همه نه توسط طور مورد عنوان کل بدون مانند دهد کنید شود ولی چون حال بعد قبل هست نیست باید خیلی من تو آیا چند وقتی زیرا "+
+"the a an and or of to in for with on at by from is are was were be been this that it as but if not no you we they he she my your our its will can do does has have had so than then there their what which who all any more most other into over up out about new").split(/\s+/));
+const FA=/[\u06F0-\u06F9]/g, AR=/[\u0660-\u0669]/g;
+const normalize=s=>String(s)
+  .replace(/[\u064A\u0649]/g,"\u06CC").replace(/\u0643/g,"\u06A9")
+  .replace(/[\u0623\u0625\u0622]/g,"\u0627").replace(/\u0629/g,"\u0647")
+  .replace(/[\u064B-\u0652\u0670\u0640]/g,"")
+  .replace(FA,d=>String.fromCharCode(d.charCodeAt(0)-0x06F0+48))
+  .replace(AR,d=>String.fromCharCode(d.charCodeAt(0)-0x0660+48)).toLowerCase();
+const fa=n=>String(n).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[d]);
+const tokenize=s=>normalize(s).split(/[^\p{L}\p{N}\u200c]+/u).map(w=>w.replace(/^\u200c+|\u200c+$/g,"")).filter(w=>w.length>1);
+
+let sentences=[], graph={nodes:[],links:[]}, adj=new Map(), cnt=new Map(), maxFreq=1;
+let sim=null, picked=null, table=null, treeRoot=null, active=null, tab="net";
+const opts={mode:"sent",win:2,minF:1,minW:1,stop:true,nums:true,iso:true,labels:true,spread:100,fan:5,auto:2,byW:true,guide:true};
+const $=s=>document.querySelector(s);
+const ramp=d3.scaleLinear().domain([0,.5,1]).range(["#cfcabe","#e0ac2f","#493a22"]).interpolate(d3.interpolateHcl);
+const rel=c=>Math.sqrt((c-1)/Math.max(1,maxFreq-1));
+const heat=c=>ramp(rel(c));
+const soft=c=>d3.interpolateHcl("#f8f4ea","#dfa927")(Math.min(.9,rel(c)));
+
+/* ================= network ================= */
+const svg=d3.select("#graph"), gRoot=svg.append("g").attr("class","viz");
+const gLink=gRoot.append("g"), gNode=gRoot.append("g");
+const zoom=d3.zoom().scaleExtent([.12,6]).on("zoom",e=>{gRoot.attr("transform",e.transform);
+  gNode.selectAll("text").attr("opacity",e.transform.k<.45?0:1)});
+svg.call(zoom).on("mousedown.c",()=>svg.classed("is-panning",true)).on("mouseup.c",()=>svg.classed("is-panning",false));
+
+function compute(){
+  const freq=new Map(), pairs=new Map(), bump=(m,k)=>m.set(k,(m.get(k)||0)+1);
+  for(const raw of sentences){
+    let ws=tokenize(raw);
+    if(opts.stop) ws=ws.filter(w=>!STOP.has(w));
+    if(opts.nums) ws=ws.filter(w=>!/^\d+$/.test(w));
+    if(!ws.length) continue;
+    ws.forEach(w=>bump(freq,w));
+    if(opts.mode==="sent"){
+      const u=[...new Set(ws)];
+      for(let i=0;i<u.length;i++)for(let j=i+1;j<u.length;j++) bump(pairs,u[i]<u[j]?u[i]+"\0"+u[j]:u[j]+"\0"+u[i]);
+    }else{
+      for(let i=0;i<ws.length;i++)for(let j=i+1;j<=Math.min(i+opts.win,ws.length-1);j++){
+        const a=ws[i],b=ws[j]; if(a===b) continue;
+        bump(pairs,a<b?a+"\0"+b:b+"\0"+a);
+      }
+    }
+  }
+  let floor=opts.minF, capped=false; const CAP=420;
+  let keep=new Set([...freq].filter(([,c])=>c>=floor).map(([w])=>w));
+  while(keep.size>CAP&&floor<60){floor++;capped=true;keep=new Set([...freq].filter(([,c])=>c>=floor).map(([w])=>w))}
+  const links=[], deg=new Map();
+  for(const [k,w] of pairs){
+    if(w<opts.minW) continue;
+    const [a,b]=k.split("\0");
+    if(!keep.has(a)||!keep.has(b)) continue;
+    links.push({source:a,target:b,w}); deg.set(a,(deg.get(a)||0)+1); deg.set(b,(deg.get(b)||0)+1);
+  }
+  let nodes=[...keep].map(w=>({id:w,c:freq.get(w),deg:deg.get(w)||0}));
+  if(opts.iso) nodes=nodes.filter(n=>n.deg>0);
+  const alive=new Set(nodes.map(n=>n.id));
+  const lk=links.filter(l=>alive.has(l.source)&&alive.has(l.target));
+  adj=new Map(); cnt=new Map();
+  nodes.forEach(n=>{adj.set(n.id,[]);cnt.set(n.id,n.c)});
+  lk.forEach(l=>{adj.get(l.source).push({id:l.target,w:l.w});adj.get(l.target).push({id:l.source,w:l.w})});
+  adj.forEach(a=>a.sort((x,y)=>y.w-x.w||cnt.get(y.id)-cnt.get(x.id)));
+  maxFreq=d3.max(nodes,n=>n.c)||1;
+  return {nodes,links:lk,floor,capped,total:freq.size};
+}
+function render(keepTree){
+  if(!sentences.length) return;
+  $("#empty").hidden=true; $("#err").hidden=true; $("#busy").hidden=false;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const g=compute(); $("#busy").hidden=true;
+    if(!g.nodes.length){
+      $("#errT").textContent="با این تنظیمات گرافی نمی‌ماند";
+      $("#errB").textContent=`از ${fa(g.total)} کلمه یکتا هیچ‌کدام از فیلترها رد نشد. حداقل تکرار یا حداقل وزن یال را کم کن.`;
+      $("#err").hidden=false; clearNet(); return;
+    }
+    graph=g; drawNet(g); stats(g); notice(g); fillRoots();
+    const prev=keepTree&&treeRoot?treeRoot.word:null;
+    treeRoot=null; active=null;
+    if(prev&&adj.has(prev)) buildTree(prev);
+    else if(tab==="deep") $("#dEmpty").hidden=false;
+  }));
+}
+function clearNet(){gLink.selectAll("*").remove();gNode.selectAll("*").remove();if(sim)sim.stop()}
+const R=()=>d3.scaleSqrt().domain([1,maxFreq]).range([5.5,27]).clamp(true);
+const F=()=>d3.scaleSqrt().domain([1,maxFreq]).range([9.5,21]).clamp(true);
+function drawNet(g){
+  clearNet();
+  const r=R(), f=F();
+  const nodes=g.nodes.map(d=>({...d})), links=g.links.map(d=>({...d}));
+  const wS=d3.scaleLinear().domain([1,d3.max(links,l=>l.w)||1]).range([1,4.6]);
+  const link=gLink.selectAll("line").data(links).join("line").attr("class","link")
+    .attr("stroke-width",d=>wS(d.w)).attr("stroke-opacity",d=>.3+Math.min(.4,d.w*.06));
+  const node=gNode.selectAll("g").data(nodes,d=>d.id).join("g").attr("class","node");
+  node.append("circle").attr("r",d=>r(d.c)).attr("fill",d=>heat(d.c));
+  node.append("text").attr("font-size",d=>f(d.c)+"px").attr("dy",d=>r(d.c)+f(d.c)*.95).text(d=>d.id);
+  labelPass();
+  node.on("mouseenter",(e,d)=>{if(!picked)focus(d.id)}).on("mouseleave",()=>{if(!picked)blur()})
+    .on("click",(e,d)=>{e.stopPropagation();pick(d)})
+    .call(d3.drag().on("start",(e,d)=>{if(!e.active)sim.alphaTarget(.22).restart();d.fx=d.x;d.fy=d.y})
+      .on("drag",(e,d)=>{d.fx=e.x;d.fy=e.y}).on("end",e=>{if(!e.active)sim.alphaTarget(0)}))
+    .on("dblclick",(e,d)=>{d.fx=d.fy=null;sim.alphaTarget(.2).restart();setTimeout(()=>sim.alphaTarget(0),400)});
+  svg.on("click",unpick);
+  const box=$("#paneNet").getBoundingClientRect(), k=opts.spread/100;
+  sim=d3.forceSimulation(nodes)
+    .force("link",d3.forceLink(links).id(d=>d.id).distance(d=>(34+58/Math.sqrt(d.w))*k).strength(d=>Math.min(1,.06*d.w+.16)))
+    .force("charge",d3.forceManyBody().strength(d=>-(120+r(d.c)*22)*k).distanceMax(640))
+    .force("collide",d3.forceCollide().radius(d=>r(d.c)+7).iterations(2))
+    .force("x",d3.forceX(box.width/2).strength(.045)).force("y",d3.forceY(box.height/2).strength(.055))
+    .on("tick",()=>{link.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+      node.attr("transform",d=>`translate(${d.x},${d.y})`)}).on("end",fitNet);
+  for(let i=0;i<90;i++) sim.tick();
+  fitNet();
+}
+function labelPass(){
+  const cut=opts.labels?0:(d3.quantile(graph.nodes.map(n=>n.c).sort(d3.ascending),.72)||0);
+  gNode.selectAll("text").style("display",d=>d.c>=cut?null:"none");
+}
+function fitNet(){
+  const nodes=gNode.selectAll("g").data(); if(!nodes.length) return;
+  const box=$("#paneNet").getBoundingClientRect();
+  const xs=d3.extent(nodes,d=>d.x), ys=d3.extent(nodes,d=>d.y);
+  const w=Math.max(1,xs[1]-xs[0]), h=Math.max(1,ys[1]-ys[0]);
+  const k=Math.min(2.2,.86*Math.min(box.width/w,box.height/h));
+  svg.transition("fit").duration(600).ease(d3.easeExpOut).call(zoom.transform,
+    d3.zoomIdentity.translate(box.width/2,box.height/2).scale(k).translate(-(xs[0]+w/2),-(ys[0]+h/2)));
+}
+function focus(id){
+  const near=new Set([id,...(adj.get(id)||[]).map(n=>n.id)]);
+  gRoot.classed("is-focus",true);
+  gNode.selectAll("g").classed("hi",d=>near.has(d.id)).classed("pick",d=>d.id===id);
+  gLink.selectAll("line").classed("hi",d=>d.source.id===id||d.target.id===id);
+}
+function blur(){gRoot.classed("is-focus",false);gNode.selectAll("g").classed("hi",false).classed("pick",false);gLink.selectAll("line").classed("hi",false)}
+function pick(d){
+  picked=d.id; focus(d.id);
+  $("#peekW").textContent=d.id;
+  $("#peekM").textContent=`${fa(d.c)} بار · ${fa(d.deg)} اتصال`;
+  $("#peekN").innerHTML="";
+  (adj.get(d.id)||[]).slice(0,10).forEach(n=>{
+    const b=document.createElement("button"); b.className="chip"; b.innerHTML=`${n.id}<b>${fa(n.w)}</b>`;
+    b.onclick=ev=>{ev.stopPropagation();const t=gNode.selectAll("g").data().find(x=>x.id===n.id);if(t)pick(t)};
+    $("#peekN").appendChild(b);
+  });
+  $("#peekDive").onclick=ev=>{ev.stopPropagation();buildTree(d.id);go("deep")};
+  $("#peek").classList.add("is-on");
+}
+function unpick(){picked=null;blur();$("#peek").classList.remove("is-on")}
+$("#peekX").onclick=e=>{e.stopPropagation();unpick()};
+
+/* ================= deep search tree ================= */
+const tsvg=d3.select("#tree"), tRoot=tsvg.append("g");
+const tgGuide=tRoot.append("g").attr("class","guide"), tgLink=tRoot.append("g"), tgNode=tRoot.append("g");
+const tzoom=d3.zoom().scaleExtent([.16,2.4]).on("zoom",e=>tRoot.attr("transform",e.transform));
+tsvg.call(tzoom).on("mousedown.c",()=>tsvg.classed("is-panning",true)).on("mouseup.c",()=>tsvg.classed("is-panning",false));
+
+const ROW=52, COL=248, CH=38;
+const pickHot=()=>([...graph.nodes].sort((a,b)=>b.c-a.c)[0]||{}).id;
+const boxW=w=>Math.max(88,Math.min(196,w.length*11+56));
+
+function mkNode(word,parent,edgeW){
+  return {word,count:cnt.get(word)||0,edgeW:edgeW||0,parent,depth:parent?parent.depth+1:0,kids:null,open:false};
+}
+function chain(n){const s=new Set();let p=n;while(p){s.add(p.word);p=p.parent}return s}
+function ensureKids(n){
+  if(n.kids!==null) return n.kids;
+  const seen=chain(n);
+  let list=(adj.get(n.word)||[]).filter(x=>(cnt.get(x.id)||0)<n.count&&!seen.has(x.id));
+  list.sort(opts.byW?(a,b)=>b.w-a.w||cnt.get(b.id)-cnt.get(a.id):(a,b)=>cnt.get(b.id)-cnt.get(a.id)||b.w-a.w);
+  n.kids=list.slice(0,opts.fan).map(x=>mkNode(x.id,n,x.w));
+  return n.kids;
+}
+function autoOpen(n,d){ if(d<=0) return; const k=ensureKids(n); if(!k.length) return; n.open=true; k.forEach(c=>autoOpen(c,d-1)); }
+function buildTree(word){
+  if(!word||!adj.has(word)){$("#dEmpty").hidden=false;treeRoot=null;return}
+  treeRoot=mkNode(word,null,0); autoOpen(treeRoot,opts.auto);
+  active=treeRoot; $("#dEmpty").hidden=true; $("#rootSel").value=word;
+  drawTree(true);
+}
+function toggle(n){
+  const k=ensureKids(n);
+  if(!k.length){ active=n; drawTree(false); return; }
+  n.open=!n.open; active=n; drawTree(false);
+}
+function drawTree(refit){
+  if(!treeRoot){$("#dEmpty").hidden=false;return}
+  const h=d3.hierarchy(treeRoot,d=>d.open?d.kids:null);
+  h.each(d=>{d.data._w=boxW(d.data.word); ensureKids(d.data)});
+  d3.tree().nodeSize([ROW,COL]).separation((a,b)=>a.parent===b.parent?1:1.35)(h);
+  const nodes=h.descendants(), links=h.links();
+  const X=d=>-d.y, Y=d=>d.x;
+  const onPath=new Set(); { let p=active; while(p){onPath.add(p);p=p.parent} }
+
+  /* layer ruler */
+  const cols=[...new Set(nodes.map(d=>d.depth))].sort(d3.ascending);
+  const topY=d3.min(nodes,d=>Y(d))-38;
+  const gd=tgGuide.style("display",opts.guide?null:"none").selectAll("g").data(cols,d=>d).join(enter=>{
+    const e=enter.append("g"); e.append("line"); e.append("text"); return e;
+  });
+  const botY=d3.max(nodes,d=>Y(d))+26;
+  gd.select("line").attr("x1",d=>-d*COL).attr("x2",d=>-d*COL).attr("y1",topY+12).attr("y2",botY);
+  gd.select("text").attr("x",d=>-d*COL).attr("y",topY).text(d=>d?`لایه ${fa(d)}`:"ریشه");
+
+  /* links: one transition, opacity + path together */
+  const lj=tgLink.selectAll("path").data(links,d=>d.source.data.word+">"+d.target.data.word+"@"+d.target.depth);
+  const path=d=>{
+    const px=X(d.source)-d.source.data._w/2, py=Y(d.source);
+    const cx=X(d.target)+d.target.data._w/2, cy=Y(d.target);
+    const m=(px+cx)/2;
+    return `M${px},${py}C${m},${py} ${m},${cy} ${cx},${cy}`;
+  };
+  lj.exit().transition("t").duration(160).attr("opacity",0).remove();
+  const le=lj.enter().append("path").attr("class","tlink").attr("opacity",0).attr("d",path);
+  le.merge(lj).classed("on",d=>onPath.has(d.source.data)&&onPath.has(d.target.data))
+    .transition("t").duration(420).ease(d3.easeExpOut).attr("opacity",1).attr("d",path);
+
+  /* nodes */
+  const nj=tgNode.selectAll("g.tnode").data(nodes,d=>d.data.word+"@"+d.depth);
+  nj.exit().transition("t").duration(160).attr("opacity",0).remove();
+  const ne=nj.enter().append("g").attr("class","tnode").attr("opacity",0)
+    .attr("transform",d=>{const p=d.parent&&d.parent.data._px!=null?d.parent.data:d.data;
+      return `translate(${p._px!=null?p._px:X(d)},${p._py!=null?p._py:Y(d)})`});
+  ne.append("rect").attr("class","sh");
+  ne.append("rect").attr("class","card");
+  ne.append("text").attr("class","w");
+  ne.append("text").attr("class","n");
+  const bg=ne.append("g").attr("class","badge");
+  bg.append("rect").attr("width",20).attr("height",20).attr("y",-10);
+  bg.append("text").attr("dy",4);
+  ne.on("click",(ev,d)=>{ev.stopPropagation();toggle(d.data)});
+
+  const g=ne.merge(nj);
+  g.classed("open",d=>d.data.open).classed("root",d=>d.depth===0)
+   .classed("leaf",d=>(d.data.kids||[]).length===0).classed("on",d=>d.data===active);
+  g.select("rect.sh").attr("x",d=>-d.data._w/2-4).attr("y",-CH/2+4).attr("width",d=>d.data._w).attr("height",CH);
+  g.select("rect.card").attr("x",d=>-d.data._w/2).attr("y",-CH/2).attr("width",d=>d.data._w).attr("height",CH)
+    .attr("fill",d=>d.depth===0?"var(--acc)":soft(d.data.count));
+  g.select("text.w").attr("dy",-2).attr("font-size",d=>d.depth===0?"15px":"13.5px").text(d=>d.data.word);
+  g.select("text.n").attr("dy",13).text(d=>d.depth?`${fa(d.data.count)}× · یال ${fa(d.data.edgeW)}`:`${fa(d.data.count)}× ریشه`);
+  g.select("g.badge").attr("display",d=>(d.data.kids||[]).length?null:"none")
+    .attr("transform",d=>`translate(${-d.data._w/2-20},0)`);
+  g.select("g.badge rect").attr("fill",d=>d.data.open?"var(--acc)":"var(--surface)");
+  g.select("g.badge text").attr("x",10).text(d=>d.data.open?"−":"+"+fa((d.data.kids||[]).length));
+  g.transition("t").duration(440).ease(d3.easeExpOut).attr("opacity",1)
+    .attr("transform",d=>`translate(${X(d)},${Y(d)})`)
+    .on("end",d=>{d.data._px=X(d);d.data._py=Y(d)});
+  nodes.forEach(d=>{d.data._px=X(d);d.data._py=Y(d)});
+
+  $("#dDepth").textContent=fa(d3.max(nodes,d=>d.depth)||0);
+  $("#dNodes").textContent=fa(nodes.length);
+  $("#dRule").innerHTML=`آستانه لایه بعد <b>&lt; ${fa((active||treeRoot).count)}×</b>`;
+  trail(active||treeRoot);
+  if(refit) fitTree(); else setTimeout(fitTree,60);
+}
+function fitTree(){
+  const nodes=tgNode.selectAll("g.tnode").data(); if(!nodes.length) return;
+  const box=$("#paneDeep").getBoundingClientRect();
+  const xs=[d3.min(nodes,d=>-d.y-d.data._w/2)-20,d3.max(nodes,d=>-d.y+d.data._w/2)+20];
+  const ys=[d3.min(nodes,d=>d.x)-60,d3.max(nodes,d=>d.x)+40];
+  const w=Math.max(1,xs[1]-xs[0]), h=Math.max(1,ys[1]-ys[0]);
+  const k=Math.min(1.25,.9*Math.min(box.width/w,box.height/h));
+  tsvg.transition("fit").duration(560).ease(d3.easeExpOut).call(tzoom.transform,
+    d3.zoomIdentity.translate(box.width/2,box.height/2).scale(k).translate(-(xs[0]+w/2),-(ys[0]+h/2)));
+}
+function trail(n){
+  const path=[]; let p=n; while(p){path.unshift(p);p=p.parent}
+  const el=$("#trail"); el.innerHTML="";
+  path.forEach((node,i)=>{
+    if(i){const a=document.createElement("span");a.className="arrow";a.textContent="↳";el.appendChild(a)}
+    const b=document.createElement("button");
+    b.className="crumb"+(i===path.length-1?" crumb--now":"");
+    b.innerHTML=`${node.word}<b>${fa(node.count)}×</b>`;
+    if(i<path.length-1) b.onclick=()=>{active=node;drawTree(false)};
+    el.appendChild(b);
+  });
+}
+$("#dExpand").onclick=()=>{if(treeRoot){autoOpen(treeRoot,opts.auto);drawTree(true)}};
+$("#dCollapse").onclick=()=>{if(treeRoot){const f=n=>{n.open=false;(n.kids||[]).forEach(f)};f(treeRoot);active=treeRoot;drawTree(true)}};
+$("#dFit").onclick=fitTree;
+$("#dStart").onclick=()=>buildTree(pickHot());
+$("#btnReset").onclick=()=>buildTree(treeRoot?treeRoot.word:pickHot());
+$("#rootSel").onchange=e=>buildTree(e.target.value);
+function fillRoots(){
+  const list=[...graph.nodes].sort((a,b)=>b.c-a.c);
+  $("#rootSel").innerHTML=list.map(n=>`<option value="${n.id}">${n.id} — ${fa(n.c)}×</option>`).join("");
+  $("#rootHint").textContent=`${fa(list.length)} گزینه`;
+  if(treeRoot&&adj.has(treeRoot.word)) $("#rootSel").value=treeRoot.word;
+}
+
+/* ================= tabs / rail ================= */
+function go(which){
+  tab=which; const net=which==="net";
+  $("#tabNet").setAttribute("aria-selected",net); $("#tabDeep").setAttribute("aria-selected",!net);
+  $("#paneNet").classList.toggle("is-on",net); $("#paneDeep").classList.toggle("is-on",!net);
+  $("#secNet").hidden=!net; $("#secDeep").hidden=net;
+  if(!net){
+    if(!graph.nodes.length){$("#dEmpty").hidden=false}
+    else{fillRoots(); if(!treeRoot){$("#dEmpty").hidden=false} else {$("#dEmpty").hidden=true;drawTree(true)}}
+  }
+}
+$("#tabNet").onclick=()=>go("net"); $("#tabDeep").onclick=()=>go("deep");
+const railToggle=off=>{document.body.classList.toggle("rail-off",off);
+  setTimeout(()=>{tab==="net"?fitNet():fitTree()},380)};
+$("#railHide1").onclick=()=>railToggle(true); $("#railHide2").onclick=()=>railToggle(true);
+$("#railOpen").onclick=()=>railToggle(false);
+addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea,select")) return;
+  if(e.key==="1")go("net"); if(e.key==="2")go("deep");
+  if(e.key==="Escape")unpick();
+  if(e.key==="\\")railToggle(!document.body.classList.contains("rail-off"));
+});
+
+/* ================= stats / input ================= */
+function stats(g){
+  $("#kSent").textContent=fa(sentences.length);
+  $("#kNode").textContent=fa(g.nodes.length);
+  $("#kEdge").textContent=fa(g.links.length);
+  $("#rampMax").textContent=fa(maxFreq);
+  const top=[...g.nodes].sort((a,b)=>b.c-a.c).slice(0,6);
+  $("#ranks").innerHTML=top.map(n=>`<li data-w="${n.id}"><i style="background:${heat(n.c)}"></i><em>${n.id}</em><b>${fa(n.c)}</b></li>`).join("");
+  $("#ranks").querySelectorAll("li").forEach(li=>li.onclick=()=>{
+    const w=li.dataset.w;
+    if(tab==="deep") buildTree(w);
+    else{const t=gNode.selectAll("g").data().find(x=>x.id===w); if(t) pick(t)}
+  });
+}
+function notice(g){
+  const w=$("#warn");
+  if(g.capped){w.hidden=false;w.textContent=`کلمات یکتا زیاد بود؛ برای خوانا ماندن حداقل تکرار روی ${fa(g.floor)} تنظیم شد.`}
+  else w.hidden=true;
+}
+function setSentences(list){
+  sentences=list.map(s=>String(s??"").trim()).filter(Boolean);
+  if(!sentences.length){$("#errT").textContent="متنی خوانده نشد";$("#errB").textContent="ستون انتخابی خالی است یا فایل جمله‌ای ندارد.";$("#err").hidden=false;return}
+  $("#minF").max=Math.max(6,Math.min(40,Math.round(sentences.length/6)));
+  treeRoot=null; render();
+}
+function loadTable(rows){
+  table=rows; const cols=Object.keys(rows[0]||{});
+  const sel=$("#col"); sel.innerHTML=cols.map(c=>`<option value="${c}">${c.trim()||"(بی‌نام)"}</option>`).join("");
+  const guess=cols.find(c=>c.trim().toLowerCase()==="name")||cols.find(c=>/name|title|text|جمله|متن|نام/i.test(c))||cols[0];
+  sel.value=guess; $("#colWrap").hidden=false; $("#colHint").textContent=`${fa(rows.length)} سطر`;
+  setSentences(rows.map(r=>r[guess]));
+}
+$("#col").onchange=e=>setSentences(table.map(r=>r[e.target.value]));
+function ingest(name,text){
+  try{
+    if(/\.json$/i.test(name)){
+      const j=JSON.parse(text);
+      if(Array.isArray(j)&&typeof j[0]==="object"&&j[0]!==null) return loadTable(j);
+      if(Array.isArray(j)){$("#colWrap").hidden=true;return setSentences(j.map(v=>typeof v==="object"?Object.values(v)[0]:v))}
+      return loadTable(Object.values(j).map(v=>({value:v})));
+    }
+    if(/\.tsv$/i.test(name)) return loadTable(d3.tsvParse(text));
+    if(/\.csv$/i.test(name)){
+      const rows=d3.csvParse(text);
+      if(rows.columns.length===1){$("#colWrap").hidden=true;return setSentences(rows.map(r=>r[rows.columns[0]]))}
+      return loadTable(rows);
+    }
+    $("#colWrap").hidden=true; setSentences(text.split(/\r?\n/));
+  }catch(_){
+    $("#errT").textContent="فایل خوانده نشد";
+    $("#errB").textContent="ساختار فایل قابل تجزیه نبود. یک CSV با هدر یا TXT با هر جمله در یک خط بده.";
+    $("#err").hidden=false;
+  }
+}
+const readFile=f=>{const r=new FileReader();r.onload=()=>ingest(f.name,r.result);r.readAsText(f,"utf-8")};
+$("#btnPick").onclick=()=>$("#file").click();
+$("#file").onchange=e=>e.target.files[0]&&readFile(e.target.files[0]);
+const drop=$("#drop");
+["dragenter","dragover"].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("is-over")}));
+["dragleave","drop"].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();if(ev==="drop"||e.target===document.body)drop.classList.remove("is-over")}));
+document.addEventListener("drop",e=>{const f=e.dataTransfer?.files?.[0];if(f)readFile(f)});
+$("#btnPaste").onclick=()=>{$("#colWrap").hidden=true;table=null;setSentences($("#paste").value.split(/\r?\n/))};
+const sample=()=>{$("#colWrap").hidden=true;table=null;$("#paste").value=SAMPLE.join("\n");setSentences(SAMPLE)};
+$("#btnSample").onclick=sample; $("#btnSample2").onclick=sample;
+$("#errBack").onclick=()=>{$("#err").hidden=true;if(!graph.nodes.length)$("#empty").hidden=false};
+
+/* ================= controls ================= */
+const seg=(a,b,mode)=>{$(a).setAttribute("aria-pressed","true");$(b).setAttribute("aria-pressed","false");opts.mode=mode;$("#winWrap").hidden=mode==="sent";render(true)};
+$("#mSent").onclick=()=>seg("#mSent","#mWin","sent");
+$("#mWin").onclick=()=>seg("#mWin","#mSent","win");
+const bind=(id,out,key,fmt=fa,after)=>{const el=$(id);
+  el.oninput=()=>{opts[key]=+el.value;$(out).textContent=fmt(el.value)};
+  el.onchange=()=>after?after():render(true)};
+bind("#win","#winV","win"); bind("#minF","#minFV","minF"); bind("#minW","#minWV","minW");
+bind("#spread","#spV","spread",v=>fa((v/100).toFixed(1))+"×");
+bind("#fan","#fanV","fan",fa,()=>{if(treeRoot)buildTree(treeRoot.word)});
+bind("#auto","#autoV","auto",fa,()=>{if(treeRoot)buildTree(treeRoot.word)});
+[["#optStop","stop"],["#optNum","nums"],["#optIso","iso"]].forEach(([id,k])=>$(id).onchange=e=>{opts[k]=e.target.checked;render(true)});
+$("#optLbl").onchange=e=>{opts.labels=e.target.checked;labelPass()};
+$("#optByW").onchange=e=>{opts.byW=e.target.checked;if(treeRoot)buildTree(treeRoot.word)};
+$("#optGuide").onchange=e=>{opts.guide=e.target.checked;tgGuide.style("display",opts.guide?null:"none")};
+$("#find").oninput=e=>{
+  const q=normalize(e.target.value.trim());
+  gNode.selectAll("g").classed("hit",d=>q.length>1&&d.id.includes(q));
+  if(q.length>1){const hit=gNode.selectAll("g").data().find(d=>d.id.includes(q));hit?pick(hit):unpick()} else unpick();
+};
+$("#zIn").onclick=()=>svg.transition().duration(240).call(zoom.scaleBy,1.4);
+$("#zOut").onclick=()=>svg.transition().duration(240).call(zoom.scaleBy,1/1.4);
+$("#zFit").onclick=fitNet;
+
+const save=(blob,name)=>{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)};
+const treeOut=n=>({word:n.word,count:n.count,edgeWeight:n.edgeW,children:(n.open&&n.kids?n.kids:[]).map(treeOut)});
+$("#btnJson").onclick=()=>save(new Blob([JSON.stringify({
+  nodes:graph.nodes.map(n=>({word:n.id,count:n.c,degree:n.deg})),
+  links:graph.links.map(l=>({source:l.source.id??l.source,target:l.target.id??l.target,weight:l.w})),
+  deepSearchTree:treeRoot?treeOut(treeRoot):null
+},null,2)],{type:"application/json"}),"word-network.json");
+$("#btnSvg").onclick=()=>{
+  const net=tab==="net";
+  const src=(net?svg:tsvg).node().cloneNode(true);
+  src.setAttribute("xmlns","http://www.w3.org/2000/svg");
+  const box=$(net?"#paneNet":"#paneDeep").getBoundingClientRect();
+  src.setAttribute("width",box.width); src.setAttribute("height",box.height);
+  const st=document.createElementNS("http://www.w3.org/2000/svg","style");
+  st.textContent=`text{font-family:Vazirmatn,sans-serif;font-weight:700;fill:#3b342c;text-anchor:middle}
+  .node text{paint-order:stroke;stroke:#f1ede3;stroke-width:4px}
+  line{stroke:#a9a39b}circle{stroke:#3b342c;stroke-width:2}
+  .tlink{fill:none;stroke:#3b342c;stroke-width:2;stroke-opacity:.45}
+  rect.card{stroke:#3b342c;stroke-width:2}rect.sh{fill:#3b342c}
+  text.n{font-family:monospace;font-size:10px;fill:#6c6458}
+  .guide line{stroke:#9b948a;stroke-dasharray:2 6}.guide text{font-family:monospace;font-size:10px;fill:#9b948a}`;
+  src.insertBefore(st,src.firstChild);
+  save(new Blob([`<?xml version="1.0" encoding="UTF-8"?>`+src.outerHTML],{type:"image/svg+xml"}),net?"word-network.svg":"deep-search-tree.svg");
+};
+addEventListener("resize",()=>{if(tab==="net"&&sim)fitNet();else if(treeRoot)fitTree()});
+</script>
+</body>
+</html>
