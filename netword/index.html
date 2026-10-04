@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
@@ -51,7 +52,7 @@
         var credit = document.createElement('div');
         credit.className = 'design-ui-credit';
         credit.setAttribute('aria-hidden', 'true');
-        credit.innerHTML = '\u{1F49C} by ClickUp Brain';
+        credit.innerHTML = '\u{1F49C} by Omid Ebrahimi - TheCodeZ';
         document.body.appendChild(credit);
 
         var timer = null;
@@ -85,7 +86,7 @@
 <!-- /skill:libraries -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>شبکه کلمات — نما و سرچ عمیق درختی</title>
+<title>NetWord · نما و سرچ عمیق درختی</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..900&display=swap" rel="stylesheet">
@@ -312,184 +313,239 @@ body.rail-off .railbtn{display:grid}
   .finder{width:100%}
   .peek{inset-inline:var(--s-3);inset-block:auto var(--s-12);width:auto}
 }
+
+/* ---------------- NetWord: contacts, language, byline ---------------- */
+.rail__top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--s-2);margin-block-end:var(--s-4)}
+.contact{display:flex;gap:6px}
+.soc{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 8px;border:2px solid var(--edge);background:var(--surface);
+  color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:.6875rem;font-weight:700;letter-spacing:.03em;box-shadow:var(--hard-sm);
+  transition:transform .1s var(--eo),box-shadow .1s var(--eo),background .16s var(--eo),color .16s var(--eo)}
+.soc:hover{background:var(--edge);color:var(--acc)}
+.soc:active{transform:translate(2px,-2px);box-shadow:none}
+.soc svg{width:14px;height:14px;flex:none}
+.lang{display:inline-flex;align-items:center;gap:4px;height:28px;border:2px solid var(--edge);background:var(--surface);padding-inline:7px 0;box-shadow:var(--hard-sm);cursor:pointer}
+.lang svg{width:14px;height:14px;flex:none;color:var(--ink-2)}
+.lang select{width:auto;border:0;background:transparent;padding:0 4px;height:24px;font-size:.75rem;font-weight:700;cursor:pointer}
+.lang select:focus{outline:0}
+.lang:focus-within{outline:3px solid var(--acc-deep);outline-offset:2px}
+.byline{margin:3px 0 0;font-size:.75rem;color:oklch(36% 0.05 78)}
+.byline b{font-weight:800;color:var(--ink)}
+html[dir=ltr] .ramp{background:linear-gradient(90deg,var(--lo),var(--mid),var(--hi))}
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="rail">
     <div class="rail__head">
-      <span class="stamp">co-occurrence engine</span>
-      <h1>شبکه کلمات</h1>
+      <div class="rail__top">
+        <div class="contact">
+          <a class="soc" href="https://github.com/TheCodeZ" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>GitHub</a>
+          <a class="soc" href="https://www.linkedin.com/in/omid-ebrahimi" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M13.6 0H2.4A2.4 2.4 0 0 0 0 2.4v11.2A2.4 2.4 0 0 0 2.4 16h11.2a2.4 2.4 0 0 0 2.4-2.4V2.4A2.4 2.4 0 0 0 13.6 0ZM4.9 13.4H2.6V6.1h2.3v7.3ZM3.75 5.1a1.33 1.33 0 1 1 0-2.66 1.33 1.33 0 0 1 0 2.66Zm9.65 8.3h-2.3V9.85c0-.85-.02-1.94-1.18-1.94-1.18 0-1.36.92-1.36 1.88v3.61H6.26V6.1h2.2v1h.03c.31-.58 1.06-1.2 2.18-1.2 2.33 0 2.76 1.53 2.76 3.53v3.97Z"/></svg>LinkedIn</a>
+        </div>
+        <label class="lang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.6 5.7 3.6 9s-1.1 6.3-3.6 9c-2.5-2.7-3.6-5.7-3.6-9S9.5 5.7 12 3Z"/></svg><select id="langSel" data-i18n-aria="lang" aria-label="زبان"></select></label>
+      </div>
+      <span class="stamp" data-i18n="stamp">co-occurrence engine</span>
+      <h1>NetWord</h1>
+      <p class="byline"><span data-i18n="by">ساخته‌شده توسط</span> <b><bdi>Omid Ebrahimi - TheCodeZ</bdi></b></p>
     </div>
 
     <div class="nav" role="tablist">
-      <button id="tabNet" role="tab" aria-selected="true" aria-controls="paneNet">شبکه<small>graph · 1</small></button>
-      <button id="tabDeep" role="tab" aria-selected="false" aria-controls="paneDeep">سرچ عمیق<small>tree · 2</small></button>
+      <button id="tabNet" role="tab" aria-selected="true" aria-controls="paneNet"><span data-i18n="tabNet">شبکه</span><small>graph · 1</small></button>
+      <button id="tabDeep" role="tab" aria-selected="false" aria-controls="paneDeep"><span data-i18n="tabDeep">سرچ عمیق</span><small>tree · 2</small></button>
     </div>
 
     <div class="rail__body">
       <section class="sec">
-        <div class="sec__t"><span>منبع داده</span><button class="btn btn--bare" id="btnSample">داده نمونه</button></div>
+        <div class="sec__t"><span data-i18n="dataSrc">منبع داده</span><button class="btn btn--bare" id="btnSample" data-i18n="sample">داده نمونه</button></div>
         <div class="drop" id="drop">
-          <p>فایل <code>CSV</code> / <code>JSON</code> / <code>TXT</code> را رها کنید</p>
-          <button class="btn" id="btnPick">انتخاب فایل</button>
+          <p data-i18n-html="dropHint">فایل <code>CSV</code> / <code>JSON</code> / <code>TXT</code> را رها کنید</p>
+          <button class="btn" id="btnPick" data-i18n="pick">انتخاب فایل</button>
           <input type="file" id="file" accept=".csv,.tsv,.json,.txt" hidden>
         </div>
         <label class="fld" id="colWrap" hidden>
-          <span class="fld__l">ستون متن<span class="fld__v" id="colHint"></span></span>
+          <span class="fld__l"><span data-i18n="textCol">ستون متن</span><span class="fld__v" id="colHint"></span></span>
           <select id="col"></select>
         </label>
-        <details class="py"><summary>جای‌گذاری دستی متن</summary>
-          <textarea id="paste" placeholder="هر خط یک جمله..." spellcheck="false"></textarea>
-          <div class="row" style="margin-block-start:var(--s-2)"><button class="btn btn--go" id="btnPaste">ساخت گراف</button></div>
+        <details class="py"><summary data-i18n="pasteSum">جای‌گذاری دستی متن</summary>
+          <textarea id="paste" placeholder="هر خط یک جمله..." data-i18n-ph="pastePh" spellcheck="false"></textarea>
+          <div class="row" style="margin-block-start:var(--s-2)"><button class="btn btn--go" id="btnPaste" data-i18n="build">ساخت گراف</button></div>
         </details>
-        <details class="py"><summary>خروجی گرفتن از پانداس</summary>
-<pre><span class="c"># ستون جملات را بریز روی دیسک، بعد فایل را رها کن</span>
+        <details class="py"><summary data-i18n="pandasSum">خروجی گرفتن از پانداس</summary>
+<pre><span class="c" data-i18n="pandasCmt"># ستون جملات را بریز روی دیسک، بعد فایل را رها کن</span>
 df[<span class="s">"name "</span>].dropna().to_csv(
     <span class="s">"words.csv"</span>, index=False, encoding=<span class="s">"utf-8"</span>)</pre>
         </details>
       </section>
 
       <section class="sec">
-        <div class="sec__t"><span>ساخت یال‌ها</span></div>
-        <div class="segs" role="group" aria-label="حالت اتصال">
-          <button id="mSent" aria-pressed="true">کل جمله</button>
-          <button id="mWin" aria-pressed="false">پنجره مجاورت</button>
+        <div class="sec__t"><span data-i18n="edges">ساخت یال‌ها</span></div>
+        <div class="segs" role="group" aria-label="حالت اتصال" data-i18n-aria="linkMode">
+          <button id="mSent" aria-pressed="true" data-i18n="mSent">کل جمله</button>
+          <button id="mWin" aria-pressed="false" data-i18n="mWin">پنجره مجاورت</button>
         </div>
         <label class="fld" id="winWrap" hidden>
-          <span class="fld__l">اندازه پنجره<span class="fld__v" id="winV">۲</span></span>
+          <span class="fld__l"><span data-i18n="winSize">اندازه پنجره</span><span class="fld__v" id="winV">۲</span></span>
           <input type="range" id="win" min="1" max="6" step="1" value="2">
         </label>
         <label class="fld">
-          <span class="fld__l">حداقل تکرار کلمه<span class="fld__v" id="minFV">۱</span></span>
+          <span class="fld__l"><span data-i18n="minF">حداقل تکرار کلمه</span><span class="fld__v" id="minFV">۱</span></span>
           <input type="range" id="minF" min="1" max="20" step="1" value="1">
         </label>
         <label class="fld">
-          <span class="fld__l">حداقل وزن یال<span class="fld__v" id="minWV">۱</span></span>
+          <span class="fld__l"><span data-i18n="minW">حداقل وزن یال</span><span class="fld__v" id="minWV">۱</span></span>
           <input type="range" id="minW" min="1" max="12" step="1" value="1">
         </label>
-        <label class="switch"><span>حذف کلمات ایست</span><input type="checkbox" id="optStop" checked></label>
-        <label class="switch"><span>حذف اعداد</span><input type="checkbox" id="optNum" checked></label>
-        <label class="switch"><span>پنهان کردن نودهای تنها</span><input type="checkbox" id="optIso" checked></label>
+        <label class="switch"><span data-i18n="stop">حذف کلمات ایست</span><input type="checkbox" id="optStop" checked></label>
+        <label class="switch"><span data-i18n="nums">حذف اعداد</span><input type="checkbox" id="optNum" checked></label>
+        <label class="switch"><span data-i18n="iso">پنهان کردن نودهای تنها</span><input type="checkbox" id="optIso" checked></label>
       </section>
 
       <section class="sec" id="secNet">
-        <div class="sec__t"><span>نمایش شبکه</span></div>
+        <div class="sec__t"><span data-i18n="netView">نمایش شبکه</span></div>
         <label class="fld">
-          <span class="fld__l">فاصله نودها<span class="fld__v" id="spV">۱٫۰×</span></span>
+          <span class="fld__l"><span data-i18n="spread">فاصله نودها</span><span class="fld__v" id="spV">۱٫۰×</span></span>
           <input type="range" id="spread" min="40" max="220" step="5" value="100">
         </label>
-        <label class="switch"><span>برچسب همه کلمات</span><input type="checkbox" id="optLbl" checked></label>
+        <label class="switch"><span data-i18n="labels">برچسب همه کلمات</span><input type="checkbox" id="optLbl" checked></label>
       </section>
 
       <section class="sec" id="secDeep" hidden>
-        <div class="sec__t"><span>سرچ عمیق</span><button class="btn btn--bare" id="btnReset">ریست</button></div>
+        <div class="sec__t"><span data-i18n="tabDeep">سرچ عمیق</span><button class="btn btn--bare" id="btnReset" data-i18n="reset">ریست</button></div>
         <label class="fld">
-          <span class="fld__l">کلمه ریشه<span class="fld__v" id="rootHint">—</span></span>
+          <span class="fld__l"><span data-i18n="root">کلمه ریشه</span><span class="fld__v" id="rootHint">—</span></span>
           <select id="rootSel"></select>
         </label>
         <label class="fld">
-          <span class="fld__l">شاخه در هر نود<span class="fld__v" id="fanV">۵</span></span>
+          <span class="fld__l"><span data-i18n="fan">شاخه در هر نود</span><span class="fld__v" id="fanV">۵</span></span>
           <input type="range" id="fan" min="2" max="12" step="1" value="5">
         </label>
         <label class="fld">
-          <span class="fld__l">باز کردن خودکار تا عمق<span class="fld__v" id="autoV">۲</span></span>
+          <span class="fld__l"><span data-i18n="auto">باز کردن خودکار تا عمق</span><span class="fld__v" id="autoV">۲</span></span>
           <input type="range" id="auto" min="1" max="5" step="1" value="2">
         </label>
-        <label class="switch"><span>ترتیب شاخه‌ها بر اساس وزن یال</span><input type="checkbox" id="optByW" checked></label>
-        <label class="switch"><span>خط‌کش لایه‌ها</span><input type="checkbox" id="optGuide" checked></label>
-        <p class="note">هر لایه فقط کلماتی را می‌گیرد که تکرارشان <b>کمتر از والد</b> است و در مسیر بالادست نیامده‌اند، پس مسیر همیشه نزولی است و لوپ نمی‌خورد.</p>
+        <label class="switch"><span data-i18n="byW">ترتیب شاخه‌ها بر اساس وزن یال</span><input type="checkbox" id="optByW" checked></label>
+        <label class="switch"><span data-i18n="guide">خط‌کش لایه‌ها</span><input type="checkbox" id="optGuide" checked></label>
+        <p class="note" data-i18n-html="note">هر لایه فقط کلماتی را می‌گیرد که تکرارشان <b>کمتر از والد</b> است و در مسیر بالادست نیامده‌اند، پس مسیر همیشه نزولی است و لوپ نمی‌خورد.</p>
       </section>
 
       <section class="sec">
-        <div class="sec__t"><span>خلاصه</span></div>
+        <div class="sec__t"><span data-i18n="summary">خلاصه</span></div>
         <div class="figs">
-          <div class="fig"><b id="kSent">۰</b><span>جمله</span></div>
-          <div class="fig"><b id="kNode">۰</b><span>نود</span></div>
-          <div class="fig"><b id="kEdge">۰</b><span>یال</span></div>
+          <div class="fig"><b id="kSent">۰</b><span data-i18n="sent">جمله</span></div>
+          <div class="fig"><b id="kNode">۰</b><span data-i18n="node">نود</span></div>
+          <div class="fig"><b id="kEdge">۰</b><span data-i18n="edge">یال</span></div>
         </div>
-        <div class="sec__t" style="margin-block:var(--s-4) var(--s-2)"><span>داغ‌ترین کلمات</span></div>
+        <div class="sec__t" style="margin-block:var(--s-4) var(--s-2)"><span data-i18n="hot">داغ‌ترین کلمات</span></div>
         <ol class="ranks" id="ranks"></ol>
         <div class="row" style="margin-block-start:var(--s-4)">
           <button class="btn" id="btnJson">JSON</button>
-          <button class="btn" id="btnSvg">SVG نمای فعال</button>
+          <button class="btn" id="btnSvg" data-i18n="svgBtn">SVG نمای فعال</button>
         </div>
       </section>
     </div>
   </aside>
 
   <main class="stage">
-    <button class="railbtn" id="railOpen" title="نمایش نوار کنار">☰</button>
+    <button class="railbtn" id="railOpen" title="نمایش نوار کنار" data-i18n-title="railShow">☰</button>
 
     <!-- network -->
     <section class="pane is-on" id="paneNet" role="tabpanel">
-      <svg class="canvas" id="graph" aria-label="گراف شبکه کلمات"></svg>
+      <svg class="canvas" id="graph" aria-label="گراف شبکه کلمات" data-i18n-aria="graphAria"></svg>
       <div class="hud">
         <div class="finder">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="color:var(--ink-2);flex:none"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input type="search" id="find" placeholder="جست‌وجوی کلمه…" autocomplete="off">
+          <input type="search" id="find" placeholder="جست‌وجوی کلمه…" data-i18n-ph="findPh" autocomplete="off">
         </div>
         <div class="tools">
-          <button id="railHide1" title="پنهان کردن نوار کنار">⟩</button>
-          <button id="zIn" title="بزرگ‌نمایی">+</button>
-          <button id="zOut" title="کوچک‌نمایی">−</button>
-          <button id="zFit" title="جا دادن">⤢</button>
+          <button id="railHide1" title="پنهان کردن نوار کنار" data-i18n-title="railHide">⟩</button>
+          <button id="zIn" title="بزرگ‌نمایی" data-i18n-title="zIn">+</button>
+          <button id="zOut" title="کوچک‌نمایی" data-i18n-title="zOut">−</button>
+          <button id="zFit" title="جا دادن" data-i18n-title="zFit">⤢</button>
         </div>
       </div>
       <div class="legend">
-        <h4>تکرار کلمه</h4><div class="ramp"></div>
-        <div class="ramp-l"><span>۱</span><span id="rampMax">—</span></div>
+        <h4 data-i18n="freq">تکرار کلمه</h4><div class="ramp"></div>
+        <div class="ramp-l"><span id="rampMin">۱</span><span id="rampMax">—</span></div>
       </div>
       <div class="peek" id="peek">
         <button class="btn btn--bare peek__x" id="peekX">✕</button>
         <div class="peek__w" id="peekW"></div>
         <div class="peek__m" id="peekM"></div>
-        <h4>هم‌نشین‌ها</h4>
+        <h4 data-i18n="neighbors">هم‌نشین‌ها</h4>
         <div class="chips" id="peekN"></div>
-        <div class="row" style="margin-block-start:var(--s-4)"><button class="btn btn--go" id="peekDive">کاوش درختی از این کلمه ↳</button></div>
+        <div class="row" style="margin-block-start:var(--s-4)"><button class="btn btn--go" id="peekDive" data-i18n="dive">کاوش درختی از این کلمه ↳</button></div>
       </div>
       <div class="warn" id="warn" hidden></div>
       <div class="overlay" id="empty">
         <svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="var(--edge)" stroke-width="2">
           <circle cx="24" cy="13" r="6" fill="var(--acc)"/><circle cx="11" cy="34" r="4.5"/><circle cx="37" cy="32" r="5" fill="var(--acc)"/><circle cx="25" cy="43" r="3"/>
           <path d="M24 19 13.5 30M24 19l10 9M14 37.5l8 4.5M33.5 36l-6 5"/></svg>
-        <h2>هنوز گرافی ساخته نشده</h2>
-        <p>ستون جملات را از دیتافریم بیرون بده و فایلش را رها کن، یا با داده نمونه شروع کن.</p>
-        <button class="btn btn--go" id="btnSample2">ساخت با داده نمونه</button>
+        <h2 data-i18n="emptyT">هنوز گرافی ساخته نشده</h2>
+        <p data-i18n="emptyB">ستون جملات را از دیتافریم بیرون بده و فایلش را رها کن، یا با داده نمونه شروع کن.</p>
+        <button class="btn btn--go" id="btnSample2" data-i18n="sample2">ساخت با داده نمونه</button>
       </div>
-      <div class="overlay" id="busy" hidden><div class="spark"></div><p>توکن‌سازی و شمارش هم‌آیی…</p></div>
-      <div class="overlay" id="err" hidden><h2 id="errT"></h2><p id="errB"></p><button class="btn" id="errBack">برگشت</button></div>
+      <div class="overlay" id="busy" hidden><div class="spark"></div><p data-i18n="busy">توکن‌سازی و شمارش هم‌آیی…</p></div>
+      <div class="overlay" id="err" hidden><h2 id="errT"></h2><p id="errB"></p><button class="btn" id="errBack" data-i18n="back">برگشت</button></div>
     </section>
 
     <!-- deep search -->
     <section class="pane" id="paneDeep" role="tabpanel">
-      <svg class="canvas" id="tree" aria-label="درخت سرچ عمیق"></svg>
+      <svg class="canvas" id="tree" aria-label="درخت سرچ عمیق" data-i18n-aria="treeAria"></svg>
       <div class="hud">
-        <div class="pill" id="dRule">آستانه تکرار <b>—</b></div>
+        <div class="pill" id="dRule"><span data-i18n="ruleInit">آستانه تکرار</span> <b>—</b></div>
         <div class="tools">
-          <button id="railHide2" title="پنهان کردن نوار کنار">⟩</button>
-          <button id="dExpand" title="باز کردن خودکار"><b>باز</b></button>
-          <button id="dCollapse" title="جمع کردن همه"><b>جمع</b></button>
-          <button id="dFit" title="جا دادن">⤢</button>
+          <button id="railHide2" title="پنهان کردن نوار کنار" data-i18n-title="railHide">⟩</button>
+          <button id="dExpand" title="باز کردن خودکار" data-i18n-title="expand"><b data-i18n="expandB">باز</b></button>
+          <button id="dCollapse" title="جمع کردن همه" data-i18n-title="collapse"><b data-i18n="collapseB">جمع</b></button>
+          <button id="dFit" title="جا دادن" data-i18n-title="zFit">⤢</button>
         </div>
       </div>
       <div class="trail" id="trail"></div>
       <div class="pills">
-        <span class="pill">عمق <b id="dDepth">۰</b></span>
-        <span class="pill">جعبه <b id="dNodes">۰</b></span>
+        <span class="pill"><span data-i18n="depth">عمق</span> <b id="dDepth">۰</b></span>
+        <span class="pill"><span data-i18n="boxes">جعبه</span> <b id="dNodes">۰</b></span>
       </div>
       <div class="overlay" id="dEmpty">
         <svg width="62" height="46" viewBox="0 0 62 46" fill="none" stroke="var(--edge)" stroke-width="2">
           <rect x="40" y="17" width="20" height="12" fill="var(--acc)"/><rect x="16" y="3" width="18" height="11"/><rect x="16" y="17" width="18" height="11"/><rect x="16" y="31" width="18" height="11"/>
           <path d="M40 23h-4M36 8.5h-2v14M36 36.5h-2v-14"/></svg>
-        <h2>ریشه را انتخاب کن</h2>
-        <p>یک کلمه بردار، بعد با هر کلیک یک لایه پایین‌تر برو. هر لایه فقط کلمات کم‌تکرارتر از والد را باز می‌کند.</p>
-        <button class="btn btn--go" id="dStart">شروع از داغ‌ترین کلمه</button>
+        <h2 data-i18n="dEmptyT">ریشه را انتخاب کن</h2>
+        <p data-i18n="dEmptyB">یک کلمه بردار، بعد با هر کلیک یک لایه پایین‌تر برو. هر لایه فقط کلمات کم‌تکرارتر از والد را باز می‌کند.</p>
+        <button class="btn btn--go" id="dStart" data-i18n="dStart">شروع از داغ‌ترین کلمه</button>
       </div>
     </section>
   </main>
 </div>
 
+<script>
+/* ================= i18n (NetWord) ================= */
+const I18N_LANGS=[["fa","فارسی"],["en","English"],["ar","العربية"],["es","Español"],["fr","Français"],["de","Deutsch"],["zh","中文"],["hi","हिन्दी"],["pt","Português"],["ru","Русский"],["ja","日本語"],["tr","Türkçe"]];
+const I18N_RTL=new Set(["fa","ar"]);
+const I18N_DIGITS={fa:"۰۱۲۳۴۵۶۷۸۹",ar:"٠١٢٣٤٥٦٧٨٩"};
+const I18N={
+fa:{title:"NetWord · نما و سرچ عمیق درختی",stamp:"co-occurrence engine",tabNet:"شبکه",tabDeep:"سرچ عمیق",dataSrc:"منبع داده",sample:"داده نمونه",dropHint:"فایل {f} را رها کنید",pick:"انتخاب فایل",textCol:"ستون متن",pasteSum:"جای‌گذاری دستی متن",pastePh:"هر خط یک جمله...",build:"ساخت گراف",pandasSum:"خروجی گرفتن از پانداس",pandasCmt:"# ستون جملات را بریز روی دیسک، بعد فایل را رها کن",edges:"ساخت یال‌ها",linkMode:"حالت اتصال",mSent:"کل جمله",mWin:"پنجره مجاورت",winSize:"اندازه پنجره",minF:"حداقل تکرار کلمه",minW:"حداقل وزن یال",stop:"حذف کلمات ایست",nums:"حذف اعداد",iso:"پنهان کردن نودهای تنها",netView:"نمایش شبکه",spread:"فاصله نودها",labels:"برچسب همه کلمات",reset:"ریست",root:"کلمه ریشه",fan:"شاخه در هر نود",auto:"باز کردن خودکار تا عمق",byW:"ترتیب شاخه‌ها بر اساس وزن یال",guide:"خط‌کش لایه‌ها",note:"هر لایه فقط کلماتی را می‌گیرد که تکرارشان <b>کمتر از والد</b> است و در مسیر بالادست نیامده‌اند، پس مسیر همیشه نزولی است و لوپ نمی‌خورد.",summary:"خلاصه",sent:"جمله",node:"نود",edge:"یال",hot:"داغ‌ترین کلمات",svgBtn:"SVG نمای فعال",railShow:"نمایش نوار کنار",railHide:"پنهان کردن نوار کنار",graphAria:"گراف شبکه کلمات",findPh:"جست‌وجوی کلمه…",zIn:"بزرگ‌نمایی",zOut:"کوچک‌نمایی",zFit:"جا دادن",freq:"تکرار کلمه",neighbors:"هم‌نشین‌ها",dive:"کاوش درختی از این کلمه ↳",emptyT:"هنوز گرافی ساخته نشده",emptyB:"ستون جملات را از دیتافریم بیرون بده و فایلش را رها کن، یا با داده نمونه شروع کن.",sample2:"ساخت با داده نمونه",busy:"توکن‌سازی و شمارش هم‌آیی…",back:"برگشت",treeAria:"درخت سرچ عمیق",expand:"باز کردن خودکار",expandB:"باز",collapse:"جمع کردن همه",collapseB:"جمع",depth:"عمق",boxes:"جعبه",dEmptyT:"ریشه را انتخاب کن",dEmptyB:"یک کلمه بردار، بعد با هر کلیک یک لایه پایین‌تر برو. هر لایه فقط کلمات کم‌تکرارتر از والد را باز می‌کند.",dStart:"شروع از داغ‌ترین کلمه",by:"ساخته‌شده توسط",lang:"زبان",errNoGraphT:"با این تنظیمات گرافی نمی‌ماند",errNoGraphB:"از {n} کلمه یکتا هیچ‌کدام از فیلترها رد نشد. حداقل تکرار یا حداقل وزن یال را کم کن.",peekM:"{c} بار · {d} اتصال",layer:"لایه {n}",rootL:"ریشه",nodeN:"{c}× · یال {w}",nodeRoot:"{c}× ریشه",rule:"آستانه لایه بعد",ruleInit:"آستانه تکرار",options:"{n} گزینه",capped:"کلمات یکتا زیاد بود؛ برای خوانا ماندن حداقل تکرار روی {n} تنظیم شد.",noTextT:"متنی خوانده نشد",noTextB:"ستون انتخابی خالی است یا فایل جمله‌ای ندارد.",unnamed:"(بی‌نام)",readErrT:"فایل خوانده نشد",readErrB:"ساختار فایل قابل تجزیه نبود. یک CSV با هدر یا TXT با هر جمله در یک خط بده.",rows:"{n} سطر"},
+en:{title:"NetWord · word network & deep tree search",stamp:"co-occurrence engine",tabNet:"Network",tabDeep:"Deep search",dataSrc:"Data source",sample:"Sample data",dropHint:"Drop a {f} file",pick:"Choose file",textCol:"Text column",pasteSum:"Paste text manually",pastePh:"One sentence per line...",build:"Build graph",pandasSum:"Export from pandas",pandasCmt:"# dump the sentence column to disk, then drop the file",edges:"Edge building",linkMode:"Link mode",mSent:"Whole sentence",mWin:"Sliding window",winSize:"Window size",minF:"Min word frequency",minW:"Min edge weight",stop:"Remove stop words",nums:"Remove numbers",iso:"Hide isolated nodes",netView:"Network view",spread:"Node spacing",labels:"Label all words",reset:"Reset",root:"Root word",fan:"Branches per node",auto:"Auto-expand to depth",byW:"Sort branches by edge weight",guide:"Layer ruler",note:"Each layer only takes words that appear <b>less often than their parent</b> and haven't shown up upstream, so paths always descend and never loop.",summary:"Summary",sent:"sentences",node:"nodes",edge:"edges",hot:"Hottest words",svgBtn:"SVG of active view",railShow:"Show sidebar",railHide:"Hide sidebar",graphAria:"Word network graph",findPh:"Search a word…",zIn:"Zoom in",zOut:"Zoom out",zFit:"Fit to screen",freq:"Word frequency",neighbors:"Co-occurring words",dive:"Explore tree from this word ↳",emptyT:"No graph yet",emptyB:"Export the sentence column from your dataframe and drop the file here, or start with sample data.",sample2:"Build with sample data",busy:"Tokenizing and counting co-occurrences…",back:"Back",treeAria:"Deep search tree",expand:"Auto-expand",expandB:"Open",collapse:"Collapse all",collapseB:"Close",depth:"Depth",boxes:"Boxes",dEmptyT:"Pick a root",dEmptyB:"Choose a word, then go one layer deeper with each click. Every layer only opens words rarer than their parent.",dStart:"Start from the hottest word",by:"by",lang:"Language",errNoGraphT:"Nothing survives these settings",errNoGraphB:"None of the {n} unique words passed the filters. Lower the min frequency or min edge weight.",peekM:"{c} times · {d} links",layer:"Layer {n}",rootL:"Root",nodeN:"{c}× · edge {w}",nodeRoot:"{c}× root",rule:"Next layer threshold",ruleInit:"Frequency threshold",options:"{n} options",capped:"Too many unique words; min frequency was raised to {n} to keep it readable.",noTextT:"No text found",noTextB:"The selected column is empty or the file has no sentences.",unnamed:"(unnamed)",readErrT:"Couldn't read the file",readErrB:"The file structure couldn't be parsed. Use a CSV with a header or a TXT with one sentence per line.",rows:"{n} rows"},
+ar:{title:"NetWord · شبكة الكلمات والبحث الشجري العميق",stamp:"محرّك التواجد المشترك",tabNet:"الشبكة",tabDeep:"البحث العميق",dataSrc:"مصدر البيانات",sample:"بيانات تجريبية",dropHint:"أفلت ملف {f} هنا",pick:"اختيار ملف",textCol:"عمود النص",pasteSum:"لصق النص يدويًا",pastePh:"جملة واحدة في كل سطر...",build:"إنشاء الرسم",pandasSum:"التصدير من pandas",pandasCmt:"# احفظ عمود الجمل على القرص ثم أفلت الملف",edges:"بناء الروابط",linkMode:"نمط الربط",mSent:"الجملة كاملة",mWin:"نافذة التجاور",winSize:"حجم النافذة",minF:"أدنى تكرار للكلمة",minW:"أدنى وزن للرابط",stop:"حذف كلمات التوقف",nums:"حذف الأرقام",iso:"إخفاء العقد المنفردة",netView:"عرض الشبكة",spread:"المسافة بين العقد",labels:"تسمية كل الكلمات",reset:"إعادة ضبط",root:"الكلمة الجذر",fan:"الفروع لكل عقدة",auto:"التوسيع التلقائي حتى العمق",byW:"ترتيب الفروع حسب وزن الرابط",guide:"مسطرة الطبقات",note:"كل طبقة تأخذ فقط الكلمات التي تكرارها <b>أقل من الأصل</b> ولم تظهر في المسار العلوي، لذا يبقى المسار تنازليًا دائمًا ولا يدور في حلقة.",summary:"الملخص",sent:"جملة",node:"عقدة",edge:"رابط",hot:"الكلمات الأكثر تكرارًا",svgBtn:"SVG للعرض الحالي",railShow:"إظهار الشريط الجانبي",railHide:"إخفاء الشريط الجانبي",graphAria:"رسم شبكة الكلمات",findPh:"ابحث عن كلمة…",zIn:"تكبير",zOut:"تصغير",zFit:"ملاءمة الشاشة",freq:"تكرار الكلمة",neighbors:"الكلمات المرافقة",dive:"استكشاف شجري من هذه الكلمة ↳",emptyT:"لم يُنشأ أي رسم بعد",emptyB:"صدّر عمود الجمل من إطار البيانات وأفلت الملف هنا، أو ابدأ بالبيانات التجريبية.",sample2:"إنشاء ببيانات تجريبية",busy:"جارٍ التقطيع وعدّ التواجد المشترك…",back:"رجوع",treeAria:"شجرة البحث العميق",expand:"توسيع تلقائي",expandB:"فتح",collapse:"طي الكل",collapseB:"طي",depth:"العمق",boxes:"الصناديق",dEmptyT:"اختر الجذر",dEmptyB:"اختر كلمة، ثم انزل طبقة مع كل نقرة. كل طبقة تفتح فقط كلمات أقل تكرارًا من الأصل.",dStart:"ابدأ من الكلمة الأكثر تكرارًا",by:"من تطوير",lang:"اللغة",errNoGraphT:"لا يبقى أي رسم بهذه الإعدادات",errNoGraphB:"لم تجتز أي من الكلمات الفريدة ({n}) المرشحات. خفّض أدنى تكرار أو أدنى وزن للرابط.",peekM:"{c} مرة · {d} رابط",layer:"الطبقة {n}",rootL:"الجذر",nodeN:"{c}× · رابط {w}",nodeRoot:"{c}× جذر",rule:"عتبة الطبقة التالية",ruleInit:"عتبة التكرار",options:"{n} خيار",capped:"عدد الكلمات الفريدة كبير؛ رُفع أدنى تكرار إلى {n} للحفاظ على الوضوح.",noTextT:"لم يُقرأ أي نص",noTextB:"العمود المختار فارغ أو الملف لا يحتوي على جمل.",unnamed:"(بلا اسم)",readErrT:"تعذّرت قراءة الملف",readErrB:"تعذّر تحليل بنية الملف. استخدم CSV بترويسة أو TXT بجملة في كل سطر.",rows:"{n} صف"},
+es:{title:"NetWord · red de palabras y búsqueda profunda en árbol",stamp:"motor de coocurrencia",tabNet:"Red",tabDeep:"Búsqueda profunda",dataSrc:"Fuente de datos",sample:"Datos de ejemplo",dropHint:"Suelta un archivo {f}",pick:"Elegir archivo",textCol:"Columna de texto",pasteSum:"Pegar texto manualmente",pastePh:"Una frase por línea...",build:"Crear grafo",pandasSum:"Exportar desde pandas",pandasCmt:"# guarda la columna de frases en disco y luego suelta el archivo",edges:"Construcción de aristas",linkMode:"Modo de enlace",mSent:"Frase completa",mWin:"Ventana deslizante",winSize:"Tamaño de ventana",minF:"Frecuencia mínima",minW:"Peso mínimo de arista",stop:"Quitar palabras vacías",nums:"Quitar números",iso:"Ocultar nodos aislados",netView:"Vista de red",spread:"Separación de nodos",labels:"Etiquetar todas las palabras",reset:"Reiniciar",root:"Palabra raíz",fan:"Ramas por nodo",auto:"Autoexpandir hasta nivel",byW:"Ordenar ramas por peso",guide:"Regla de capas",note:"Cada capa solo toma palabras que aparecen <b>menos que su padre</b> y que no salieron más arriba, así que el camino siempre desciende y nunca hace bucles.",summary:"Resumen",sent:"frases",node:"nodos",edge:"aristas",hot:"Palabras más frecuentes",svgBtn:"SVG de la vista activa",railShow:"Mostrar barra lateral",railHide:"Ocultar barra lateral",graphAria:"Grafo de red de palabras",findPh:"Buscar palabra…",zIn:"Acercar",zOut:"Alejar",zFit:"Ajustar",freq:"Frecuencia",neighbors:"Coocurrencias",dive:"Explorar árbol desde aquí ↳",emptyT:"Aún no hay grafo",emptyB:"Exporta la columna de frases de tu dataframe y suelta el archivo, o empieza con datos de ejemplo.",sample2:"Crear con datos de ejemplo",busy:"Tokenizando y contando coocurrencias…",back:"Volver",treeAria:"Árbol de búsqueda profunda",expand:"Autoexpandir",expandB:"Abrir",collapse:"Contraer todo",collapseB:"Cerrar",depth:"Nivel",boxes:"Cajas",dEmptyT:"Elige una raíz",dEmptyB:"Elige una palabra y baja una capa con cada clic. Cada capa solo abre palabras menos frecuentes que su padre.",dStart:"Empezar por la más frecuente",by:"por",lang:"Idioma",errNoGraphT:"Con estos ajustes no queda grafo",errNoGraphB:"Ninguna de las {n} palabras únicas pasó los filtros. Baja la frecuencia mínima o el peso mínimo de arista.",peekM:"{c} veces · {d} enlaces",layer:"Capa {n}",rootL:"Raíz",nodeN:"{c}× · arista {w}",nodeRoot:"{c}× raíz",rule:"Umbral de la siguiente capa",ruleInit:"Umbral de frecuencia",options:"{n} opciones",capped:"Demasiadas palabras únicas; la frecuencia mínima se subió a {n} para que sea legible.",noTextT:"No se leyó texto",noTextB:"La columna elegida está vacía o el archivo no tiene frases.",unnamed:"(sin nombre)",readErrT:"No se pudo leer el archivo",readErrB:"No se pudo analizar la estructura. Usa un CSV con encabezado o un TXT con una frase por línea.",rows:"{n} filas"},
+fr:{title:"NetWord · réseau de mots et recherche arborescente",stamp:"moteur de cooccurrence",tabNet:"Réseau",tabDeep:"Recherche profonde",dataSrc:"Source de données",sample:"Données d'exemple",dropHint:"Déposez un fichier {f}",pick:"Choisir un fichier",textCol:"Colonne de texte",pasteSum:"Coller du texte",pastePh:"Une phrase par ligne...",build:"Créer le graphe",pandasSum:"Exporter depuis pandas",pandasCmt:"# enregistrez la colonne de phrases, puis déposez le fichier",edges:"Construction des arêtes",linkMode:"Mode de liaison",mSent:"Phrase entière",mWin:"Fenêtre glissante",winSize:"Taille de fenêtre",minF:"Fréquence minimale",minW:"Poids minimal d'arête",stop:"Retirer les mots vides",nums:"Retirer les nombres",iso:"Masquer les nœuds isolés",netView:"Affichage du réseau",spread:"Espacement des nœuds",labels:"Étiqueter tous les mots",reset:"Réinitialiser",root:"Mot racine",fan:"Branches par nœud",auto:"Déplier jusqu'au niveau",byW:"Trier les branches par poids",guide:"Règle des couches",note:"Chaque couche ne prend que les mots <b>moins fréquents que leur parent</b> et absents plus haut : le chemin descend toujours et ne boucle jamais.",summary:"Résumé",sent:"phrases",node:"nœuds",edge:"arêtes",hot:"Mots les plus fréquents",svgBtn:"SVG de la vue active",railShow:"Afficher le panneau",railHide:"Masquer le panneau",graphAria:"Graphe du réseau de mots",findPh:"Chercher un mot…",zIn:"Zoom avant",zOut:"Zoom arrière",zFit:"Ajuster",freq:"Fréquence",neighbors:"Cooccurrents",dive:"Explorer l'arbre depuis ce mot ↳",emptyT:"Pas encore de graphe",emptyB:"Exportez la colonne de phrases de votre dataframe et déposez le fichier, ou commencez avec les données d'exemple.",sample2:"Créer avec l'exemple",busy:"Tokenisation et comptage des cooccurrences…",back:"Retour",treeAria:"Arbre de recherche profonde",expand:"Déplier auto",expandB:"Ouvrir",collapse:"Tout replier",collapseB:"Replier",depth:"Profondeur",boxes:"Boîtes",dEmptyT:"Choisissez une racine",dEmptyB:"Prenez un mot, puis descendez d'une couche à chaque clic. Chaque couche n'ouvre que des mots plus rares que leur parent.",dStart:"Partir du mot le plus fréquent",by:"par",lang:"Langue",errNoGraphT:"Aucun graphe avec ces réglages",errNoGraphB:"Aucun des {n} mots uniques n'a passé les filtres. Baissez la fréquence minimale ou le poids minimal.",peekM:"{c} fois · {d} liens",layer:"Couche {n}",rootL:"Racine",nodeN:"{c}× · arête {w}",nodeRoot:"{c}× racine",rule:"Seuil de la couche suivante",ruleInit:"Seuil de fréquence",options:"{n} options",capped:"Trop de mots uniques ; fréquence minimale passée à {n} pour rester lisible.",noTextT:"Aucun texte lu",noTextB:"La colonne choisie est vide ou le fichier ne contient pas de phrases.",unnamed:"(sans nom)",readErrT:"Lecture impossible",readErrB:"Structure du fichier illisible. Utilisez un CSV avec en-tête ou un TXT avec une phrase par ligne.",rows:"{n} lignes"},
+de:{title:"NetWord · Wortnetz & Baumsuche",stamp:"Kookkurrenz-Engine",tabNet:"Netzwerk",tabDeep:"Tiefensuche",dataSrc:"Datenquelle",sample:"Beispieldaten",dropHint:"{f}-Datei hier ablegen",pick:"Datei wählen",textCol:"Textspalte",pasteSum:"Text manuell einfügen",pastePh:"Ein Satz pro Zeile...",build:"Graph erstellen",pandasSum:"Export aus pandas",pandasCmt:"# Satzspalte speichern, dann Datei hier ablegen",edges:"Kanten bilden",linkMode:"Verknüpfungsmodus",mSent:"Ganzer Satz",mWin:"Gleitendes Fenster",winSize:"Fenstergröße",minF:"Min. Worthäufigkeit",minW:"Min. Kantengewicht",stop:"Stoppwörter entfernen",nums:"Zahlen entfernen",iso:"Isolierte Knoten ausblenden",netView:"Netzwerkansicht",spread:"Knotenabstand",labels:"Alle Wörter beschriften",reset:"Zurücksetzen",root:"Wurzelwort",fan:"Äste pro Knoten",auto:"Automatisch öffnen bis Tiefe",byW:"Äste nach Kantengewicht sortieren",guide:"Ebenenlineal",note:"Jede Ebene nimmt nur Wörter, die <b>seltener als ihr Elternwort</b> sind und oben noch nicht vorkamen. Der Pfad fällt also immer ab und bildet keine Schleifen.",summary:"Übersicht",sent:"Sätze",node:"Knoten",edge:"Kanten",hot:"Häufigste Wörter",svgBtn:"SVG der aktiven Ansicht",railShow:"Seitenleiste zeigen",railHide:"Seitenleiste ausblenden",graphAria:"Wortnetz-Graph",findPh:"Wort suchen…",zIn:"Vergrößern",zOut:"Verkleinern",zFit:"Einpassen",freq:"Worthäufigkeit",neighbors:"Nachbarwörter",dive:"Baum ab diesem Wort erkunden ↳",emptyT:"Noch kein Graph",emptyB:"Exportiere die Satzspalte aus deinem Dataframe und lege die Datei hier ab, oder starte mit Beispieldaten.",sample2:"Mit Beispieldaten erstellen",busy:"Tokenisieren und Kookkurrenzen zählen…",back:"Zurück",treeAria:"Tiefensuchbaum",expand:"Automatisch öffnen",expandB:"Auf",collapse:"Alle schließen",collapseB:"Zu",depth:"Tiefe",boxes:"Boxen",dEmptyT:"Wurzel wählen",dEmptyB:"Wähle ein Wort und geh mit jedem Klick eine Ebene tiefer. Jede Ebene öffnet nur Wörter, die seltener als ihr Elternwort sind.",dStart:"Beim häufigsten Wort starten",by:"von",lang:"Sprache",errNoGraphT:"Mit diesen Einstellungen bleibt kein Graph",errNoGraphB:"Keines der {n} eindeutigen Wörter hat die Filter passiert. Senke die Mindesthäufigkeit oder das Mindestgewicht.",peekM:"{c}× · {d} Verbindungen",layer:"Ebene {n}",rootL:"Wurzel",nodeN:"{c}× · Kante {w}",nodeRoot:"{c}× Wurzel",rule:"Schwelle nächste Ebene",ruleInit:"Häufigkeitsschwelle",options:"{n} Optionen",capped:"Zu viele eindeutige Wörter; Mindesthäufigkeit für Lesbarkeit auf {n} gesetzt.",noTextT:"Kein Text gelesen",noTextB:"Die gewählte Spalte ist leer oder die Datei enthält keine Sätze.",unnamed:"(ohne Namen)",readErrT:"Datei nicht lesbar",readErrB:"Dateistruktur konnte nicht gelesen werden. Nutze eine CSV mit Kopfzeile oder eine TXT mit einem Satz pro Zeile.",rows:"{n} Zeilen"},
+zh:{title:"NetWord · 词语网络与深度树搜索",stamp:"共现引擎",tabNet:"网络",tabDeep:"深度搜索",dataSrc:"数据源",sample:"示例数据",dropHint:"拖放 {f} 文件",pick:"选择文件",textCol:"文本列",pasteSum:"手动粘贴文本",pastePh:"每行一句...",build:"生成图",pandasSum:"从 pandas 导出",pandasCmt:"# 将句子列保存到磁盘，然后拖入文件",edges:"构建边",linkMode:"连接方式",mSent:"整句",mWin:"滑动窗口",winSize:"窗口大小",minF:"最低词频",minW:"最低边权重",stop:"去除停用词",nums:"去除数字",iso:"隐藏孤立节点",netView:"网络显示",spread:"节点间距",labels:"显示所有词标签",reset:"重置",root:"根词",fan:"每个节点的分支数",auto:"自动展开深度",byW:"按边权重排序分支",guide:"层级标尺",note:"每一层只接收<b>词频低于父节点</b>且未在上游出现过的词，因此路径始终递减，不会形成循环。",summary:"概览",sent:"句子",node:"节点",edge:"边",hot:"高频词",svgBtn:"导出当前视图 SVG",railShow:"显示侧栏",railHide:"隐藏侧栏",graphAria:"词语网络图",findPh:"搜索词语…",zIn:"放大",zOut:"缩小",zFit:"适应屏幕",freq:"词频",neighbors:"共现词",dive:"从此词展开树 ↳",emptyT:"尚未生成图",emptyB:"从数据框导出句子列并拖入文件，或使用示例数据开始。",sample2:"使用示例数据生成",busy:"正在分词并统计共现…",back:"返回",treeAria:"深度搜索树",expand:"自动展开",expandB:"展开",collapse:"全部折叠",collapseB:"折叠",depth:"深度",boxes:"节点框",dEmptyT:"选择根词",dEmptyB:"选一个词，每次点击向下一层。每一层只展开比父节点更少见的词。",dStart:"从最高频词开始",by:"作者",lang:"语言",errNoGraphT:"当前设置下没有可显示的图",errNoGraphB:"{n} 个唯一词都未通过筛选。请降低最低词频或最低边权重。",peekM:"{c} 次 · {d} 个连接",layer:"第 {n} 层",rootL:"根",nodeN:"{c}× · 边 {w}",nodeRoot:"{c}× 根",rule:"下一层阈值",ruleInit:"词频阈值",options:"{n} 个选项",capped:"唯一词过多；为保持清晰，最低词频已调为 {n}。",noTextT:"未读取到文本",noTextB:"所选列为空，或文件中没有句子。",unnamed:"（未命名）",readErrT:"无法读取文件",readErrB:"无法解析文件结构。请使用带表头的 CSV，或每行一句的 TXT。",rows:"{n} 行"},
+hi:{title:"NetWord · शब्द नेटवर्क और गहन ट्री खोज",stamp:"सह-घटना इंजन",tabNet:"नेटवर्क",tabDeep:"गहन खोज",dataSrc:"डेटा स्रोत",sample:"नमूना डेटा",dropHint:"{f} फ़ाइल यहाँ छोड़ें",pick:"फ़ाइल चुनें",textCol:"टेक्स्ट कॉलम",pasteSum:"टेक्स्ट खुद पेस्ट करें",pastePh:"हर पंक्ति में एक वाक्य...",build:"ग्राफ़ बनाएँ",pandasSum:"pandas से निर्यात",pandasCmt:"# वाक्यों वाला कॉलम डिस्क पर सेव करें, फिर फ़ाइल छोड़ें",edges:"किनारे बनाना",linkMode:"जोड़ने का तरीका",mSent:"पूरा वाक्य",mWin:"स्लाइडिंग विंडो",winSize:"विंडो आकार",minF:"न्यूनतम शब्द आवृत्ति",minW:"न्यूनतम किनारा भार",stop:"स्टॉप शब्द हटाएँ",nums:"संख्याएँ हटाएँ",iso:"अकेले नोड छिपाएँ",netView:"नेटवर्क दृश्य",spread:"नोड दूरी",labels:"सभी शब्दों पर लेबल",reset:"रीसेट",root:"मूल शब्द",fan:"प्रति नोड शाखाएँ",auto:"इस गहराई तक स्वतः खोलें",byW:"शाखाएँ किनारा भार से क्रमित करें",guide:"परत पैमाना",note:"हर परत केवल वे शब्द लेती है जो <b>अपने पैरेंट से कम बार</b> आते हैं और ऊपर नहीं आए, इसलिए पथ हमेशा नीचे जाता है और लूप नहीं बनता।",summary:"सारांश",sent:"वाक्य",node:"नोड",edge:"किनारे",hot:"सबसे लोकप्रिय शब्द",svgBtn:"सक्रिय दृश्य का SVG",railShow:"साइडबार दिखाएँ",railHide:"साइडबार छिपाएँ",graphAria:"शब्द नेटवर्क ग्राफ़",findPh:"शब्द खोजें…",zIn:"ज़ूम इन",zOut:"ज़ूम आउट",zFit:"स्क्रीन में फ़िट करें",freq:"शब्द आवृत्ति",neighbors:"सह-शब्द",dive:"इस शब्द से ट्री खोजें ↳",emptyT:"अभी कोई ग्राफ़ नहीं",emptyB:"अपने डेटाफ़्रेम से वाक्य कॉलम निर्यात करें और फ़ाइल यहाँ छोड़ें, या नमूना डेटा से शुरू करें।",sample2:"नमूना डेटा से बनाएँ",busy:"टोकन बनाए और सह-घटनाएँ गिनी जा रही हैं…",back:"वापस",treeAria:"गहन खोज ट्री",expand:"स्वतः खोलें",expandB:"खोलें",collapse:"सब बंद करें",collapseB:"बंद",depth:"गहराई",boxes:"बॉक्स",dEmptyT:"मूल शब्द चुनें",dEmptyB:"एक शब्द चुनें, फिर हर क्लिक से एक परत नीचे जाएँ। हर परत केवल पैरेंट से दुर्लभ शब्द खोलती है।",dStart:"सबसे लोकप्रिय शब्द से शुरू करें",by:"निर्माता:",lang:"भाषा",errNoGraphT:"इन सेटिंग्स से कोई ग्राफ़ नहीं बचा",errNoGraphB:"{n} अद्वितीय शब्दों में से कोई भी फ़िल्टर पार नहीं कर सका। न्यूनतम आवृत्ति या किनारा भार घटाएँ।",peekM:"{c} बार · {d} कनेक्शन",layer:"परत {n}",rootL:"मूल",nodeN:"{c}× · किनारा {w}",nodeRoot:"{c}× मूल",rule:"अगली परत की सीमा",ruleInit:"आवृत्ति सीमा",options:"{n} विकल्प",capped:"अद्वितीय शब्द बहुत ज़्यादा थे; पढ़ने योग्य रखने के लिए न्यूनतम आवृत्ति {n} कर दी गई।",noTextT:"कोई टेक्स्ट नहीं मिला",noTextB:"चुना गया कॉलम खाली है या फ़ाइल में वाक्य नहीं हैं।",unnamed:"(बेनाम)",readErrT:"फ़ाइल पढ़ी नहीं जा सकी",readErrB:"फ़ाइल की संरचना समझी नहीं जा सकी। हेडर वाली CSV या हर पंक्ति में एक वाक्य वाली TXT दें।",rows:"{n} पंक्तियाँ"},
+pt:{title:"NetWord · rede de palavras e busca profunda em árvore",stamp:"motor de coocorrência",tabNet:"Rede",tabDeep:"Busca profunda",dataSrc:"Fonte de dados",sample:"Dados de exemplo",dropHint:"Solte um arquivo {f}",pick:"Escolher arquivo",textCol:"Coluna de texto",pasteSum:"Colar texto manualmente",pastePh:"Uma frase por linha...",build:"Gerar grafo",pandasSum:"Exportar do pandas",pandasCmt:"# salve a coluna de frases em disco e depois solte o arquivo",edges:"Construção de arestas",linkMode:"Modo de ligação",mSent:"Frase inteira",mWin:"Janela deslizante",winSize:"Tamanho da janela",minF:"Frequência mínima",minW:"Peso mínimo da aresta",stop:"Remover stopwords",nums:"Remover números",iso:"Ocultar nós isolados",netView:"Exibição da rede",spread:"Espaçamento dos nós",labels:"Rotular todas as palavras",reset:"Redefinir",root:"Palavra raiz",fan:"Ramos por nó",auto:"Expandir até o nível",byW:"Ordenar ramos por peso",guide:"Régua de camadas",note:"Cada camada só recebe palavras que aparecem <b>menos que o pai</b> e que não surgiram acima, então o caminho sempre desce e nunca entra em loop.",summary:"Resumo",sent:"frases",node:"nós",edge:"arestas",hot:"Palavras mais frequentes",svgBtn:"SVG da vista ativa",railShow:"Mostrar barra lateral",railHide:"Ocultar barra lateral",graphAria:"Grafo da rede de palavras",findPh:"Buscar palavra…",zIn:"Aproximar",zOut:"Afastar",zFit:"Ajustar",freq:"Frequência",neighbors:"Coocorrentes",dive:"Explorar árvore a partir daqui ↳",emptyT:"Nenhum grafo ainda",emptyB:"Exporte a coluna de frases do seu dataframe e solte o arquivo, ou comece com dados de exemplo.",sample2:"Gerar com dados de exemplo",busy:"Tokenizando e contando coocorrências…",back:"Voltar",treeAria:"Árvore de busca profunda",expand:"Expandir auto",expandB:"Abrir",collapse:"Recolher tudo",collapseB:"Fechar",depth:"Nível",boxes:"Caixas",dEmptyT:"Escolha uma raiz",dEmptyB:"Escolha uma palavra e desça uma camada a cada clique. Cada camada só abre palavras mais raras que o pai.",dStart:"Começar pela mais frequente",by:"por",lang:"Idioma",errNoGraphT:"Nenhum grafo com essas configurações",errNoGraphB:"Nenhuma das {n} palavras únicas passou pelos filtros. Reduza a frequência mínima ou o peso mínimo.",peekM:"{c} vezes · {d} ligações",layer:"Camada {n}",rootL:"Raiz",nodeN:"{c}× · aresta {w}",nodeRoot:"{c}× raiz",rule:"Limite da próxima camada",ruleInit:"Limite de frequência",options:"{n} opções",capped:"Palavras únicas demais; a frequência mínima foi ajustada para {n} para manter a leitura.",noTextT:"Nenhum texto lido",noTextB:"A coluna escolhida está vazia ou o arquivo não tem frases.",unnamed:"(sem nome)",readErrT:"Não foi possível ler o arquivo",readErrB:"Não deu para interpretar o arquivo. Use um CSV com cabeçalho ou um TXT com uma frase por linha.",rows:"{n} linhas"},
+ru:{title:"NetWord · сеть слов и глубокий поиск по дереву",stamp:"движок совместной встречаемости",tabNet:"Сеть",tabDeep:"Глубокий поиск",dataSrc:"Источник данных",sample:"Пример данных",dropHint:"Перетащите файл {f}",pick:"Выбрать файл",textCol:"Текстовый столбец",pasteSum:"Вставить текст вручную",pastePh:"По одному предложению в строке...",build:"Построить граф",pandasSum:"Экспорт из pandas",pandasCmt:"# сохраните столбец с предложениями и перетащите файл",edges:"Построение рёбер",linkMode:"Режим связи",mSent:"Всё предложение",mWin:"Скользящее окно",winSize:"Размер окна",minF:"Мин. частота слова",minW:"Мин. вес ребра",stop:"Убрать стоп-слова",nums:"Убрать числа",iso:"Скрыть одиночные узлы",netView:"Вид сети",spread:"Расстояние между узлами",labels:"Подписать все слова",reset:"Сброс",root:"Корневое слово",fan:"Ветвей на узел",auto:"Авто-раскрытие до глубины",byW:"Сортировать ветви по весу ребра",guide:"Линейка уровней",note:"Каждый уровень берёт только слова, которые встречаются <b>реже родителя</b> и не появлялись выше, поэтому путь всегда нисходящий и не зацикливается.",summary:"Сводка",sent:"предложений",node:"узлов",edge:"рёбер",hot:"Самые частые слова",svgBtn:"SVG текущего вида",railShow:"Показать панель",railHide:"Скрыть панель",graphAria:"Граф сети слов",findPh:"Найти слово…",zIn:"Приблизить",zOut:"Отдалить",zFit:"Вписать",freq:"Частота слова",neighbors:"Соседние слова",dive:"Дерево от этого слова ↳",emptyT:"Граф ещё не построен",emptyB:"Выгрузите столбец предложений из датафрейма и перетащите файл сюда или начните с примера.",sample2:"Построить на примере",busy:"Токенизация и подсчёт совместной встречаемости…",back:"Назад",treeAria:"Дерево глубокого поиска",expand:"Авто-раскрытие",expandB:"Откр.",collapse:"Свернуть всё",collapseB:"Сверн.",depth:"Глубина",boxes:"Блоки",dEmptyT:"Выберите корень",dEmptyB:"Возьмите слово и с каждым кликом спускайтесь на уровень ниже. Каждый уровень раскрывает только слова реже родителя.",dStart:"Начать с самого частого слова",by:"автор:",lang:"Язык",errNoGraphT:"С такими настройками граф пуст",errNoGraphB:"Ни одно из {n} уникальных слов не прошло фильтры. Уменьшите мин. частоту или мин. вес ребра.",peekM:"{c} раз · {d} связей",layer:"Уровень {n}",rootL:"Корень",nodeN:"{c}× · ребро {w}",nodeRoot:"{c}× корень",rule:"Порог следующего уровня",ruleInit:"Порог частоты",options:"вариантов: {n}",capped:"Слишком много уникальных слов; для читаемости мин. частота поднята до {n}.",noTextT:"Текст не прочитан",noTextB:"Выбранный столбец пуст или в файле нет предложений.",unnamed:"(без имени)",readErrT:"Не удалось прочитать файл",readErrB:"Не удалось разобрать структуру файла. Используйте CSV с заголовком или TXT с одним предложением в строке.",rows:"строк: {n}"},
+ja:{title:"NetWord · 単語ネットワークと深層ツリー検索",stamp:"共起エンジン",tabNet:"ネットワーク",tabDeep:"深層検索",dataSrc:"データソース",sample:"サンプルデータ",dropHint:"{f} ファイルをドロップ",pick:"ファイルを選択",textCol:"テキスト列",pasteSum:"テキストを直接貼り付け",pastePh:"1行に1文...",build:"グラフを作成",pandasSum:"pandas から書き出す",pandasCmt:"# 文の列をディスクに保存してからファイルをドロップ",edges:"エッジの作成",linkMode:"接続モード",mSent:"文全体",mWin:"スライディングウィンドウ",winSize:"ウィンドウサイズ",minF:"最小出現回数",minW:"最小エッジ重み",stop:"ストップワードを除外",nums:"数字を除外",iso:"孤立ノードを隠す",netView:"ネットワーク表示",spread:"ノード間隔",labels:"すべての単語にラベル",reset:"リセット",root:"ルート単語",fan:"ノードごとの枝数",auto:"自動展開の深さ",byW:"エッジ重みで枝を並べる",guide:"階層ルーラー",note:"各階層は<b>親より出現回数が少なく</b>、上流に出ていない単語だけを取るため、経路は常に下降しループしません。",summary:"概要",sent:"文",node:"ノード",edge:"エッジ",hot:"頻出単語",svgBtn:"表示中ビューの SVG",railShow:"サイドバーを表示",railHide:"サイドバーを隠す",graphAria:"単語ネットワークグラフ",findPh:"単語を検索…",zIn:"拡大",zOut:"縮小",zFit:"全体表示",freq:"出現回数",neighbors:"共起語",dive:"この単語からツリー探索 ↳",emptyT:"まだグラフがありません",emptyB:"データフレームから文の列を書き出してファイルをドロップするか、サンプルデータで始めましょう。",sample2:"サンプルで作成",busy:"トークン化と共起の集計中…",back:"戻る",treeAria:"深層検索ツリー",expand:"自動展開",expandB:"開く",collapse:"すべて閉じる",collapseB:"閉じる",depth:"深さ",boxes:"ボックス",dEmptyT:"ルートを選択",dEmptyB:"単語を選び、クリックごとに1階層ずつ下ります。各階層は親より珍しい単語だけを開きます。",dStart:"最頻出の単語から開始",by:"制作:",lang:"言語",errNoGraphT:"この設定ではグラフが残りません",errNoGraphB:"{n} 個のユニーク単語がどれもフィルターを通過しませんでした。最小出現回数か最小エッジ重みを下げてください。",peekM:"{c} 回 · {d} 接続",layer:"階層 {n}",rootL:"ルート",nodeN:"{c}× · エッジ {w}",nodeRoot:"{c}× ルート",rule:"次の階層のしきい値",ruleInit:"出現回数のしきい値",options:"{n} 件",capped:"ユニーク単語が多すぎるため、読みやすさのため最小出現回数を {n} にしました。",noTextT:"テキストを読み込めません",noTextB:"選択した列が空か、ファイルに文がありません。",unnamed:"（名前なし）",readErrT:"ファイルを読み込めません",readErrB:"ファイル構造を解析できませんでした。ヘッダー付き CSV か、1行1文の TXT を使ってください。",rows:"{n} 行"},
+tr:{title:"NetWord · kelime ağı ve derin ağaç araması",stamp:"birlikte geçme motoru",tabNet:"Ağ",tabDeep:"Derin arama",dataSrc:"Veri kaynağı",sample:"Örnek veri",dropHint:"{f} dosyasını bırakın",pick:"Dosya seç",textCol:"Metin sütunu",pasteSum:"Metni elle yapıştır",pastePh:"Her satıra bir cümle...",build:"Grafik oluştur",pandasSum:"pandas'tan dışa aktar",pandasCmt:"# cümle sütununu diske kaydedin, sonra dosyayı bırakın",edges:"Kenar oluşturma",linkMode:"Bağlantı modu",mSent:"Tüm cümle",mWin:"Kayan pencere",winSize:"Pencere boyutu",minF:"Min. kelime sıklığı",minW:"Min. kenar ağırlığı",stop:"Durak kelimeleri çıkar",nums:"Sayıları çıkar",iso:"Yalnız düğümleri gizle",netView:"Ağ görünümü",spread:"Düğüm aralığı",labels:"Tüm kelimeleri etiketle",reset:"Sıfırla",root:"Kök kelime",fan:"Düğüm başına dal",auto:"Şu derinliğe kadar aç",byW:"Dalları kenar ağırlığına göre sırala",guide:"Katman cetveli",note:"Her katman yalnızca <b>ebeveyninden daha az geçen</b> ve yukarıda görünmemiş kelimeleri alır; yol hep aşağı iner ve döngüye girmez.",summary:"Özet",sent:"cümle",node:"düğüm",edge:"kenar",hot:"En sık kelimeler",svgBtn:"Aktif görünümün SVG'si",railShow:"Kenar çubuğunu göster",railHide:"Kenar çubuğunu gizle",graphAria:"Kelime ağı grafiği",findPh:"Kelime ara…",zIn:"Yakınlaştır",zOut:"Uzaklaştır",zFit:"Sığdır",freq:"Kelime sıklığı",neighbors:"Birlikte geçenler",dive:"Bu kelimeden ağacı keşfet ↳",emptyT:"Henüz grafik yok",emptyB:"Dataframe'inizden cümle sütununu dışa aktarıp dosyayı bırakın ya da örnek veriyle başlayın.",sample2:"Örnek veriyle oluştur",busy:"Belirteçleme ve birlikte geçmeler sayılıyor…",back:"Geri",treeAria:"Derin arama ağacı",expand:"Otomatik aç",expandB:"Aç",collapse:"Tümünü kapat",collapseB:"Kapat",depth:"Derinlik",boxes:"Kutu",dEmptyT:"Bir kök seçin",dEmptyB:"Bir kelime seçin, her tıklamada bir katman aşağı inin. Her katman yalnızca ebeveyninden daha nadir kelimeleri açar.",dStart:"En sık kelimeden başla",by:"Geliştirici:",lang:"Dil",errNoGraphT:"Bu ayarlarla grafik kalmıyor",errNoGraphB:"{n} benzersiz kelimenin hiçbiri filtreleri geçemedi. Min. sıklığı veya min. kenar ağırlığını düşürün.",peekM:"{c} kez · {d} bağlantı",layer:"Katman {n}",rootL:"Kök",nodeN:"{c}× · kenar {w}",nodeRoot:"{c}× kök",rule:"Sonraki katman eşiği",ruleInit:"Sıklık eşiği",options:"{n} seçenek",capped:"Çok fazla benzersiz kelime vardı; okunabilirlik için min. sıklık {n} yapıldı.",noTextT:"Metin okunamadı",noTextB:"Seçilen sütun boş ya da dosyada cümle yok.",unnamed:"(adsız)",readErrT:"Dosya okunamadı",readErrB:"Dosya yapısı çözümlenemedi. Başlıklı bir CSV veya her satırda bir cümle olan bir TXT kullanın.",rows:"{n} satır"}
+};
+let LANG="fa", DS=-1, lastErr=null;
+const t=(k,v)=>{let s=(I18N[LANG]&&I18N[LANG][k])??I18N.en[k]??k;
+  if(v) for(const x in v) s=s.split("{"+x+"}").join(v[x]); return s};
+function showErr(tk,bk,v){
+  lastErr=[tk,bk,v];
+  const fv={}; if(v) for(const x in v) fv[x]=fa(v[x]);
+  document.querySelector("#errT").textContent=t(tk,fv);
+  document.querySelector("#errB").textContent=t(bk,fv);
+}
+</script>
 <script>
 /* ================= data ================= */
 const SAMPLE=["گوشی موبایل سامسونگ گلکسی اس ۲۳ اولترا","گوشی موبایل شیائومی ردمی نوت ۱۳ پرو","گوشی موبایل اپل آیفون ۱۵ پرو مکس","لپ تاپ ایسوس ویووبوک پرو ۱۵ اینچ","لپ تاپ لنوو آیدیاپد گیمینگ","لپ تاپ اپل مک بوک ایر","هدفون بی سیم سونی","هدفون بلوتوثی شیائومی ردمی بادز","ساعت هوشمند سامسونگ گلکسی واچ ۶","ساعت هوشمند شیائومی می بند ۸","تلویزیون هوشمند ال جی ۵۵ اینچ","تلویزیون هوشمند سامسونگ کریستال ۵۰ اینچ","کیبورد مکانیکی گیمینگ ریزر","ماوس گیمینگ بی سیم لاجیتک","مانیتور گیمینگ ایسوس ۲۷ اینچ","شارژر سریع دیواری سامسونگ","پاوربانک شیائومی ۲۰۰۰۰ میلی آمپر","کیس کامپیوتر گیمینگ گرین","کارت گرافیک ایسوس آر تی ایکس","حافظه اس اس دی سامسونگ ۱ ترابایت","رم کامپیوتر کورسیر ۱۶ گیگابایت","دوربین عکاسی کانن","جاروبرقی رباتیک شیائومی","اسپیکر بلوتوثی جی بی ال","پرینتر لیزری اچ پی","مودم روتر بی سیم تی پی لینک","کولر گازی اسپلیت ال جی","یخچال فریزر سامسونگ ساید بای ساید","ماشین لباسشویی ال جی ۹ کیلو","مایکروویو سامسونگ ۲۳ لیتر","هدفون گیمینگ ریزر با میکروفون","کیبورد بی سیم لاجیتک","گوشی موبایل نوکیا ساده","تبلت سامسونگ گلکسی تب","تبلت اپل آیپد ایر","مانیتور ال جی ۲۴ اینچ اداری"];
@@ -502,7 +558,7 @@ const normalize=s=>String(s)
   .replace(/[\u064B-\u0652\u0670\u0640]/g,"")
   .replace(FA,d=>String.fromCharCode(d.charCodeAt(0)-0x06F0+48))
   .replace(AR,d=>String.fromCharCode(d.charCodeAt(0)-0x0660+48)).toLowerCase();
-const fa=n=>String(n).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[d]);
+const fa=n=>{const s=String(n),D=I18N_DIGITS[LANG];return D?s.replace(/\d/g,d=>D[d]):s};
 const tokenize=s=>normalize(s).split(/[^\p{L}\p{N}\u200c]+/u).map(w=>w.replace(/^\u200c+|\u200c+$/g,"")).filter(w=>w.length>1);
 
 let sentences=[], graph={nodes:[],links:[]}, adj=new Map(), cnt=new Map(), maxFreq=1;
@@ -566,8 +622,7 @@ function render(keepTree){
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     const g=compute(); $("#busy").hidden=true;
     if(!g.nodes.length){
-      $("#errT").textContent="با این تنظیمات گرافی نمی‌ماند";
-      $("#errB").textContent=`از ${fa(g.total)} کلمه یکتا هیچ‌کدام از فیلترها رد نشد. حداقل تکرار یا حداقل وزن یال را کم کن.`;
+      showErr("errNoGraphT","errNoGraphB",{n:g.total});
       $("#err").hidden=false; clearNet(); return;
     }
     graph=g; drawNet(g); stats(g); notice(g); fillRoots();
@@ -631,7 +686,7 @@ function blur(){gRoot.classed("is-focus",false);gNode.selectAll("g").classed("hi
 function pick(d){
   picked=d.id; focus(d.id);
   $("#peekW").textContent=d.id;
-  $("#peekM").textContent=`${fa(d.c)} بار · ${fa(d.deg)} اتصال`;
+  $("#peekM").textContent=t("peekM",{c:fa(d.c),d:fa(d.deg)});
   $("#peekN").innerHTML="";
   (adj.get(d.id)||[]).slice(0,10).forEach(n=>{
     const b=document.createElement("button"); b.className="chip"; b.innerHTML=`${n.id}<b>${fa(n.w)}</b>`;
@@ -684,7 +739,7 @@ function drawTree(refit){
   h.each(d=>{d.data._w=boxW(d.data.word); ensureKids(d.data)});
   d3.tree().nodeSize([ROW,COL]).separation((a,b)=>a.parent===b.parent?1:1.35)(h);
   const nodes=h.descendants(), links=h.links();
-  const X=d=>-d.y, Y=d=>d.x;
+  const X=d=>DS*d.y, Y=d=>d.x;
   const onPath=new Set(); { let p=active; while(p){onPath.add(p);p=p.parent} }
 
   /* layer ruler */
@@ -694,14 +749,14 @@ function drawTree(refit){
     const e=enter.append("g"); e.append("line"); e.append("text"); return e;
   });
   const botY=d3.max(nodes,d=>Y(d))+26;
-  gd.select("line").attr("x1",d=>-d*COL).attr("x2",d=>-d*COL).attr("y1",topY+12).attr("y2",botY);
-  gd.select("text").attr("x",d=>-d*COL).attr("y",topY).text(d=>d?`لایه ${fa(d)}`:"ریشه");
+  gd.select("line").attr("x1",d=>DS*d*COL).attr("x2",d=>DS*d*COL).attr("y1",topY+12).attr("y2",botY);
+  gd.select("text").attr("x",d=>DS*d*COL).attr("y",topY).text(d=>d?t("layer",{n:fa(d)}):t("rootL"));
 
   /* links: one transition, opacity + path together */
   const lj=tgLink.selectAll("path").data(links,d=>d.source.data.word+">"+d.target.data.word+"@"+d.target.depth);
   const path=d=>{
-    const px=X(d.source)-d.source.data._w/2, py=Y(d.source);
-    const cx=X(d.target)+d.target.data._w/2, cy=Y(d.target);
+    const px=X(d.source)+DS*d.source.data._w/2, py=Y(d.source);
+    const cx=X(d.target)-DS*d.target.data._w/2, cy=Y(d.target);
     const m=(px+cx)/2;
     return `M${px},${py}C${m},${py} ${m},${cy} ${cx},${cy}`;
   };
@@ -732,9 +787,9 @@ function drawTree(refit){
   g.select("rect.card").attr("x",d=>-d.data._w/2).attr("y",-CH/2).attr("width",d=>d.data._w).attr("height",CH)
     .attr("fill",d=>d.depth===0?"var(--acc)":soft(d.data.count));
   g.select("text.w").attr("dy",-2).attr("font-size",d=>d.depth===0?"15px":"13.5px").text(d=>d.data.word);
-  g.select("text.n").attr("dy",13).text(d=>d.depth?`${fa(d.data.count)}× · یال ${fa(d.data.edgeW)}`:`${fa(d.data.count)}× ریشه`);
+  g.select("text.n").attr("dy",13).text(d=>d.depth?t("nodeN",{c:fa(d.data.count),w:fa(d.data.edgeW)}):t("nodeRoot",{c:fa(d.data.count)}));
   g.select("g.badge").attr("display",d=>(d.data.kids||[]).length?null:"none")
-    .attr("transform",d=>`translate(${-d.data._w/2-20},0)`);
+    .attr("transform",d=>`translate(${DS<0?-d.data._w/2-20:d.data._w/2},0)`);
   g.select("g.badge rect").attr("fill",d=>d.data.open?"var(--acc)":"var(--surface)");
   g.select("g.badge text").attr("x",10).text(d=>d.data.open?"−":"+"+fa((d.data.kids||[]).length));
   g.transition("t").duration(440).ease(d3.easeExpOut).attr("opacity",1)
@@ -744,14 +799,14 @@ function drawTree(refit){
 
   $("#dDepth").textContent=fa(d3.max(nodes,d=>d.depth)||0);
   $("#dNodes").textContent=fa(nodes.length);
-  $("#dRule").innerHTML=`آستانه لایه بعد <b>&lt; ${fa((active||treeRoot).count)}×</b>`;
+  $("#dRule").innerHTML=`${t("rule")} <b>&lt; ${fa((active||treeRoot).count)}×</b>`;
   trail(active||treeRoot);
   if(refit) fitTree(); else setTimeout(fitTree,60);
 }
 function fitTree(){
   const nodes=tgNode.selectAll("g.tnode").data(); if(!nodes.length) return;
   const box=$("#paneDeep").getBoundingClientRect();
-  const xs=[d3.min(nodes,d=>-d.y-d.data._w/2)-20,d3.max(nodes,d=>-d.y+d.data._w/2)+20];
+  const xs=[d3.min(nodes,d=>DS*d.y-d.data._w/2)-20,d3.max(nodes,d=>DS*d.y+d.data._w/2)+20];
   const ys=[d3.min(nodes,d=>d.x)-60,d3.max(nodes,d=>d.x)+40];
   const w=Math.max(1,xs[1]-xs[0]), h=Math.max(1,ys[1]-ys[0]);
   const k=Math.min(1.25,.9*Math.min(box.width/w,box.height/h));
@@ -779,7 +834,7 @@ $("#rootSel").onchange=e=>buildTree(e.target.value);
 function fillRoots(){
   const list=[...graph.nodes].sort((a,b)=>b.c-a.c);
   $("#rootSel").innerHTML=list.map(n=>`<option value="${n.id}">${n.id} — ${fa(n.c)}×</option>`).join("");
-  $("#rootHint").textContent=`${fa(list.length)} گزینه`;
+  $("#rootHint").textContent=t("options",{n:fa(list.length)});
   if(treeRoot&&adj.has(treeRoot.word)) $("#rootSel").value=treeRoot.word;
 }
 
@@ -822,20 +877,20 @@ function stats(g){
 }
 function notice(g){
   const w=$("#warn");
-  if(g.capped){w.hidden=false;w.textContent=`کلمات یکتا زیاد بود؛ برای خوانا ماندن حداقل تکرار روی ${fa(g.floor)} تنظیم شد.`}
+  if(g.capped){w.hidden=false;w.textContent=t("capped",{n:fa(g.floor)})}
   else w.hidden=true;
 }
 function setSentences(list){
   sentences=list.map(s=>String(s??"").trim()).filter(Boolean);
-  if(!sentences.length){$("#errT").textContent="متنی خوانده نشد";$("#errB").textContent="ستون انتخابی خالی است یا فایل جمله‌ای ندارد.";$("#err").hidden=false;return}
+  if(!sentences.length){showErr("noTextT","noTextB");$("#err").hidden=false;return}
   $("#minF").max=Math.max(6,Math.min(40,Math.round(sentences.length/6)));
   treeRoot=null; render();
 }
 function loadTable(rows){
   table=rows; const cols=Object.keys(rows[0]||{});
-  const sel=$("#col"); sel.innerHTML=cols.map(c=>`<option value="${c}">${c.trim()||"(بی‌نام)"}</option>`).join("");
+  const sel=$("#col"); sel.innerHTML=cols.map(c=>`<option value="${c}">${c.trim()||t("unnamed")}</option>`).join("");
   const guess=cols.find(c=>c.trim().toLowerCase()==="name")||cols.find(c=>/name|title|text|جمله|متن|نام/i.test(c))||cols[0];
-  sel.value=guess; $("#colWrap").hidden=false; $("#colHint").textContent=`${fa(rows.length)} سطر`;
+  sel.value=guess; $("#colWrap").hidden=false; $("#colHint").textContent=t("rows",{n:fa(rows.length)});
   setSentences(rows.map(r=>r[guess]));
 }
 $("#col").onchange=e=>setSentences(table.map(r=>r[e.target.value]));
@@ -855,8 +910,7 @@ function ingest(name,text){
     }
     $("#colWrap").hidden=true; setSentences(text.split(/\r?\n/));
   }catch(_){
-    $("#errT").textContent="فایل خوانده نشد";
-    $("#errB").textContent="ساختار فایل قابل تجزیه نبود. یک CSV با هدر یا TXT با هر جمله در یک خط بده.";
+    showErr("readErrT","readErrB");
     $("#err").hidden=false;
   }
 }
@@ -921,6 +975,46 @@ $("#btnSvg").onclick=()=>{
   save(new Blob([`<?xml version="1.0" encoding="UTF-8"?>`+src.outerHTML],{type:"image/svg+xml"}),net?"word-network.svg":"deep-search-tree.svg");
 };
 addEventListener("resize",()=>{if(tab==="net"&&sim)fitNet();else if(treeRoot)fitTree()});
+</script>
+<script>
+/* ================= language switcher (NetWord) ================= */
+function applyLang(code){
+  if(!I18N[code]) code="en";
+  LANG=code;
+  const rtl=I18N_RTL.has(code);
+  DS=rtl?-1:1;
+  document.documentElement.lang=code;
+  document.documentElement.dir=rtl?"rtl":"ltr";
+  document.title=t("title");
+  const F='<code>CSV</code> / <code>JSON</code> / <code>TXT</code>';
+  document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
+  document.querySelectorAll("[data-i18n-html]").forEach(el=>el.innerHTML=t(el.dataset.i18nHtml).replace("{f}",F));
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>el.placeholder=t(el.dataset.i18nPh));
+  document.querySelectorAll("[data-i18n-title]").forEach(el=>el.title=t(el.dataset.i18nTitle));
+  document.querySelectorAll("[data-i18n-aria]").forEach(el=>el.setAttribute("aria-label",t(el.dataset.i18nAria)));
+  ["#railHide1","#railHide2"].forEach(s=>$(s).textContent=rtl?"⟩":"⟨");
+  /* numbers in the current script */
+  $("#winV").textContent=fa(opts.win); $("#minFV").textContent=fa(opts.minF); $("#minWV").textContent=fa(opts.minW);
+  $("#spV").textContent=fa((opts.spread/100).toFixed(1))+"×";
+  $("#fanV").textContent=fa(opts.fan); $("#autoV").textContent=fa(opts.auto); $("#rampMin").textContent=fa(1);
+  if(graph.nodes.length){ stats(graph); notice(graph); fillRoots(); }
+  else { $("#kSent").textContent=fa(sentences.length); $("#kNode").textContent=fa(0); $("#kEdge").textContent=fa(0); }
+  if(table){ $("#colHint").textContent=t("rows",{n:fa(table.length)});
+    [...$("#col").options].forEach(o=>{ if(!o.value.trim()) o.textContent=t("unnamed") }); }
+  if(lastErr && !$("#err").hidden) showErr(...lastErr);
+  if(picked){ const d=gNode.selectAll("g").data().find(x=>x.id===picked); if(d) pick(d); }
+  if(treeRoot) drawTree(true); else $("#dRule").innerHTML=`${t("ruleInit")} <b>—</b>`;
+  $("#langSel").value=code;
+  try{ localStorage.setItem("netword-lang",code) }catch(_){}
+}
+$("#langSel").innerHTML=I18N_LANGS.map(([c,n])=>`<option value="${c}" lang="${c}">${n}</option>`).join("");
+$("#langSel").onchange=e=>applyLang(e.target.value);
+(function(){
+  let saved=null;
+  try{ saved=new URLSearchParams(location.search).get("lang")||localStorage.getItem("netword-lang") }catch(_){}
+  const nav=(navigator.languages||[navigator.language||""]).map(l=>String(l).slice(0,2).toLowerCase()).find(l=>I18N[l]);
+  applyLang(saved&&I18N[saved]?saved:(nav||"en"));
+})();
 </script>
 </body>
 </html>
