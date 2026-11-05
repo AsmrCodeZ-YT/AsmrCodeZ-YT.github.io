@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinkedIn Post Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#141414;--paper:#FBF7EE;--muted:#5d5d5d;
+  --li:#0A66C2;--li2:#DCEAFB;--blue:#8AB8EE;
+  --green:#DDF0D6;--greenB:#5FB35A;--red:#FADADA;--redB:#E0675C;
+  --yellow:#FFF0C4;--yellowB:#F6CF5F;--r:14px;
+}
+body{background:var(--paper);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;line-height:1.45;
+  background-image:radial-gradient(rgba(20,20,20,.07) 1px,transparent 1px);background-size:18px 18px}
+.wrap{max-width:1180px;margin:0 auto;padding:34px 20px 60px;counter-reset:sec}
+a{color:var(--li)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12.5px}
+
+/* HERO */
+.hero{text-align:center;margin-bottom:26px}
+.title-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.title-row h1{font-size:clamp(28px,4.6vw,48px);font-weight:700;letter-spacing:-.025em}
+.logo{width:52px;height:52px;border:2.5px solid var(--ink);border-radius:12px;background:#fff;display:grid;place-items:center;box-shadow:3px 3px 0 var(--ink)}
+.dash{display:flex;flex-direction:column;gap:8px}
+.dash i{display:block;width:22px;height:3.5px;background:var(--ink);border-radius:3px}
+.dash.l i:nth-child(1){transform:rotate(28deg)} .dash.l i:nth-child(3){transform:rotate(-28deg)}
+.dash.r i:nth-child(1){transform:rotate(-28deg)} .dash.r i:nth-child(3){transform:rotate(28deg)}
+.pill{display:inline-block;margin-top:12px;padding:6px 20px;border:2px solid var(--ink);border-radius:999px;background:var(--green);font-weight:600;font-size:17px;box-shadow:3px 3px 0 var(--ink)}
+
+/* SECTIONS */
+.sec{background:#fff;border:2.5px solid var(--ink);border-radius:var(--r);box-shadow:5px 5px 0 var(--ink);padding:16px;margin-bottom:24px;counter-increment:sec}
+.sec.nocount{counter-increment:none}
+.sec-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--li2);border:2px solid var(--ink);border-radius:10px;padding:8px 14px;margin-bottom:16px}
+.sec-head h2{font-size:21px;font-weight:700}
+.sec-head .sub{color:var(--muted);font-size:14px;margin-left:auto}
+.num{width:36px;height:36px;border-radius:50%;border:2.5px solid var(--ink);background:#fff;display:grid;place-items:center;font-weight:700;font-size:18px;flex:none}
+.sec:not(.nocount) .num::before{content:counter(sec)}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.auto{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+@media(max-width:860px){.g2{grid-template-columns:1fr}.sec-head .sub{margin-left:0}}
+.box{border:2px solid var(--ink);border-radius:12px;padding:14px;background:#fff}
+.box h3{font-size:16px;margin-bottom:8px;text-align:center}
+.kpi .label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.kpi .val{font-size:30px;font-weight:700;letter-spacing:-.02em;margin:2px 0}
+.kpi .hint{font-size:13px;color:var(--muted)}
+.kpi.hl{background:var(--li2)}
+.chart-box{position:relative;height:300px}
+.chart-box.tall{height:380px}
+.caption{font-size:13.5px;color:var(--muted);margin-top:8px;text-align:center}
+
+.callout{display:flex;gap:14px;align-items:center;border:2px solid var(--ink);border-radius:12px;padding:12px 16px;margin-top:14px;font-weight:600;background:var(--yellow)}
+.callout.green{background:var(--green)}.callout.red{background:var(--red)}.callout.blue{background:var(--li2)}
+.callout .big{font-size:26px;flex:none}
+.callout small{display:block;font-weight:500;color:#333}
+
+/* UPLOAD */
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2.5px dashed var(--ink);border-radius:12px;padding:38px 20px;background:var(--paper);cursor:pointer;transition:background .15s;text-align:center}
+.drop:hover,.drop.over{background:var(--li2)}
+.drop .ico{font-size:34px}
+.drop b{font-size:18px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.btn{font:inherit;font-weight:700;border:2px solid var(--ink);background:var(--li);color:#fff;padding:9px 16px;border-radius:10px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;transition:transform .08s,box-shadow .08s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:none}
+.btn.ghost{background:#fff;color:var(--ink)}
+.btn.yellow{background:var(--yellowB);color:var(--ink)}
+.err{display:none}
+
+/* INSIGHTS */
+.ins{display:flex;gap:12px;border:2px solid var(--ink);border-radius:12px;padding:12px 14px;background:#fff}
+.ins .ic{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-weight:700;flex:none;background:#fff}
+.ins h4{font-size:15.5px;margin-bottom:2px}
+.ins p{font-size:14px;color:#2b2b2b}
+.ins.good{background:var(--green)}.ins.bad{background:var(--red)}.ins.tip{background:var(--yellow)}.ins.info{background:var(--li2)}
+
+/* FEATURES */
+.feat{display:grid;grid-template-columns:44px minmax(0,1fr) 210px;gap:14px;align-items:center;border:2px solid var(--ink);border-radius:12px;padding:12px 14px;margin-bottom:10px;background:#fff}
+.feat.missing{opacity:.5}
+.feat .rank{width:38px;height:38px;border-radius:10px;border:2px solid var(--ink);display:grid;place-items:center;font-weight:700;font-size:17px}
+.feat .rank.core{background:var(--li);color:#fff}.feat .rank.strong{background:var(--yellowB)}.feat .rank.context{background:#fff}
+.feat .name{font-weight:700;font-size:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.feat .why{font-size:13.5px;color:#333;margin:2px 0 4px}
+.tier{font-size:11px;font-weight:700;padding:1px 8px;border:1.5px solid var(--ink);border-radius:999px;text-transform:uppercase;letter-spacing:.05em}
+.tier.core{background:var(--li2)}.tier.strong{background:var(--yellow)}.tier.context{background:#f3f3f3}
+.feat .valbox{text-align:right}
+.feat .v{font-weight:700;font-size:17px}
+.bar{height:10px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;background:#fff;margin-top:6px}
+.bar>span{display:block;height:100%;background:var(--li)}
+@media(max-width:760px){.feat{grid-template-columns:40px 1fr}.feat .valbox{grid-column:1/-1;text-align:left}}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chip{display:inline-flex;gap:6px;align-items:center;border:2px solid var(--ink);border-radius:999px;padding:3px 11px;font-size:13px;background:#fff}
+.chip .dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-size:10px;font-weight:700}
+.chip.ok .dot{background:var(--greenB);color:#fff}.chip.miss{opacity:.55}.chip.miss .dot{background:var(--red)}
+.chip em{font-style:normal;color:var(--muted);font-size:11.5px}
+
+/* FORMAT CARDS */
+.fcard{border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:#fff}
+.fcard .fh{padding:8px;text-align:center;font-weight:700;font-size:19px;border-bottom:2px solid var(--ink);letter-spacing:.03em;text-transform:uppercase}
+.fcard .fb{padding:10px 14px;display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:14px}
+.fcard .fb b{text-align:right}
+
+/* CONTROLS */
+.controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+select{font:inherit;font-weight:600;border:2px solid var(--ink);border-radius:8px;padding:6px 10px;background:#fff}
+input[type=range]{accent-color:var(--li);width:180px}
+.badge{display:inline-block;border:2px solid var(--ink);border-radius:8px;padding:2px 10px;font-weight:700;background:var(--yellow)}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border:2px solid var(--ink);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff}
+th,td{padding:9px 10px;text-align:left;border-bottom:1.5px solid #e4e0d6;white-space:nowrap}
+th{background:var(--li2);border-bottom:2px solid var(--ink);cursor:pointer;user-select:none;font-weight:700}
+th:hover{background:#c9defa}
+th.sorted::after{content:attr(data-dir);margin-left:4px}
+tr:hover td{background:#fbf8f0}
+td.post{white-space:normal;min-width:240px;max-width:340px}
+td.post a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:2px solid var(--li2)}
+td.post a:hover{border-color:var(--li)}
+.tp{display:inline-block;border:1.5px solid var(--ink);border-radius:6px;padding:0 7px;font-size:12px;font-weight:700}
+.mat{display:inline-block;font-size:10.5px;font-weight:700;border:1.5px solid var(--ink);border-radius:6px;padding:0 5px;background:var(--yellow);margin-left:4px}
+tr.top td{background:var(--green)}
+.brk{color:var(--muted);font-size:11.5px}
+
+footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;font-weight:600}
+footer .priv{color:var(--muted);font-weight:500;font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="title-row">
+      <span class="dash l"><i></i><i></i><i></i></span>
+      <div class="logo" title="LinkedIn">
+        <svg viewBox="0 0 24 24" width="32" height="32" aria-label="LinkedIn">
+          <rect x="2" y="2" width="20" height="20" fill="#fff"/>
+          <path fill="#0A66C2" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </div>
+      <h1>LinkedIn Post Analytics</h1>
+      <span class="dash r"><i></i><i></i><i></i></span>
+    </div>
+    <div class="pill">What is actually working in your posts?</div>
+  </header>
+
+  <!-- UPLOAD -->
+  <section class="sec nocount" id="uploadSec">
+    <div class="sec-head"><span class="num">↑</span><h2>Upload your export</h2><span class="sub">LinkedIn → Analytics → Posts → Export (.xlsx / .csv)</span></div>
+    <label class="drop" id="drop">
+      <input type="file" id="file" accept=".xlsx,.xls,.csv" hidden>
+      <span class="ico">📊</span>
+      <b>Drop your PostPerformance file here</b>
+      <span class="mono">or click to browse · .xlsx · .xls · .csv</span>
+    </label>
+    <div class="row">
+      <button class="btn yellow" id="sampleBtn">Load sample data</button>
+      <button class="btn ghost" id="csvBtn" hidden>⬇ Download enriched CSV</button>
+      <span id="fileInfo" class="mono"></span>
+    </div>
+    <div class="callout red err" id="err"><span class="big">⚠</span><div id="errMsg"></div></div>
+  </section>
+
+  <div id="report" hidden>
+
+    <!-- 1 OVERVIEW -->
+    <section class="sec">
+      <div class="sec-head"><span class="num"></span><h2>Overview</h2><span class="sub" id="rangeSub"></span></div>
+      <div class="grid kpis" id="kpis"></div>
+    </section>
+
+    <!-- 2 INSIGHTS -->
+    <section class="sec">
+      <div class="sec-head"><span class="num"></span><h2>Key insights</h2><span class="sub">Auto-generated from your data</span></div>
+      <div class="grid g2" id="insights"></div>
+    </section>
+
+    <!-- 3 FEATURES -->
+    <section class="sec">
+      <div class="sec-head"><span class="num"></span><h2>Features ranked by importance</h2><span class="sub">Extracted columns → engineered features</span></div>
+      <div class="box" style="margin-bottom:14px">
+        <h3 style="text-align:left">Detected columns</h3>
+        <div class="chips" id="colChips"></div>
+      </div>
+      <div id="features"></div>
+      <div class="callout"><span class="big">💡</span><div>If a metric changes the ranking once you divide by impressions, the total was just hiding reach.<small>Rank posts on rates (per impression), not raw totals.</small></div></div>
+    </section>
+
+    <!-- 4 TIMELINE -->
+    <section class="sec">
+      <div class="sec-head"><span class="num"></span><h2>Performance over time</h2><span class="sub">Bars = impressions · Line = engagement rate</span></div>
+      <div class="chart-box tall"><canvas id="chartTimeline"></canvas></div>
+    </section>
+
+    <!-- 5 FORMATS -->
+    <section class="sec">
+      <div class="sec-head"><span class="num"></span><h2>Format battle</h2><span class="sub">Compare formats on rates, not totals</span></div>
+      <div class="grid auto" id="formatCards" style="margin-bottom:14px"></div>
+      <div class="grid g2">
+        <div class="box"><h3>Avg impressions per post</h3><div class="chart-box"><canvas id="chartTypeImpr"></canvas></div></div>
+        <div class="box"><h3>Engagement rate & weighted score</h3><div class="chart-box"><canvas id="chartTypeER"></canvas></div></div>
+      </div>
+      <div class="callout blue" id="formatCallout"></div>
+    </section>
+
+    <!-- 6 DISTRIBUTION -->
+    <section class="sec">
+      <div class="sec-head"><span class="num"></span><h2>Distribution shape</h2><span class="sub">Same data, different bin counts = different story</span></div>
+      <div class="controls">
+        <label>Metric
+          <select id="histMetric">
+            <option value="impr">Impressions</option>
+            <option value="reach">Members reached</option>
+            <option value="er">Engagement rate (%)</option>
+            <option value="wScore">Weighted score / 1K</option>
+            <option value="outPct">Out-of-network %</option>
+          </select>
+        </label>
+        <label>Bins <input type="range" id="histBins" min="2" max="30" value="5"> <span class="badge" id="binVal">5</span></label>
+      </div>
+      <div class="chart-box"><canvas id="chartHist"></canvas></div>
+      <div class="callout green" id="shapeCallout"></div>
+    </section>
+
+    <!-- 7 REACH QUALITY -->
+    <section class="sec">
+      <div class="sec-head"><span class="num"></span><h2>Reach quality</h2><span class="sub">Who saw it, and did it land?</span></div>
+      <div class="grid g2">
+        <div class="box"><h3>In-network vs out-of-network impressions</h3><div class="chart-box tall"><canvas id="chartNetwork"></canvas></div></div>
+        <div class="box"><h3>Reach vs resonance</h3><div class="chart-box tall"><canvas id="chartScatter"></canvas></div>
+          <div class="caption">Top-right = winners · Bottom-right = reach without resonance · Top-left = hidden gems worth reposting</div></div>
+      </div>
+    </section>
+
+    <!-- 8 TIMING -->
+    <section class="sec">
+      <div class="sec-head"><span class="num"></span><h2>Timing & cadence</h2><span class="sub">Needs volume before it's trustworthy</span></div>
+      <div class="grid g2">
+        <div class="box"><h3>Avg impressions by publish day</h3><div class="chart-box"><canvas id="chartDow"></canvas></div></div>
+        <div class="grid" id="cadence" style="grid-template-columns:1fr 1fr;align-content:start"></div>
+      </div>
+    </section>
+
+    <!-- 9 TOPICS -->
+    <section class="sec">
+      <div class="sec-head"><span class="num"></span><h2>Topics</h2><span class="sub">Keywords pulled from the post URL slug</span></div>
+      <div class="chart-box tall"><canvas id="chartTopics"></canvas></div>
+      <div class="caption">(n) = number of posts containing the keyword</div>
+    </section>
+
+    <!-- 10 VIDEO -->
+    <section class="sec" id="videoSec">
+      <div class="sec-head"><span class="num"></span><h2>Video performance</h2><span class="sub">Does the hook stop the scroll?</span></div>
+      <div class="grid kpis" id="videoKpis"></div>
+    </section>
+
+    <!-- 11 LEADERBOARD -->
+    <section class="sec">
+      <div class="sec-head"><span class="num"></span><h2>Post leaderboard</h2><span class="sub">Click a column to sort · default = weighted score</span></div>
+      <div class="tbl-wrap"><table id="tbl"></table></div>
+      <div class="callout"><span class="big">⚠</span><div>LinkedIn exports are lifetime-to-date at export time.<small>Posts marked <span class="mat">MATURING</span> are less than 3 days old and are still collecting impressions, so compare them carefully.</small></div></div>
+    </section>
+
+  </div>
+
+  <footer>
+    <span>🔖 Save this before your next post.</span>
+    <span class="priv">Runs 100% in your browser. Your file never leaves your device.</span>
+  </footer>
+</div>
+
+<script>
+/* ---------------- CONFIG ---------------- */
+const COLS=[
+ {key:'url',label:'Post URL',role:'Identity',match:['posturl','url','postlink']},
+ {key:'date',label:'Post Publish Date',role:'Timing',match:['postpublishdate','publishdate','date','createddate']},
+ {key:'type',label:'Post type',role:'Format',match:['posttype','type','contenttype']},
+ {key:'impr',label:'Impressions',role:'Distribution',match:['impressions']},
+ {key:'inNet',label:'Impressions (in-network)',role:'Distribution',match:['impressionsinnetwork']},
+ {key:'outNet',label:'Impressions (out-of-network)',role:'Distribution',match:['impressionsoutofnetwork']},
+ {key:'reach',label:'Members reached',role:'Distribution',match:['membersreached','uniqueimpressions']},
+ {key:'views',label:'Views',role:'Video',match:['views','videoviews']},
+ {key:'watch',label:'Watch time',role:'Video',match:['watchtime']},
+ {key:'avgWatch',label:'Avg watch time',role:'Video',match:['avgwatchtime','averagewatchtime']},
+ {key:'followers',label:'Followers gained',role:'Conversion',match:['followersgained','follows']},
+ {key:'profile',label:'Profile viewers',role:'Conversion',match:['profileviewers','profileviews']},
+ {key:'reactions',label:'Reactions',role:'Engagement',match:['reactions','likes']},
+ {key:'comments',label:'Comments',role:'Engagement',match:['comments']},
+ {key:'reposts',label:'Reposts',role:'Engagement',match:['reposts','shares']},
+ {key:'saves',label:'Saves',role:'Engagement',match:['saves']},
+ {key:'sends',label:'Sends',role:'Engagement',match:['sends']},
+ {key:'custom',label:'Custom button engagements',role:'Conversion',match:['custombuttonengagements']}
+];
+const TYPE_COLORS={text:'#8AB8EE',image:'#8CCB86',video:'#F08A80',document:'#F6CF5F',carousel:'#F6CF5F',article:'#C4A8F2',poll:'#F7A8D0',unknown:'#BDBDBD'};
+const typeColor=t=>TYPE_COLORS[String(t).toLowerCase()]||'#BDBDBD';
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const STOP=new Set('a an the and or of to in on for with is are was be it its this that your you my our we at by from as how why what not isnt dont cant doing share post ugcpost activity'.split(' '));
+const INK='#141414';
+
+let POSTS=[],FOUND={},EXTRA=[],REF_DATE=null,charts={},sortState={key:'wScore',dir:-1};
+
+/* ---------------- HELPERS ---------------- */
+const $=s=>document.querySelector(s);
+const norm=s=>String(s??'').toLowerCase().replace(/[^a-z0-9]/g,'');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):s;
+const fmt=(n,d=0)=>n==null||isNaN(n)||!isFinite(n)?'—':Number(n).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
+const fmtPct=(n,d=1)=>n==null||isNaN(n)||!isFinite(n)?'—':fmt(n,d)+'%';
+const fmtSec=s=>{if(s==null||isNaN(s))return'—';s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),r=s%60;return h?`${h}h ${m}m`:m?`${m}m ${r}s`:`${r}s`;};
+const fmtDate=d=>d?d.toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—';
+const sum=(a,f)=>a.reduce((s,x)=>s+(+f(x)||0),0);
+const avg=(a,f)=>{const v=a.map(f).filter(x=>x!=null&&!isNaN(x));return v.length?v.reduce((s,x)=>s+x,0)/v.length:null;};
+const median=arr=>{const a=[...arr].sort((x,y)=>x-y);if(!a.length)return null;const m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2;};
+const short=(s,n=34)=>s.length>n?s.slice(0,n-1)+'…':s;
+const has=k=>FOUND[k]!=null;
+
+function num(v){if(v==null)return null;if(typeof v==='number')return isNaN(v)?null:v;const s=String(v).trim().replace(/,/g,'').replace('%','');if(s===''||s.toLowerCase()==='nan'||s==='-')return null;const n=parseFloat(s);return isNaN(n)?null:n;}
+function pct(v){if(v==null||v==='')return null;if(typeof v==='number')return v<=1?v*100:v;return num(v);}
+function dur(v){
+  if(v==null||v==='')return null;if(typeof v==='number')return v;
+  const s=String(v).toLowerCase().trim();if(s==='nan'||s==='-')return null;
+  let t=0,f=false,m;const re=/(\d+(?:\.\d+)?)\s*(h|m|s)/g;
+  while((m=re.exec(s))){f=true;t+=parseFloat(m[1])*({h:3600,m:60,s:1}[m[2]]);}
+  if(f)return t;
+  if(s.includes(':'))return s.split(':').map(Number).reduce((a,b)=>a*60+b,0);
+  const n=parseFloat(s);return isNaN(n)?null:n;
+}
+function toDate(v){
+  if(v==null||v==='')return null;
+  if(v instanceof Date)return isNaN(v)?null:v;
+  if(typeof v==='number'){const d=new Date(Date.UTC(1899,11,30)+Math.round(v*864e5));return new Date(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate());}
+  const s=String(v).trim();
+  const m=s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})/);
+  if(m){let y=+m[3];if(y<100)y+=2000;return new Date(y,+m[1]-1,+m[2]);}
+  const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(iso)return new Date(+iso[1],+iso[2]-1,+iso[3]);
+  const d=new Date(s);return isNaN(d)?null:d;
+}
+function slug(url){const m=String(url||'').match(/\/posts\/[^_\/]+_(.+?)-(?:share|ugcpost|activity)-/i);return m?m[1]:'';}
+
+/* ---------------- LOADING ---------------- */
+const drop=$('#drop');
+$('#file').addEventListener('change',e=>{if(e.target.files[0])readFile(e.target.files[0]);});
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+drop.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)readFile(f);});
+$('#sampleBtn').addEventListener('click',()=>run(SAMPLE,'Sample · PostPerformance_2026-10-08_2026-11-04.xlsx','PostPerformance_2026-10-08_2026-11-04.xlsx'));
+$('#csvBtn').addEventListener('click',exportCSV);
+$('#histMetric').addEventListener('change',renderHist);
+$('#histBins').addEventListener('input',renderHist);
+
+function showError(msg){$('#err').style.display='flex';$('#errMsg').textContent=msg;}
+function clearError(){$('#err').style.display='none';}
+
+function findHeader(rows){
+  for(let i=0;i<Math.min(40,rows.length);i++){
+    const r=(rows[i]||[]).map(norm);
+    if(r.includes('posturl'))return i;
+    if(r.includes('impressions')&&(r.includes('posttype')||r.includes('reactions')))return i;
+  }
+  return -1;
+}
+function readFile(file){
+  if(typeof XLSX==='undefined'){showError('Could not load the spreadsheet library. Check your internet connection and reload.');return;}
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+      let rows=null,sheet=null;
+      const order=[...wb.SheetNames].sort((a,b)=>(/post/i.test(b)?1:0)-(/post/i.test(a)?1:0));
+      for(const n of order){
+        const rr=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:true,defval:null});
+        if(findHeader(rr)>-1){rows=rr;sheet=n;break;}
+      }
+      if(!rows)throw new Error('Could not find a "Post URL" / "Impressions" header row in any sheet. Is this a LinkedIn post performance export?');
+      run(rows,`${file.name} · sheet "${sheet}"`,file.name);
+    }catch(err){showError(err.message);}
+  };
+  r.readAsArrayBuffer(file);
+}
+
+function parse(rows){
+  const h=findHeader(rows);
+  const heads=rows[h].map(norm);
+  FOUND={};
+  COLS.forEach(c=>{const i=heads.findIndex(x=>c.match.includes(x));if(i>-1)FOUND[c.key]=i;});
+  const used=Object.values(FOUND);
+  EXTRA=rows[h].filter((x,i)=>x!=null&&String(x).trim()!==''&&!used.includes(i));
+  const get=(r,k)=>FOUND[k]!=null?r[FOUND[k]]:null;
+  const out=[];
+  rows.slice(h+1).forEach(r=>{
+    if(!r||r.every(c=>c==null||c===''))return;
+    const impr=num(get(r,'impr'));if(impr==null)return;
+    const t=String(get(r,'type')||'Unknown').trim();
+    const p={
+      url:String(get(r,'url')||''),date:toDate(get(r,'date')),type:cap(t.toLowerCase()),impr,
+      inPct:pct(get(r,'inNet')),outPct:pct(get(r,'outNet')),reach:num(get(r,'reach')),
+      views:num(get(r,'views')),watch:dur(get(r,'watch')),avgWatch:dur(get(r,'avgWatch')),
+      followers:num(get(r,'followers'))||0,profile:num(get(r,'profile'))||0,
+      reactions:num(get(r,'reactions'))||0,comments:num(get(r,'comments'))||0,reposts:num(get(r,'reposts'))||0,
+      saves:num(get(r,'saves'))||0,sends:num(get(r,'sends'))||0,custom:num(get(r,'custom'))||0
+    };
+    if(p.outPct==null&&p.inPct!=null)p.outPct=100-p.inPct;
+    if(p.inPct==null&&p.outPct!=null)p.inPct=100-p.outPct;
+    p.eng=p.reactions+p.comments+p.reposts+p.saves+p.sends+p.custom;
+    p.weighted=p.reactions+p.comments*3+p.reposts*4+p.saves*3+p.sends*3+p.custom*2;
+    p.er=impr?p.eng/impr*100:0;
+    p.wScore=impr?p.weighted/impr*1000:0;
+    p.outImpr=p.outPct!=null?impr*p.outPct/100:null;
+    p.inImpr=p.inPct!=null?impr*p.inPct/100:null;
+    p.reachRatio=p.reach!=null&&impr?p.reach/impr:null;
+    p.profileRate=impr?p.profile/impr*1000:0;
+    p.followRate=impr?p.followers/impr*1000:0;
+    p.deepRate=impr?(p.saves+p.sends)/impr*1000:0;
+    p.commentRate=impr?p.comments/impr*1000:0;
+    p.viewRate=p.views!=null&&impr?p.views/impr*100:null;
+    p.dow=p.date?p.date.getDay():null;
+    const s=slug(p.url);
+    p.title=s?cap(s.replace(/-+/g,' ').trim()):`Post ${out.length+1}`;
+    p.words=s?[...new Set(s.toLowerCase().split('-').filter(w=>w.length>2&&!STOP.has(w)&&!/^\d+$/.test(w)))]:[];
+    out.push(p);
+  });
+  return out;
+}
+
+function run(rows,label,fname){
+  clearError();
+  try{
+    POSTS=parse(rows);
+    if(!POSTS.length)throw new Error('Header found, but no rows with numeric Impressions.');
+    const fm=String(fname||'').match(/(\d{4}-\d{2}-\d{2})\D+(\d{4}-\d{2}-\d{2})/);
+    const dates=POSTS.map(p=>p.date).filter(Boolean);
+    REF_DATE=fm?toDate(fm[2]):(dates.length?new Date(Math.max(...dates)):null);
+    POSTS.forEach(p=>{p.maturing=!!(p.date&&REF_DATE&&(REF_DATE-p.date)/864e5<3);});
+    // fixed rank by weighted score
+    [...POSTS].sort((a,b)=>b.wScore-a.wScore||b.impr-a.impr).forEach((p,i)=>p.rank=i+1);
+    $('#fileInfo').textContent=`✓ ${label} · ${POSTS.length} posts`;
+    $('#csvBtn').hidden=false;
+    $('#report').hidden=false;
+    renderAll();
+    setTimeout(()=>$('#report').scrollIntoView({behavior:'smooth'}),80);
+  }catch(err){showError(err.message);}
+}
+
+/* ---------------- CHART SETUP ---------------- */
+if(typeof Chart!=='undefined'){
+  Chart.defaults.font.family="'Space Grotesk', system-ui, sans-serif";
+  Chart.defaults.font.size=12.5;
+  Chart.defaults.color=INK;
+  Chart.defaults.borderColor='rgba(20,20,20,.10)';
+  Chart.defaults.plugins.legend.labels.boxWidth=14;
+  Chart.defaults.plugins.tooltip.backgroundColor=INK;
+  Chart.defaults.plugins.tooltip.padding=10;
+  Chart.defaults.plugins.tooltip.cornerRadius=8;
+}
+function mk(id,cfg){
+  if(typeof Chart==='undefined')return;
+  if(charts[id])charts[id].destroy();
+  cfg.options=Object.assign({responsive:true,maintainAspectRatio:false},cfg.options||{});
+  charts[id]=new Chart(document.getElementById(id),cfg);
+}
+const barStyle=c=>({backgroundColor:c,borderColor:INK,borderWidth:2,borderRadius:4,borderSkipped:false});
+const byDate=(a,b)=>(a.date||0)-(b.date||0);
+
+/* ---------------- AGGREGATES ---------------- */
+function totals(){
+  const P=POSTS;
+  return{
+    n:P.length,impr:sum(P,p=>p.impr),reach:sum(P,p=>p.reach),eng:sum(P,p=>p.eng),weighted:sum(P,p=>p.weighted),
+    followers:sum(P,p=>p.followers),profile:sum(P,p=>p.profile),out:sum(P,p=>p.outImpr),
+    comments:sum(P,p=>p.comments),saves:sum(P,p=>p.saves),sends:sum(P,p=>p.sends),reposts:sum(P,p=>p.reposts),reactions:sum(P,p=>p.reactions)
+  };
+}
+function typeStats(){
+  const m={};POSTS.forEach(p=>(m[p.type]=m[p.type]||[]).push(p));
+  return Object.entries(m).map(([t,a])=>{
+    const I=sum(a,p=>p.impr);
+    return{type:t,n:a.length,impr:I/a.length,er:I?sum(a,p=>p.eng)/I*100:0,ws:I?sum(a,p=>p.weighted)/I*1000:0,
+      out:avg(a,p=>p.outPct),reach:avg(a,p=>p.reach),profile:I?sum(a,p=>p.profile)/I*1000:0};
+  }).sort((a,b)=>b.impr-a.impr);
+}
+function dowStats(){
+  return[1,2,3,4,5,6,0].map(d=>{const a=POSTS.filter(p=>p.dow===d);return{d,label:DOW[d],n:a.length,impr:a.length?avg(a,p=>p.impr):null,er:a.length?sum(a,p=>p.eng)/sum(a,p=>p.impr)*100:null};});
+}
+function cadenceStats(){
+  const d=POSTS.map(p=>p.date).filter(Boolean).sort((a,b)=>a-b);
+  if(d.length<2)return null;
+  const gaps=[];for(let i=1;i<d.length;i++)gaps.push((d[i]-d[i-1])/864e5);
+  const span=(d[d.length-1]-d[0])/864e5+1;
+  return{avgGap:gaps.reduce((a,b)=>a+b,0)/gaps.length,maxGap:Math.max(...gaps),perWeek:d.length/Math.max(1,span/7),span,sameDay:gaps.filter(g=>g===0).length};
+}
+function topicStats(){
+  const m={};
+  POSTS.forEach(p=>p.words.forEach(w=>{(m[w]=m[w]||{w,n:0,impr:0,eng:0});m[w].n++;m[w].impr+=p.impr;m[w].eng+=p.eng;}));
+  return Object.values(m).map(o=>({...o,avg:o.impr/o.n,er:o.impr?o.eng/o.impr*100:0}))
+    .sort((a,b)=>b.n-a.n||b.avg-a.avg).slice(0,14).sort((a,b)=>b.avg-a.avg);
+}
+
+/* ---------------- RENDER ---------------- */
+function renderAll(){
+  renderKPIs();renderInsights();renderFeatures();renderTimeline();renderFormats();
+  const n=POSTS.length;const b=Math.max(3,Math.ceil(Math.log2(n)+1));
+  $('#histBins').value=Math.min(30,b);renderHist();
+  renderNetwork();renderScatter();renderTiming();renderTopics();renderVideo();renderTable();
+}
+
+function renderKPIs(){
+  const T=totals();const dates=POSTS.map(p=>p.date).filter(Boolean);
+  const from=dates.length?new Date(Math.min(...dates)):null,to=dates.length?new Date(Math.max(...dates)):null;
+  $('#rangeSub').textContent=from?`${fmtDate(from)} → ${fmtDate(to)}, ${to.getFullYear()}`:'';
+  const k=[
+    ['Posts',fmt(T.n),from?`${Math.round((to-from)/864e5)+1} days covered`:''],
+    ['Total impressions',fmt(T.impr),`${fmt(T.impr/T.n)} avg / post`,true],
+    ['Members reached',has('reach')?fmt(T.reach):'—',has('reach')?`${fmtPct(T.reach/T.impr*100,0)} unique of impressions`:'column missing'],
+    ['Engagement rate',fmtPct(T.eng/T.impr*100,2),`${fmt(T.eng)} total interactions`,true],
+    ['Weighted score / 1K',fmt(T.weighted/T.impr*1000,2),'Comments, reposts, saves & sends weighted up'],
+    ['Out-of-network',has('outNet')||has('inNet')?fmtPct(T.out/T.impr*100):'—','share of impressions from strangers'],
+    ['Profile viewers',fmt(T.profile),`${fmt(T.profile/T.impr*1000,2)} per 1K impressions`],
+    ['Followers gained',fmt(T.followers),`${fmt(T.followers/T.impr*1000,2)} per 1K impressions`]
+  ];
+  $('#kpis').innerHTML=k.map(([l,v,h,hl])=>`<div class="box kpi ${hl?'hl':''}"><div class="label">${l}</div><div class="val">${v}</div><div class="hint">${h}</div></div>`).join('');
+}
+
+function renderInsights(){
+  const T=totals(),ts=typeStats(),ins=[];
+  const er=T.eng/T.impr*100;
+  // format reach
+  if(ts.length>=2){
+    const b=ts[0],w=ts[ts.length-1];
+    ins.push({t:'info',i:'i',h:`${b.type} posts lead on reach`,p:`${b.type} averages ${fmt(b.impr)} impressions per post (${b.n} posts), ${fmt(b.impr/w.impr,1)}× more than ${w.type} (${fmt(w.impr)}).`});
+    const be=[...ts].sort((a,b)=>b.ws-a.ws)[0];
+    if(be.type!==b.type)ins.push({t:'tip',i:'★',h:`Reach vs resonance trade-off`,p:`${be.type} has the best weighted engagement (${fmt(be.ws,2)} / 1K) even though ${b.type} gets more impressions. Try putting a ${be.type.toLowerCase()} hook into a ${b.type.toLowerCase()} post.`});
+  }
+  // ER level
+  if(er<1)ins.push({t:'bad',i:'!',h:'Engagement is the bottleneck',p:`Only ${fmtPct(er,2)} of impressions turn into an interaction. Reach is happening, but people aren't reacting. End posts with one specific question, and reply to every comment in the first hour.`});
+  else if(er<3)ins.push({t:'info',i:'i',h:'Engagement is moderate',p:`${fmtPct(er,2)} engagement rate. The next lever is comments and saves, not likes.`});
+  else ins.push({t:'good',i:'✓',h:'Strong engagement',p:`${fmtPct(er,2)} of impressions convert into interactions. Your content resonates, so scale the reach.`});
+  // zero posts
+  const zero=POSTS.filter(p=>p.eng===0).length;
+  if(zero>0)ins.push({t:zero>=POSTS.length/3?'bad':'tip',i:'!',h:`${zero} of ${POSTS.length} posts got zero interactions`,p:`These posts were seen (${fmt(avg(POSTS.filter(p=>p.eng===0),p=>p.impr))} avg impressions) but nobody acted. Check whether their hooks promise a payoff the post actually delivers.`});
+  // network
+  if(has('outNet')||has('inNet')){
+    const o=T.out/T.impr*100;
+    if(o>=45)ins.push({t:'good',i:'✓',h:'The algorithm is taking you beyond your network',p:`${fmtPct(o)} of impressions come from out-of-network members. That's where follower growth comes from.`});
+    else if(o<30)ins.push({t:'tip',i:'★',h:'Mostly your own network sees you',p:`Only ${fmtPct(o)} out-of-network. Broader hooks, takes people can disagree with, and early comments help posts escape your network.`});
+    else ins.push({t:'info',i:'i',h:'Balanced distribution',p:`${fmtPct(o)} of impressions are out-of-network.`});
+  }
+  // conversion
+  const fr=T.followers/T.impr*1000;
+  if(fr<0.5)ins.push({t:'tip',i:'★',h:'Posts are not converting into follows',p:`${fmt(T.followers)} follower(s) from ${fmt(T.impr)} impressions. Give people a reason to follow, like a recurring series or a clear promise in your headline.`});
+  // top post
+  const top=[...POSTS].sort((a,b)=>b.wScore-a.wScore)[0];
+  if(top&&top.eng>0)ins.push({t:'good',i:'✓',h:'Best post to learn from',p:`“${esc(short(top.title,60))}” (${top.type}, ${fmtDate(top.date)}): ${fmtPct(top.er,2)} ER, ${fmt(top.wScore,1)} weighted / 1K. Reuse its structure.`});
+  // day
+  const ds=dowStats().filter(d=>d.n>0).sort((a,b)=>b.impr-a.impr);
+  if(ds.length>=2)ins.push({t:'info',i:'i',h:`${ds[0].label} is your best publish day (so far)`,p:`${fmt(ds[0].impr)} avg impressions over ${ds[0].n} post(s) vs ${fmt(ds[ds.length-1].impr)} on ${ds[ds.length-1].label}. Small sample, so treat it as a hypothesis.`});
+  // video
+  const vids=POSTS.filter(p=>p.views!=null);
+  if(vids.length){
+    const vr=sum(vids,p=>p.views)/sum(vids,p=>p.impr)*100,aw=avg(vids,p=>p.avgWatch);
+    ins.push({t:aw!=null&&aw<15?'tip':'info',i:'▶',h:'Video hook check',p:`${fmtPct(vr)} of video impressions became views, with an average watch of ${fmtSec(aw)}. ${aw!=null&&aw<15?'Attention drops early, so put the payoff in the first 3 seconds and add captions.':''}`});
+  }
+  // cadence
+  const c=cadenceStats();
+  if(c)ins.push({t:c.maxGap>5?'tip':'good',i:c.maxGap>5?'★':'✓',h:`Posting ~${fmt(c.perWeek,1)}× per week`,p:`Average gap ${fmt(c.avgGap,1)} days, longest gap ${fmt(c.maxGap)} days.${c.sameDay?` ${c.sameDay} same-day double post(s), which can cannibalize each other.`:''}`});
+  const mat=POSTS.filter(p=>p.maturing).length;
+  if(mat)ins.push({t:'tip',i:'⏳',h:`${mat} post(s) still maturing`,p:`Published less than 3 days before the export date, so their numbers will still grow.`});
+  $('#insights').innerHTML=ins.map(x=>`<div class="ins ${x.t}"><div class="ic">${x.i}</div><div><h4>${x.h}</h4><p>${x.p}</p></div></div>`).join('');
+}
+
+function renderFeatures(){
+  const T=totals(),ts=typeStats(),vids=POSTS.filter(p=>p.views!=null),c=cadenceStats();
+  const ds=dowStats().filter(d=>d.n>0).sort((a,b)=>b.impr-a.impr),tp=topicStats().filter(t=>t.n>=1);
+  const F=[
+    {n:'Engagement Rate',tier:'core',need:['impr','reactions'],why:'The cleanest quality signal: what share of viewers acted. Normalizes for reach so posts are comparable.',f:'(reactions + comments + reposts + saves + sends) ÷ impressions',v:fmtPct(T.eng/T.impr*100,2)},
+    {n:'Weighted Engagement Score',tier:'core',need:['impr','comments'],why:'Not all interactions are equal. LinkedIn ranking leans on comments, reposts, saves and sends far more than likes.',f:'(1·R + 3·C + 4·Rp + 3·S + 3·Sd) ÷ impr × 1000',v:fmt(T.weighted/T.impr*1000,2)+' / 1K'},
+    {n:'Impressions',tier:'core',need:['impr'],why:'Raw distribution. Necessary but not sufficient, so always read it next to engagement rate.',f:'Σ impressions · avg per post',v:fmt(T.impr/T.n)+' / post'},
+    {n:'Out-of-Network Share',tier:'core',need:['outNet|inNet'],why:'Virality proxy. A high share means the algorithm is pushing you to strangers, which is where growth comes from.',f:'out-of-network impressions ÷ impressions',v:fmtPct(T.out/T.impr*100)},
+    {n:'Profile View Rate',tier:'strong',need:['profile'],why:'Curiosity signal: the post made someone want to know who you are.',f:'profile viewers ÷ impr × 1000',v:fmt(T.profile/T.impr*1000,2)+' / 1K'},
+    {n:'Follower Conversion',tier:'strong',need:['followers'],why:'The business outcome of a post: audience you keep.',f:'followers gained ÷ impr × 1000',v:fmt(T.followers/T.impr*1000,2)+' / 1K'},
+    {n:'Saves + Sends Rate',tier:'strong',need:['saves','sends'],why:'“Dark social” value: content worth keeping or forwarding. A strong predictor of long-tail reach.',f:'(saves + sends) ÷ impr × 1000',v:fmt((T.saves+T.sends)/T.impr*1000,2)+' / 1K'},
+    {n:'Comment Rate',tier:'strong',need:['comments'],why:'Conversation depth. Comments extend a post’s lifespan in the feed.',f:'comments ÷ impr × 1000',v:fmt(T.comments/T.impr*1000,2)+' / 1K'},
+    {n:'Post Format',tier:'strong',need:['type'],why:'Format sets the reach ceiling and the effort floor. Compare formats on rates, not totals.',f:'group by Post type',v:ts.length?`Top: ${ts[0].type}`:'—'},
+    {n:'Reach Efficiency',tier:'context',need:['reach'],why:'Unique members ÷ impressions. Low means the same people saw it repeatedly; high means broad, fresh reach.',f:'members reached ÷ impressions',v:fmtPct(T.reach/T.impr*100,0)},
+    {n:'Video View Rate & Watch Time',tier:'context',need:['views'],why:'Video only: does the hook stop the scroll, and does the content hold attention?',f:'views ÷ impr · avg watch time',v:vids.length?`${fmtPct(sum(vids,p=>p.views)/sum(vids,p=>p.impr)*100)} · ${fmtSec(avg(vids,p=>p.avgWatch))}`:'No videos'},
+    {n:'Publish Day',tier:'context',need:['date'],why:'Timing nudges early velocity. Needs many posts before it’s trustworthy.',f:'group by weekday',v:ds.length?`Best: ${ds[0].label}`:'—'},
+    {n:'Topic Keywords',tier:'context',need:['url'],why:'Extracted from the URL slug. Shows which subjects your audience rewards.',f:'slug → keywords → avg impressions',v:tp.length?`Top: ${tp[0].w}`:'—'},
+    {n:'Posting Cadence',tier:'context',need:['date'],why:'Consistency affects how often the algorithm tests you. Gaps reset momentum.',f:'days between consecutive posts',v:c?`${fmt(c.avgGap,1)} days avg gap`:'—'}
+  ];
+  const imp=[100,93,87,81,74,68,63,58,54,48,44,38,34,30];
+  const ok=need=>need.every(k=>k.split('|').some(has));
+  $('#features').innerHTML=F.map((x,i)=>{const o=ok(x.need);return`
+    <div class="feat ${o?'':'missing'}">
+      <div class="rank ${x.tier}">${i+1}</div>
+      <div><div class="name">${x.n} <span class="tier ${x.tier}">${x.tier}</span></div>
+        <div class="why">${x.why}</div><div class="mono" style="color:#555">${x.f}</div></div>
+      <div class="valbox"><div class="v">${o?x.v:'Column missing'}</div><div class="bar"><span style="width:${imp[i]}%"></span></div>
+        <div class="mono" style="color:#777;margin-top:3px">importance ${imp[i]}</div></div>
+    </div>`;}).join('');
+  $('#colChips').innerHTML=COLS.map(c=>`<span class="chip ${has(c.key)?'ok':'miss'}"><span class="dot">${has(c.key)?'✓':'×'}</span>${c.label} <em>${c.role}</em></span>`).join('')
+    +EXTRA.map(x=>`<span class="chip"><span class="dot">+</span>${esc(x)} <em>unused</em></span>`).join('');
+}
+
+function renderTimeline(){
+  const S=[...POSTS].sort(byDate);
+  mk('chartTimeline',{data:{labels:S.map(p=>`${fmtDate(p.date)} · ${p.type}`),datasets:[
+    {type:'bar',label:'Impressions',data:S.map(p=>p.impr),...barStyle(S.map(p=>typeColor(p.type))),yAxisID:'y',order:2},
+    {type:'line',label:'Engagement rate %',data:S.map(p=>+p.er.toFixed(2)),borderColor:'#0A66C2',backgroundColor:'#0A66C2',borderWidth:3,pointRadius:5,pointBorderColor:INK,pointBorderWidth:2,tension:.25,yAxisID:'y1',order:1}
+  ]},options:{interaction:{mode:'index',intersect:false},
+    plugins:{tooltip:{callbacks:{title:it=>short(S[it[0].dataIndex].title,60)}}},
+    scales:{y:{beginAtZero:true,title:{display:true,text:'Impressions'}},y1:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'ER %'}},x:{ticks:{maxRotation:50,minRotation:30}}}}});
+}
+
+function renderFormats(){
+  const ts=typeStats();
+  $('#formatCards').innerHTML=ts.map(t=>`<div class="fcard"><div class="fh" style="background:${typeColor(t.type)}">${esc(t.type)}</div><div class="fb">
+    <span>Posts</span><b>${t.n}</b><span>Avg impressions</span><b>${fmt(t.impr)}</b><span>Avg reach</span><b>${fmt(t.reach)}</b>
+    <span>Engagement rate</span><b>${fmtPct(t.er,2)}</b><span>Weighted / 1K</span><b>${fmt(t.ws,2)}</b><span>Out-of-network</span><b>${fmtPct(t.out)}</b>
+    <span>Profile views / 1K</span><b>${fmt(t.profile,2)}</b></div></div>`).join('');
+  mk('chartTypeImpr',{type:'bar',data:{labels:ts.map(t=>`${t.type} (${t.n})`),datasets:[{label:'Avg impressions',data:ts.map(t=>Math.round(t.impr)),...barStyle(ts.map(t=>typeColor(t.type)))}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  mk('chartTypeER',{type:'bar',data:{labels:ts.map(t=>t.type),datasets:[
+    {label:'ER %',data:ts.map(t=>+t.er.toFixed(2)),...barStyle('#0A66C2')},
+    {label:'Weighted / 1K',data:ts.map(t=>+t.ws.toFixed(2)),...barStyle('#F6CF5F')}]},options:{scales:{y:{beginAtZero:true}}}});
+  const br=ts[0],be=[...ts].sort((a,b)=>b.ws-a.ws)[0];
+  $('#formatCallout').innerHTML=`<span class="big">🏆</span><div>Best for reach: ${esc(br.type)} · Best for engagement: ${esc(be.type)}<small>${br.type===be.type?'One format wins on both. Double down on it, then test a second format.':'Different winners. Your reach format and your resonance format are not the same.'}</small></div>`;
+}
+
+function renderHist(){
+  const metric=$('#histMetric').value,bins=+$('#histBins').value;$('#binVal').textContent=bins;
+  const label=$('#histMetric').selectedOptions[0].text;
+  const vals=POSTS.map(p=>p[metric]).filter(v=>v!=null&&!isNaN(v));
+  if(!vals.length){$('#shapeCallout').innerHTML='<div>No data for this metric.</div>';return;}
+  let mn=Math.min(...vals),mx=Math.max(...vals);if(mn===mx){mn-=1;mx+=1;}
+  const w=(mx-mn)/bins,counts=Array(bins).fill(0);
+  vals.forEach(v=>{let i=Math.floor((v-mn)/w);if(i>=bins)i=bins-1;if(i<0)i=0;counts[i]++;});
+  const d=(metric==='impr'||metric==='reach')?0:(w<1?2:1);
+  mk('chartHist',{type:'bar',data:{labels:counts.map((_,i)=>`${fmt(mn+i*w,d)}–${fmt(mn+(i+1)*w,d)}`),
+    datasets:[{label:'Posts',data:counts,backgroundColor:'#8AB8EE',borderColor:INK,borderWidth:2,categoryPercentage:1,barPercentage:1}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0},title:{display:true,text:'Posts'}},x:{title:{display:true,text:label}}}}});
+  const m=vals.reduce((a,b)=>a+b,0)/vals.length,med=median(vals),sd=Math.sqrt(vals.reduce((a,b)=>a+(b-m)**2,0)/vals.length);
+  const sk=sd?3*(m-med)/sd:0;
+  let shape,txt;
+  if(sk>0.4){shape='Right-skewed';txt='A few outlier posts carry your numbers. Study them closely.';}
+  else if(sk<-0.4){shape='Left-skewed';txt='Most posts sit near your ceiling and a few underperform. Find what the weak ones share.';}
+  else{shape='Roughly symmetric';txt='Performance is consistent. No breakout posts yet, so it is time to take a bigger creative swing.';}
+  $('#shapeCallout').innerHTML=`<span class="big">📐</span><div>${shape}: ${txt}<small>mean ${fmt(m,d)} · median ${fmt(med,d)} · n = ${vals.length}. With few posts the bin count changes the story, so move the slider before trusting the shape.</small></div>`;
+}
+
+function renderNetwork(){
+  const S=[...POSTS].sort(byDate);
+  if(!(has('outNet')||has('inNet'))){mk('chartNetwork',{type:'bar',data:{labels:['No in/out-of-network columns'],datasets:[]}});return;}
+  mk('chartNetwork',{type:'bar',data:{labels:S.map(p=>`${fmtDate(p.date)} · ${p.type}`),datasets:[
+    {label:'In-network',data:S.map(p=>Math.round(p.inImpr||0)),...barStyle('#0A66C2'),borderRadius:0},
+    {label:'Out-of-network',data:S.map(p=>Math.round(p.outImpr||0)),...barStyle('#F6CF5F'),borderRadius:0}]},
+    options:{indexAxis:'y',plugins:{tooltip:{callbacks:{title:it=>short(S[it[0].dataIndex].title,60),
+      afterBody:it=>`Out-of-network: ${fmtPct(S[it[0].dataIndex].outPct,0)}`}}},scales:{x:{stacked:true},y:{stacked:true}}}});
+}
+
+function renderScatter(){
+  const types=[...new Set(POSTS.map(p=>p.type))];
+  mk('chartScatter',{type:'scatter',data:{datasets:types.map(t=>({label:t,
+    data:POSTS.filter(p=>p.type===t).map(p=>({x:p.impr,y:+p.er.toFixed(2),t:p.title})),
+    backgroundColor:typeColor(t),borderColor:INK,borderWidth:2,pointRadius:8,pointHoverRadius:10}))},
+    options:{plugins:{tooltip:{callbacks:{label:c=>`${short(c.raw.t,40)}: ${fmt(c.raw.x)} impr · ${fmt(c.raw.y,2)}% ER`}}},
+      scales:{x:{title:{display:true,text:'Impressions (reach)'}},y:{beginAtZero:true,title:{display:true,text:'Engagement rate % (resonance)'}}}}});
+}
+
+function renderTiming(){
+  const ds=dowStats();
+  mk('chartDow',{type:'bar',data:{labels:ds.map(d=>`${d.label} (${d.n})`),datasets:[{label:'Avg impressions',data:ds.map(d=>d.impr==null?null:Math.round(d.impr)),...barStyle(ds.map(d=>d.n?'#8CCB86':'#eee'))}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  const c=cadenceStats();
+  const box=(l,v,h)=>`<div class="box kpi"><div class="label">${l}</div><div class="val">${v}</div><div class="hint">${h}</div></div>`;
+  $('#cadence').innerHTML=c?[
+    box('Posts / week',fmt(c.perWeek,1),`over ${fmt(c.span)} days`),
+    box('Avg gap',fmt(c.avgGap,1)+'d','between posts'),
+    box('Longest gap',fmt(c.maxGap)+'d',c.maxGap>5?'momentum risk':'consistent'),
+    box('Same-day doubles',fmt(c.sameDay),c.sameDay?'may cannibalize reach':'none')
+  ].join(''):box('Cadence','—','needs 2+ dated posts');
+}
+
+function renderTopics(){
+  const tp=topicStats();
+  if(!tp.length){mk('chartTopics',{type:'bar',data:{labels:['No keywords found in URLs'],datasets:[]}});return;}
+  mk('chartTopics',{type:'bar',data:{labels:tp.map(t=>`${t.w} (${t.n})`),datasets:[
+    {label:'Avg impressions',data:tp.map(t=>Math.round(t.avg)),...barStyle('#8AB8EE'),xAxisID:'x'}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{afterLabel:c=>`ER: ${fmtPct(tp[c.dataIndex].er,2)}`}}},scales:{x:{beginAtZero:true}}}});
+}
+
+function renderVideo(){
+  const v=POSTS.filter(p=>p.views!=null);
+  $('#videoSec').style.display=v.length?'':'none';
+  if(!v.length)return;
+  const non=POSTS.filter(p=>p.views==null);
+  const erV=sum(v,p=>p.eng)/sum(v,p=>p.impr)*100,erN=non.length?sum(non,p=>p.eng)/sum(non,p=>p.impr)*100:null;
+  const box=(l,val,h,hl)=>`<div class="box kpi ${hl?'hl':''}"><div class="label">${l}</div><div class="val">${val}</div><div class="hint">${h}</div></div>`;
+  $('#videoKpis').innerHTML=[
+    box('Videos',fmt(v.length),`${fmt(avg(v,p=>p.impr))} avg impressions`),
+    box('Total views',fmt(sum(v,p=>p.views)),'video plays'),
+    box('View rate',fmtPct(sum(v,p=>p.views)/sum(v,p=>p.impr)*100),'views ÷ impressions',true),
+    box('Avg watch time',fmtSec(avg(v,p=>p.avgWatch)),'per view',true),
+    box('Total watch time',fmtSec(sum(v,p=>p.watch)),'all videos'),
+    box('Video ER vs others',fmtPct(erV,2),erN!=null?`non-video: ${fmtPct(erN,2)}`:'')
+  ].join('');
+}
+
+const TCOLS=[
+  {k:'rank',l:'#'},{k:'title',l:'Post'},{k:'date',l:'Date'},{k:'type',l:'Type'},{k:'impr',l:'Impr.'},{k:'reach',l:'Reach'},
+  {k:'er',l:'ER'},{k:'wScore',l:'Score/1K'},{k:'outPct',l:'Out-net'},{k:'eng',l:'Interactions'},{k:'profile',l:'Profile'},{k:'followers',l:'Follows'}
+];
+function renderTable(){
+  const {key,dir}=sortState;
+  const S=[...POSTS].sort((a,b)=>{let x=a[key],y=b[key];if(x instanceof Date||y instanceof Date){x=x?+x:null;y=y?+y:null;}
+    if(x==null)return 1;if(y==null)return -1;if(typeof x==='string')return x.localeCompare(y)*dir;return (x-y)*dir;});
+  const head='<tr>'+TCOLS.map(c=>`<th data-k="${c.k}" class="${c.k===key?'sorted':''}" data-dir="${dir<0?'↓':'↑'}">${c.l}</th>`).join('')+'</tr>';
+  const body=S.map(p=>`<tr class="${p.rank===1&&p.eng>0?'top':''}">
+    <td><b>${p.rank}</b></td>
+    <td class="post">${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>`:esc(p.title)}${p.maturing?'<span class="mat">MATURING</span>':''}</td>
+    <td>${fmtDate(p.date)}${p.date?` <span class="brk">${DOW[p.dow]}</span>`:''}</td>
+    <td><span class="tp" style="background:${typeColor(p.type)}">${esc(p.type)}</span></td>
+    <td><b>${fmt(p.impr)}</b></td><td>${fmt(p.reach)}</td><td>${fmtPct(p.er,2)}</td><td>${fmt(p.wScore,1)}</td><td>${fmtPct(p.outPct,0)}</td>
+    <td><b>${fmt(p.eng)}</b> <span class="brk">R${p.reactions} C${p.comments} Rp${p.reposts} S${p.saves} Sd${p.sends}</span></td>
+    <td>${fmt(p.profile)}</td><td>${fmt(p.followers)}</td></tr>`).join('');
+  $('#tbl').innerHTML=`<thead>${head}</thead><tbody>${body}</tbody>`;
+  $('#tbl').querySelectorAll('th').forEach(th=>th.addEventListener('click',()=>{
+    const k=th.dataset.k;sortState=sortState.key===k?{key:k,dir:-sortState.dir}:{key:k,dir:(k==='title'||k==='type'||k==='rank')?1:-1};renderTable();}));
+}
+
+function exportCSV(){
+  const f=['rank','title','url','date','type','impr','reach','inPct','outPct','reactions','comments','reposts','saves','sends','eng','er','weighted','wScore','profile','profileRate','followers','followRate','deepRate','commentRate','reachRatio','views','viewRate','avgWatch','maturing'];
+  const cell=v=>{if(v instanceof Date)v=v.toISOString().slice(0,10);if(typeof v==='number')v=+v.toFixed(4);v=v==null?'':String(v);return /[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v;};
+  const csv=[f.join(','),...POSTS.map(p=>f.map(k=>cell(p[k])).join(','))].join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='linkedin_posts_enriched.csv';a.click();
+}
+
+/* ---------------- SAMPLE DATA ---------------- */
+const U='https://www.linkedin.com/posts/omidebrahimi1_';
+const SAMPLE=[
+ ['Post URL','Post Publish Date','Post type','Impressions','Impressions (in-network)','Impressions (out-of-network)','Members reached','Views','Watch time','Avg watch time','Followers gained','Profile viewers','Reactions','Comments','Reposts','Saves','Sends','Custom button engagements'],
+ [U+'customer-dashboard-customerretention-ugcPost-7522307765927854080-YBNp','10/31/2026','Video',133,'70%','30%',61,20,'6m 14s','18s',0,4,1,1,1,1,0,0],
+ [U+'report-cpa-campaign-share-7521875827920338944-NzJP','10/30/2026','Text',432,'43%','57%',292,null,null,null,0,1,0,0,0,0,0,0],
+ [U+'report-share-7520805588990197760-Iu3L','10/27/2026','Text',315,'61%','39%',189,null,null,null,0,0,0,0,0,0,0,0],
+ [U+'report-data-share-7520070864118140928-YLVP','10/25/2026','Text',446,'59%','41%',297,null,null,null,0,0,0,0,0,0,0,0],
+ [U+'dashboard-share-7519828590754975744-V5RP','10/24/2026','Text',426,'51%','49%',265,null,null,null,0,0,0,2,0,0,0,0],
+ [U+'two-expensive-mistakes-with-ai-are-doing-share-7519704141947056128-oST4','10/24/2026','Text',437,'64%','36%',303,null,null,null,1,1,0,0,0,0,0,0],
+ [U+'report-shopify-meta-share-7519030677565243392-Wmnz','10/22/2026','Image',168,'46%','54%',106,null,null,null,0,0,0,0,0,0,0,0],
+ [U+'a-live-dashboard-isnt-always-a-trustworthy-share-7518722229191294976-UXlr','10/21/2026','Text',376,'59%','41%',226,null,null,null,0,0,0,0,0,0,0,0],
+ [U+'48200-collected-46500-hit-the-bank-share-7517585431824281602-w4a_','10/18/2026','Image',312,'50%','50%',211,null,null,null,0,1,1,0,0,0,0,0],
+ [U+'dataengineering-dota2-worklife-share-7515405267598114816-g6Cx','10/12/2026','Image',235,'47%','53%',153,null,null,null,0,0,1,0,0,0,0,0],
+ [U+'dataengineering-dataanalytics-marketintelligence-ugcPost-7514310364084371457--Cph','10/9/2026','Video',114,'91%','9%',57,21,'4m 16s','12s',0,0,2,0,1,0,0,0]
+];
+</script>
+</body>
+</html>
